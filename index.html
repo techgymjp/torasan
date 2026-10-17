@@ -33,10 +33,22 @@
           <button type="button" class="btn" id="btn-howto">遊び方</button>
           <button type="button" class="btn" id="btn-records">記録を見る</button>
         </nav>
-        <label class="toggle">
-          <input type="checkbox" id="opt-reduce-motion">
-          <span>演出を控えめにする</span>
-        </label>
+        <div class="options">
+          <span class="options__sound" id="sound-options">
+            <label class="toggle">
+              <input type="checkbox" id="opt-music" checked>
+              <span>音楽</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="opt-sfx" checked>
+              <span>効果音</span>
+            </label>
+          </span>
+          <label class="toggle">
+            <input type="checkbox" id="opt-reduce-motion">
+            <span>演出を控えめにする</span>
+          </label>
+        </div>
         <p class="poster__note">※本作は昭和の露店と人情喜劇から着想を得たオリジナル作品です。登場人物・台詞はすべて創作です。</p>
       </div>
     </section>
@@ -46,7 +58,8 @@
       <header class="hud">
         <div class="hud__row">
           <p class="hud__turn"><span class="hud__act" id="turn-label">第一幕</span><span class="hud__of"> ／ 全五幕</span></p>
-          <p class="hud__money">売上 <strong id="stat-revenue">0</strong>円<span class="hud__sep">・</span>客 <strong id="stat-customers">0</strong>人</p>
+          <p class="hud__money">売上 <strong id="stat-revenue">0</strong>円<span class="hud__sep">・</span>客 <strong id="stat-customers">0</strong>人
+            <button type="button" class="mute" id="btn-mute" aria-pressed="false" aria-label="音を消す" title="音を消す">🔊</button></p>
         </div>
         <ul class="gauges" aria-label="パラメーター">
           <li class="gauge gauge--laughter">
@@ -173,6 +186,7 @@
   <script src="data/endings.js"></script>
   <script src="logic.js"></script>
   <script src="portrait.js"></script>
+  <script src="audio.js"></script>
   <script src="game.js"></script>
 </body>
 </html>

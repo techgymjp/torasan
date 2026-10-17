@@ -9,6 +9,7 @@
   const D = window.TankaData;
   const L = window.TankaLogic;
   const Portrait = window.TankaPortrait;
+  const Sound = window.TankaAudio;
 
   const RECORDS_KEY = "tankabai.records.v1";
   const PREFS_KEY = "tankabai.prefs.v1";
@@ -56,7 +57,19 @@
 
   function loadPrefs() {
     const p = readJson(PREFS_KEY) || {};
-    return { reduceMotion: p.reduceMotion === true };
+    return {
+      reduceMotion: p.reduceMotion === true,
+      music: p.music !== false,
+      sfx: p.sfx !== false
+    };
+  }
+
+  function savePrefs() {
+    writeJson(PREFS_KEY, {
+      reduceMotion: $("opt-reduce-motion").checked,
+      music: $("opt-music").checked,
+      sfx: $("opt-sfx").checked
+    });
   }
 
   // ---------- 共通 ----------
@@ -96,6 +109,7 @@
       $("meter-" + k).setAttribute("aria-valuenow", state[k]);
     });
     document.body.classList.toggle("is-danger", state.trouble >= 70);
+    Sound.setTension(state.trouble >= 70);
   }
 
   // ---------- 商売画面 ----------
@@ -209,6 +223,9 @@
     $("reaction").hidden = false;
     renderHud();
     playFx(outcome.stamp);
+    if (outcome.stamp) Sound.sfx.stamp(outcome.stamp.kind);
+    else Sound.sfx.select();
+    if (d.revenue > 0) Sound.sfx.coin();
     announce((outcome.stamp ? outcome.stamp.text + "。" : "") + outcome.resultText);
     $("btn-next").focus({ preventScroll: true });
     $("reaction").scrollIntoView({ block: "nearest", behavior: document.body.classList.contains("reduce-motion") ? "auto" : "smooth" });
@@ -238,6 +255,7 @@
     if (state.status === "result") {
       finish();
     } else {
+      Sound.sfx.next();
       renderEvent();
       $("event-title").focus({ preventScroll: true });
       announce(ACT_NAMES[state.turn - 1] + "　" + L.getCurrentEvent(state).title);
@@ -287,6 +305,9 @@
     });
 
     document.body.classList.remove("is-danger");
+    Sound.setTension(false);
+    Sound.setMusic("ending");
+    Sound.sfx.curtain(ending.id === "chaos");
     showScreen("result");
     $("ending-name").focus({ preventScroll: true });
   }
@@ -294,6 +315,9 @@
   // ---------- 開始・記録 ----------
 
   function start() {
+    Sound.unlock();
+    Sound.setMusic("street");
+    Sound.sfx.start();
     state = L.startGame();
     showScreen("play");
     renderEvent();
@@ -303,6 +327,8 @@
   function toTitle() {
     state = L.createInitialState();
     document.body.classList.remove("is-danger");
+    Sound.setTension(false);
+    Sound.setMusic("street");
     showScreen("title");
     $("title-heading").focus({ preventScroll: true });
   }
@@ -353,6 +379,15 @@
     }
   }
 
+  function syncMuteButton() {
+    const on = $("opt-music").checked || $("opt-sfx").checked;
+    const btn = $("btn-mute");
+    btn.setAttribute("aria-pressed", String(!on));
+    btn.textContent = on ? "🔊" : "🔇";
+    btn.setAttribute("aria-label", on ? "音を消す" : "音を鳴らす");
+    btn.title = on ? "音を消す" : "音を鳴らす";
+  }
+
   function init() {
     const prefs = loadPrefs();
     const toggle = $("opt-reduce-motion");
@@ -360,8 +395,45 @@
     setReduceMotion(prefs.reduceMotion);
     toggle.addEventListener("change", function () {
       setReduceMotion(toggle.checked);
-      writeJson(PREFS_KEY, { reduceMotion: toggle.checked });
+      savePrefs();
     });
+
+    // 音（最初のクリック／キー入力で鳴らし始める）
+    if (!Sound.supported) {
+      $("sound-options").hidden = true;
+      $("btn-mute").hidden = true;
+    }
+    $("opt-music").checked = prefs.music;
+    $("opt-sfx").checked = prefs.sfx;
+    Sound.setEnabled("music", prefs.music);
+    Sound.setEnabled("sfx", prefs.sfx);
+    Sound.setMusic("street");
+    syncMuteButton();
+    ["music", "sfx"].forEach(function (kind) {
+      $("opt-" + kind).addEventListener("change", function () {
+        Sound.unlock();
+        Sound.setEnabled(kind, $("opt-" + kind).checked);
+        syncMuteButton();
+        savePrefs();
+      });
+    });
+    $("btn-mute").addEventListener("click", function () {
+      const on = !($("opt-music").checked || $("opt-sfx").checked);
+      ["music", "sfx"].forEach(function (kind) {
+        $("opt-" + kind).checked = on;
+        Sound.setEnabled(kind, on);
+      });
+      Sound.unlock();
+      syncMuteButton();
+      savePrefs();
+    });
+    const firstGesture = function () {
+      Sound.unlock();
+      document.removeEventListener("pointerdown", firstGesture);
+      document.removeEventListener("keydown", firstGesture);
+    };
+    document.addEventListener("pointerdown", firstGesture);
+    document.addEventListener("keydown", firstGesture);
 
     $("btn-start").addEventListener("click", start);
     $("btn-howto").addEventListener("click", function () { openDialog($("dlg-howto")); });
