@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>啖呵売！昭和人情商店街</title>
+  <meta name="description" content="売って笑わせ、失敗して、最後は人情。旅商人の口上と騒動を楽しむ、ブラウザで遊べる会話選択型ドタバタ喜劇。">
+  <meta name="theme-color" content="#3b2414">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app" id="app">
+
+    <!-- 01 タイトル画面 -->
+    <section class="screen screen--title" id="screen-title" aria-labelledby="title-heading">
+      <div class="poster">
+        <div class="awning" aria-hidden="true"></div>
+        <p class="poster__kicker">昭和人情喜劇　日和町商店街の巻</p>
+        <h1 class="poster__title" id="title-heading" tabindex="-1">
+          <span class="poster__title-main">啖呵売！</span>
+          <span class="poster__title-sub">昭和人情商店街</span>
+        </h1>
+        <p class="poster__copy">売って笑わせ、失敗して、最後は人情。</p>
+        <div class="poster__street" aria-hidden="true">
+          <span class="lantern"></span><span class="lantern"></span><span class="lantern"></span>
+          <span class="shopfront">飴</span><span class="shopfront">団子</span><span class="shopfront">金物</span><span class="shopfront">八百屋</span>
+        </div>
+        <nav class="menu" aria-label="タイトルメニュー">
+          <button type="button" class="btn btn--primary btn--big" id="btn-start">商売を始める</button>
+          <button type="button" class="btn" id="btn-howto">遊び方</button>
+          <button type="button" class="btn" id="btn-records">記録を見る</button>
+        </nav>
+        <label class="toggle">
+          <input type="checkbox" id="opt-reduce-motion">
+          <span>演出を控えめにする</span>
+        </label>
+        <p class="poster__note">※本作は昭和の露店と人情喜劇から着想を得たオリジナル作品です。登場人物・台詞はすべて創作です。</p>
+      </div>
+    </section>
+
+    <!-- 02 商売画面 -->
+    <section class="screen screen--play" id="screen-play" aria-labelledby="event-title" hidden>
+      <header class="hud">
+        <div class="hud__row">
+          <p class="hud__turn"><span class="hud__act" id="turn-label">第一幕</span><span class="hud__of"> ／ 全五幕</span></p>
+          <p class="hud__money">売上 <strong id="stat-revenue">0</strong>円<span class="hud__sep">・</span>客 <strong id="stat-customers">0</strong>人</p>
+        </div>
+        <ul class="gauges" aria-label="パラメーター">
+          <li class="gauge gauge--laughter">
+            <span class="gauge__label">😄 笑い</span>
+            <span class="gauge__bar" role="meter" aria-label="笑い" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10" id="meter-laughter"><span class="gauge__fill" id="fill-laughter"></span></span>
+            <span class="gauge__num" id="stat-laughter">10</span>
+          </li>
+          <li class="gauge gauge--humanity">
+            <span class="gauge__label">🤝 人情</span>
+            <span class="gauge__bar" role="meter" aria-label="人情" aria-valuemin="0" aria-valuemax="100" aria-valuenow="30" id="meter-humanity"><span class="gauge__fill" id="fill-humanity"></span></span>
+            <span class="gauge__num" id="stat-humanity">30</span>
+          </li>
+          <li class="gauge gauge--trouble">
+            <span class="gauge__label">💥 騒動</span>
+            <span class="gauge__bar" role="meter" aria-label="騒動" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="meter-trouble"><span class="gauge__fill" id="fill-trouble"></span></span>
+            <span class="gauge__num" id="stat-trouble">0</span>
+          </li>
+        </ul>
+      </header>
+
+      <div class="stage" id="stage">
+        <div class="stage__backdrop" aria-hidden="true"></div>
+        <div class="stage__plate">
+          <span class="stage__id" id="event-id">E01</span>
+          <h2 class="stage__title" id="event-title" tabindex="-1">値切り名人</h2>
+        </div>
+        <figure class="customer">
+          <div class="customer__portrait" id="portrait" aria-hidden="true"></div>
+          <figcaption class="customer__name">
+            <strong id="char-name"></strong>
+            <small id="char-role"></small>
+          </figcaption>
+        </figure>
+        <div class="product" id="product">
+          <span class="product__icon" id="product-icon" aria-hidden="true"></span>
+          <span class="product__name" id="product-name"></span>
+          <span class="product__blurb" id="product-blurb"></span>
+        </div>
+        <div class="fx" id="fx" aria-hidden="true">
+          <div class="fx__lines"></div>
+          <div class="fx__stamp" id="fx-stamp"></div>
+        </div>
+      </div>
+
+      <div class="talk">
+        <p class="trait" id="char-trait"></p>
+        <p class="bubble" id="dialogue"></p>
+
+        <div class="choices" id="choices" role="group" aria-label="口上を選ぶ（数字キー1〜3でも選べます）"></div>
+
+        <div class="reaction" id="reaction" hidden>
+          <p class="reaction__stamp" id="reaction-stamp"></p>
+          <p class="reaction__text" id="reaction-text"></p>
+          <p class="reaction__voice" id="reaction-voice"></p>
+          <p class="reaction__note" id="reaction-note"></p>
+          <ul class="deltas" id="reaction-deltas" aria-label="今回の変化"></ul>
+          <button type="button" class="btn btn--primary" id="btn-next">次の幕へ ▶</button>
+        </div>
+        <p class="visually-hidden" id="live" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- 04 結果画面 -->
+    <section class="screen screen--result" id="screen-result" aria-labelledby="ending-name" hidden>
+      <div class="kamishibai">
+        <p class="kamishibai__kicker">本日の商い、これにて幕</p>
+        <p class="badge" id="badge-new" hidden>新しい結末を発見！</p>
+        <h2 class="kamishibai__title" id="ending-name" tabindex="-1"></h2>
+        <p class="kamishibai__text" id="ending-text"></p>
+        <p class="kamishibai__honor">称号：<strong id="ending-title"></strong></p>
+      </div>
+      <dl class="scores">
+        <div><dt>売上</dt><dd><span id="res-revenue">0</span>円<span class="best" id="badge-best" hidden>自己ベスト！</span></dd></div>
+        <div><dt>客数</dt><dd><span id="res-customers">0</span>人</dd></div>
+        <div><dt>笑い</dt><dd id="res-laughter">0</dd></div>
+        <div><dt>人情</dt><dd id="res-humanity">0</dd></div>
+        <div><dt>騒動</dt><dd id="res-trouble">0</dd></div>
+      </dl>
+      <details class="log">
+        <summary>本日の口上をふりかえる</summary>
+        <ol class="log__list" id="history"></ol>
+      </details>
+      <div class="menu menu--row">
+        <button type="button" class="btn btn--primary" id="btn-retry">もう一度商売する</button>
+        <button type="button" class="btn" id="btn-to-title">タイトルへ</button>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="sheet" id="dlg-howto" aria-labelledby="howto-heading">
+    <h2 id="howto-heading">遊び方</h2>
+    <ol class="howto">
+      <li>あなたは旅商人<strong>風間まこと</strong>。日和町商店街の露店で、<strong>全五幕</strong>の商売に挑みます。</li>
+      <li>各幕に客や騒動が現れます。<strong>3つの口上</strong>から1つを選びましょう（数字キー1〜3でも選べます）。</li>
+      <li>口上には型があります。<br>
+        <span class="type type--bluff">大風呂敷</span>笑いと売上が大きいが、騒動も増える。<br>
+        <span class="type type--wit">機転</span>売上と笑いをバランスよく。<br>
+        <span class="type type--honest">正直</span>人情が上がる。売上は控えめ。<br>
+        <span class="type type--flatter">お世辞</span>機嫌は取れるが、見抜かれると逆効果。<br>
+        <span class="type type--help">お助け</span>人情が大きく上がるが、売上を失うことも。
+      </li>
+      <li>客にはそれぞれ<strong>好きな口上・嫌いな口上</strong>があります。人物紹介のヒントをよく読みましょう。</li>
+      <li><strong>大風呂敷を続けると「調子に乗りすぎ」</strong>で騒動が上乗せされます。</li>
+      <li>最後に、売上・笑い・人情・騒動のバランスで<strong>結末</strong>が決まります。全6種の結末を集めましょう。</li>
+    </ol>
+    <form method="dialog"><button class="btn btn--primary" value="close">わかった！</button></form>
+  </dialog>
+
+  <dialog class="sheet" id="dlg-records" aria-labelledby="records-heading">
+    <h2 id="records-heading">商い帳（記録）</h2>
+    <dl class="records">
+      <div><dt>プレイ回数</dt><dd id="rec-plays">0回</dd></div>
+      <div><dt>最高売上</dt><dd id="rec-best">0円</dd></div>
+      <div><dt>最後の称号</dt><dd id="rec-title">—</dd></div>
+    </dl>
+    <h3>結末図鑑 <small id="rec-count"></small></h3>
+    <ul class="zukan" id="rec-endings"></ul>
+    <p class="sheet__note" id="rec-warning" hidden>※このブラウザでは記録を保存できません。ゲームはそのまま遊べます。</p>
+    <form method="dialog"><button class="btn btn--primary" value="close">閉じる</button></form>
+  </dialog>
+
+  <script src="data/characters.js"></script>
+  <script src="data/events.js"></script>
+  <script src="data/endings.js"></script>
+  <script src="logic.js"></script>
+  <script src="portrait.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

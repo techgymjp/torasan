@@ -1,0 +1,378 @@
+/*
+ * 画面制御（DOM・保存・演出）
+ * ゲームの計算はすべて logic.js に任せ、ここでは表示と入力だけを扱う。
+ * データの文章は textContent で表示し、HTML として解釈しない。
+ */
+(function () {
+  "use strict";
+
+  const D = window.TankaData;
+  const L = window.TankaLogic;
+  const Portrait = window.TankaPortrait;
+
+  const RECORDS_KEY = "tankabai.records.v1";
+  const PREFS_KEY = "tankabai.prefs.v1";
+  const FX_DURATION = 1200;
+  const ACT_NAMES = ["第一幕", "第二幕", "第三幕", "第四幕", "第五幕"];
+
+  const $ = function (id) { return document.getElementById(id); };
+
+  let state = L.createInitialState();
+  let fxTimer = null;
+  let storageOk = true;
+
+  // ---------- 保存（失敗してもゲームは続行） ----------
+
+  function readJson(key) {
+    try {
+      const raw = window.localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      storageOk = false;
+      return {};
+    }
+  }
+
+  function writeJson(key, value) {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (e) {
+      storageOk = false;
+      return false;
+    }
+  }
+
+  function loadRecords() {
+    const r = readJson(RECORDS_KEY) || {};
+    const known = D.endings.map(function (e) { return e.id; });
+    return {
+      bestRevenue: Number.isFinite(r.bestRevenue) ? r.bestRevenue : 0,
+      endings: Array.isArray(r.endings) ? r.endings.filter(function (id) { return known.indexOf(id) !== -1; }) : [],
+      playCount: Number.isFinite(r.playCount) ? r.playCount : 0,
+      lastTitle: typeof r.lastTitle === "string" ? r.lastTitle : null
+    };
+  }
+
+  function loadPrefs() {
+    const p = readJson(PREFS_KEY) || {};
+    return { reduceMotion: p.reduceMotion === true };
+  }
+
+  // ---------- 共通 ----------
+
+  function formatYen(n) {
+    return n.toLocaleString("ja-JP");
+  }
+
+  function signed(n) {
+    return (n > 0 ? "+" : n < 0 ? "−" : "±") + formatYen(Math.abs(n));
+  }
+
+  function showScreen(name) {
+    ["title", "play", "result"].forEach(function (s) {
+      $("screen-" + s).hidden = s !== name;
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function setReduceMotion(on) {
+    document.body.classList.toggle("reduce-motion", on);
+  }
+
+  function announce(text) {
+    $("live").textContent = text;
+  }
+
+  // ---------- HUD ----------
+
+  function renderHud() {
+    $("turn-label").textContent = ACT_NAMES[state.turn - 1] || "";
+    $("stat-revenue").textContent = formatYen(state.revenue);
+    $("stat-customers").textContent = state.customers;
+    ["laughter", "humanity", "trouble"].forEach(function (k) {
+      $("stat-" + k).textContent = state[k];
+      $("fill-" + k).style.width = state[k] + "%";
+      $("meter-" + k).setAttribute("aria-valuenow", state[k]);
+    });
+    document.body.classList.toggle("is-danger", state.trouble >= 70);
+  }
+
+  // ---------- 商売画面 ----------
+
+  function renderEvent() {
+    const event = L.getCurrentEvent(state);
+    const character = D.characters[event.character];
+
+    $("event-id").textContent = event.id;
+    $("event-title").textContent = event.title;
+    $("char-name").textContent = character.name;
+    $("char-role").textContent = character.role;
+    $("char-trait").textContent = "人物メモ：" + character.trait;
+    $("dialogue").textContent = event.dialogue;
+
+    const product = $("product");
+    if (event.product) {
+      product.hidden = false;
+      $("product-icon").textContent = event.product.icon;
+      $("product-name").textContent = event.product.name;
+      $("product-blurb").textContent = event.product.blurb;
+    } else {
+      product.hidden = true;
+    }
+
+    Portrait.render($("portrait"), character, "normal");
+
+    const box = $("choices");
+    box.textContent = "";
+    event.choices.forEach(function (choice, i) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice";
+      btn.dataset.choiceId = choice.id;
+
+      const key = document.createElement("span");
+      key.className = "choice__key";
+      key.textContent = String(i + 1);
+
+      const tag = document.createElement("span");
+      tag.className = "type type--" + choice.type;
+      tag.textContent = L.CHOICE_TYPES[choice.type].label;
+
+      const text = document.createElement("span");
+      text.className = "choice__text";
+      text.textContent = choice.text;
+
+      btn.append(key, tag, text);
+      btn.addEventListener("click", function () { choose(choice.id); });
+      box.appendChild(btn);
+    });
+
+    box.hidden = false;
+    $("reaction").hidden = true;
+    renderHud();
+    $("stage").classList.remove("stage--enter");
+    void $("stage").offsetWidth; // 紙芝居の差し替え演出を再生し直す
+    $("stage").classList.add("stage--enter");
+  }
+
+  function choose(choiceId) {
+    const result = L.applyChoice(state, choiceId);
+    if (!result) return;
+    state = result.state;
+    showReaction(result.outcome);
+  }
+
+  function deltaItem(label, value, unit, goodWhenUp) {
+    const li = document.createElement("li");
+    const cls = value === 0 ? "flat" : (value > 0) === goodWhenUp ? "up" : "down";
+    li.className = "delta delta--" + cls;
+    li.textContent = label + " " + signed(value) + unit;
+    return li;
+  }
+
+  function showReaction(outcome) {
+    const event = L.getEvent(outcome.eventId);
+    const character = D.characters[event.character];
+    Portrait.render($("portrait"), character, outcome.expression);
+
+    $("choices").hidden = true;
+
+    $("reaction-stamp").textContent = outcome.stamp ? outcome.stamp.text : "";
+    $("reaction-stamp").className = "reaction__stamp" + (outcome.stamp ? " reaction__stamp--" + outcome.stamp.kind : "");
+    $("reaction-text").textContent = outcome.resultText;
+    $("reaction-voice").textContent = outcome.reactionText ? character.name + "：" + outcome.reactionText : "";
+
+    const notes = [];
+    if (outcome.affinity === "like") notes.push("相性◎ — " + character.name + "の好む口上だった！");
+    if (outcome.affinity === "dislike") notes.push("相性× — " + character.name + "の嫌う口上だった……");
+    if (outcome.overheated) notes.push("大風呂敷の連発で調子に乗りすぎた！ 騒動が上乗せされた。");
+    $("reaction-note").textContent = notes.join("　");
+
+    const d = outcome.deltas;
+    const list = $("reaction-deltas");
+    list.textContent = "";
+    list.append(
+      deltaItem("売上", d.revenue, "円", true),
+      deltaItem("笑い", d.laughter, "", true),
+      deltaItem("人情", d.humanity, "", true),
+      deltaItem("騒動", d.trouble, "", false)
+    );
+    if (d.customers > 0) {
+      const li = document.createElement("li");
+      li.className = "delta delta--up";
+      li.textContent = "客 +" + d.customers + "人";
+      list.appendChild(li);
+    }
+
+    $("btn-next").textContent = outcome.isLastTurn ? "本日の結果を見る ▶" : "次の幕へ ▶";
+    $("reaction").hidden = false;
+    renderHud();
+    playFx(outcome.stamp);
+    announce((outcome.stamp ? outcome.stamp.text + "。" : "") + outcome.resultText);
+    $("btn-next").focus({ preventScroll: true });
+    $("reaction").scrollIntoView({ block: "nearest", behavior: document.body.classList.contains("reduce-motion") ? "auto" : "smooth" });
+  }
+
+  function playFx(stamp) {
+    const fx = $("fx");
+    const stage = $("stage");
+    clearTimeout(fxTimer);
+    fx.className = "fx";
+    stage.classList.remove("shake");
+    if (!stamp) return;
+    void fx.offsetWidth;
+    $("fx-stamp").textContent = stamp.text;
+    fx.classList.add("fx--on", "fx--" + stamp.kind);
+    if (stamp.kind === "bad") stage.classList.add("shake");
+    fxTimer = setTimeout(function () {
+      fx.className = "fx";
+      stage.classList.remove("shake");
+    }, FX_DURATION);
+  }
+
+  function next() {
+    const advanced = L.advance(state);
+    if (!advanced) return;
+    state = advanced;
+    if (state.status === "result") {
+      finish();
+    } else {
+      renderEvent();
+      $("event-title").focus({ preventScroll: true });
+      announce(ACT_NAMES[state.turn - 1] + "　" + L.getCurrentEvent(state).title);
+    }
+  }
+
+  // ---------- 結果画面 ----------
+
+  function finish() {
+    const ending = D.endings.find(function (e) { return e.id === state.ending; });
+    const records = loadRecords();
+    const isNew = records.endings.indexOf(ending.id) === -1;
+    const isBest = state.revenue > records.bestRevenue;
+
+    writeJson(RECORDS_KEY, {
+      bestRevenue: Math.max(records.bestRevenue, state.revenue),
+      endings: isNew ? records.endings.concat(ending.id) : records.endings,
+      playCount: records.playCount + 1,
+      lastTitle: ending.title
+    });
+
+    $("ending-name").textContent = "「" + ending.name + "」";
+    $("ending-text").textContent = ending.text;
+    $("ending-title").textContent = ending.title;
+    $("badge-new").hidden = !isNew;
+    $("badge-best").hidden = !(isBest && state.revenue > 0);
+    $("res-revenue").textContent = formatYen(state.revenue);
+    $("res-customers").textContent = state.customers;
+    $("res-laughter").textContent = state.laughter;
+    $("res-humanity").textContent = state.humanity;
+    $("res-trouble").textContent = state.trouble;
+
+    const list = $("history");
+    list.textContent = "";
+    state.history.forEach(function (h) {
+      const li = document.createElement("li");
+      const head = document.createElement("strong");
+      head.textContent = ACT_NAMES[h.turn - 1] + "「" + h.eventTitle + "」";
+      const tag = document.createElement("span");
+      tag.className = "type type--" + h.choiceType;
+      tag.textContent = L.CHOICE_TYPES[h.choiceType].label;
+      const text = document.createElement("span");
+      text.className = "log__text";
+      text.textContent = h.choiceText;
+      li.append(head, tag, text);
+      list.appendChild(li);
+    });
+
+    document.body.classList.remove("is-danger");
+    showScreen("result");
+    $("ending-name").focus({ preventScroll: true });
+  }
+
+  // ---------- 開始・記録 ----------
+
+  function start() {
+    state = L.startGame();
+    showScreen("play");
+    renderEvent();
+    $("event-title").focus({ preventScroll: true });
+  }
+
+  function toTitle() {
+    state = L.createInitialState();
+    document.body.classList.remove("is-danger");
+    showScreen("title");
+    $("title-heading").focus({ preventScroll: true });
+  }
+
+  function openRecords() {
+    const r = loadRecords();
+    $("rec-plays").textContent = r.playCount + "回";
+    $("rec-best").textContent = formatYen(r.bestRevenue) + "円";
+    $("rec-title").textContent = r.lastTitle || "—";
+    $("rec-count").textContent = "（" + r.endings.length + " / " + D.endings.length + "）";
+    const list = $("rec-endings");
+    list.textContent = "";
+    D.endings.forEach(function (e, i) {
+      const li = document.createElement("li");
+      const seen = r.endings.indexOf(e.id) !== -1;
+      li.className = "zukan__item" + (seen ? " zukan__item--seen" : "");
+      const num = document.createElement("span");
+      num.className = "zukan__num";
+      num.textContent = "其の" + "一二三四五六七八九十"[i];
+      const name = document.createElement("strong");
+      name.textContent = seen ? e.name : "？？？";
+      const title = document.createElement("small");
+      title.textContent = seen ? "称号：" + e.title : "まだ見ぬ結末";
+      li.append(num, name, title);
+      list.appendChild(li);
+    });
+    $("rec-warning").hidden = storageOk;
+    openDialog($("dlg-records"));
+  }
+
+  function openDialog(dlg) {
+    if (typeof dlg.showModal === "function") dlg.showModal();
+    else dlg.setAttribute("open", "");
+  }
+
+  // ---------- 入力 ----------
+
+  function onKey(e) {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (document.querySelector("dialog[open]")) return;
+    if (state.status !== "playing") return;
+    if (state.phase === "choosing" && /^[1-3]$/.test(e.key)) {
+      const btn = $("choices").querySelectorAll(".choice")[Number(e.key) - 1];
+      if (btn) {
+        e.preventDefault();
+        btn.click();
+      }
+    }
+  }
+
+  function init() {
+    const prefs = loadPrefs();
+    const toggle = $("opt-reduce-motion");
+    toggle.checked = prefs.reduceMotion;
+    setReduceMotion(prefs.reduceMotion);
+    toggle.addEventListener("change", function () {
+      setReduceMotion(toggle.checked);
+      writeJson(PREFS_KEY, { reduceMotion: toggle.checked });
+    });
+
+    $("btn-start").addEventListener("click", start);
+    $("btn-howto").addEventListener("click", function () { openDialog($("dlg-howto")); });
+    $("btn-records").addEventListener("click", openRecords);
+    $("btn-next").addEventListener("click", next);
+    $("btn-retry").addEventListener("click", start);
+    $("btn-to-title").addEventListener("click", toTitle);
+    document.addEventListener("keydown", onKey);
+
+    showScreen("title");
+  }
+
+  init();
+})();
