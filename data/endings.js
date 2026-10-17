@@ -9,14 +9,6 @@
 
   D.endings = [
     {
-      id: "rescue",
-      name: "大騒動の末の人情",
-      condition: { trouble: { min: 55 }, humanity: { min: 45 } },
-      title: "憎めない騒動屋",
-      text:
-        "通りは上を下への大騒ぎ。ところが片付けには、町じゅうの人が手を貸してくれた。「まったく、あんたって人は」——花村ときのため息は、どこか笑っていた。"
-    },
-    {
       id: "chaos",
       name: "商店街大騒動",
       condition: { trouble: { min: 85 } },

@@ -53,7 +53,7 @@ test("データ定義：イベント10種・各3択・既知のタイプと人�
 });
 
 test("データ定義：エンディングは最後が無条件", () => {
-  assert.ok(D.endings.length >= 5);
+  assert.deepEqual(D.endings.map((e) => e.id), ["chaos", "humanity", "prosperity", "laughter", "wander"]);
   assert.equal(D.endings[D.endings.length - 1].condition, null);
 });
 
@@ -167,11 +167,10 @@ test("大風呂敷の連続で「調子に乗りすぎ」になる", () => {
 test("エンディング判定の優先順位", () => {
   const base = L.createInitialState();
   const judge = (o) => L.judgeEnding(Object.assign({}, base, o)).id;
-  assert.equal(judge({ trouble: 90, humanity: 60 }), "rescue");
-  assert.equal(judge({ trouble: 55, humanity: 45 }), "rescue");
-  assert.equal(judge({ trouble: 85, humanity: 44 }), "chaos");
-  assert.equal(judge({ trouble: 84, humanity: 44, laughter: 70 }), "laughter");
-  assert.equal(judge({ trouble: 54, humanity: 75, revenue: 9000, laughter: 90 }), "humanity");
+  assert.equal(judge({ trouble: 85, humanity: 100, revenue: 9000, laughter: 100 }), "chaos");
+  assert.equal(judge({ trouble: 84, humanity: 75, revenue: 9000, laughter: 90 }), "humanity");
+  assert.equal(judge({ humanity: 74, revenue: 8000, laughter: 60 }), "prosperity");
+  assert.equal(judge({ trouble: 84, humanity: 74, laughter: 70 }), "laughter");
   assert.equal(judge({ revenue: 8000, laughter: 60 }), "prosperity");
   assert.equal(judge({ revenue: 7990, laughter: 70 }), "laughter");
   assert.equal(judge({ revenue: 8000, laughter: 59 }), "wander");
