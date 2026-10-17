@@ -98,7 +98,15 @@
       Data.events
     ];
     const pool = pools.find(function (p) { return p.length > 0; });
-    return pool[Math.min(pool.length - 1, Math.floor(rng() * pool.length))];
+    // weight が大きいイベントほど選ばれやすい（省略時は1）
+    const weights = pool.map(function (e) { return e.weight || 1; });
+    const total = weights.reduce(function (a, b) { return a + b; }, 0);
+    let r = rng() * total;
+    for (let i = 0; i < pool.length; i++) {
+      r -= weights[i];
+      if (r < 0) return pool[i];
+    }
+    return pool[pool.length - 1];
   }
 
   function beginTurn(state, rng) {

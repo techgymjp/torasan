@@ -82,6 +82,27 @@ test("5幕で終わり、3幕目は中規模・5幕目は最終イベント、�
   }
 });
 
+test("10種類すべてのイベントが実際のプレイで登場する", () => {
+  const seen = new Set();
+  for (let seed = 0; seed < 500; seed++) {
+    const rng = seeded(seed);
+    const { final } = playThrough(rng, (e) => e.choices[Math.floor(rng() * 3)].id);
+    final.usedEvents.forEach((id) => seen.add(id));
+  }
+  for (const e of D.events) assert.ok(seen.has(e.id), `未登場: ${e.id}`);
+});
+
+test("「おかみさんの叱責」は騒動15未満では出ない", () => {
+  for (let seed = 0; seed < 500; seed++) {
+    const rng = seeded(seed);
+    const { final } = playThrough(rng, (e) => (e.choices.find((c) => c.type !== "bluff") || e.choices[0]).id);
+    const idx = final.history.findIndex((h) => h.eventId === "E07");
+    if (idx === -1) continue;
+    const troubleBefore = final.history.slice(0, idx).reduce((t, h) => t + h.deltas.trouble, 0);
+    assert.ok(troubleBefore >= 15, `騒動${troubleBefore}で発生`);
+  }
+});
+
 test("パラメーターは0〜100、売上は負にならない", () => {
   for (let seed = 0; seed < 300; seed++) {
     const rng = seeded(seed);

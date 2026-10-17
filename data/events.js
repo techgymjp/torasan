@@ -3,6 +3,7 @@
  *
  * tier      : normal（通常） / mid（3幕目に優先） / final（最終幕に優先）
  * condition : 発生条件。{ パラメーター名: { min, max } } の形式（省略時は常に発生可）
+ * weight    : 出やすさ（省略時は1。大きいほど選ばれやすい）
  * choices   : 3つの口上。type は bluff / wit / honest / flatter / help
  * effects   : パラメーター変化の基本値（客との相性で補正される）
  *
@@ -205,6 +206,7 @@
       tier: "mid",
       character: "toki",
       condition: { trouble: { min: 15 } },
+      weight: 2, // 騒動を起こしたら叱られやすい
       product: null,
       dialogue: "まことさん！ さっきから何の騒ぎだい。商店街は、あんたの舞台じゃないんだよ！",
       choices: [
@@ -233,7 +235,7 @@
     },
     {
       id: "E08",
-      title: "困った旅の人",
+      title: "困った旅行者",
       tier: "normal",
       character: "sayori",
       product: { icon: "🧧", name: "道中安全のお守り袋", blurb: "旅の無事を祈る、手縫いの小袋" },
@@ -268,7 +270,7 @@
       tier: "final",
       character: "crowd",
       product: { icon: "🪭", name: "和紙のうちわ", blurb: "夏祭りにぴったりの手刷り柄" },
-      dialogue: "ザーッと夕立。「わっ、降ってきた！ 傘なんか持ってないよ！」",
+      dialogue: "ザーッと夕立。品物のうちわが濡れていく。見物客も「わっ、降ってきた！ 傘なんか持ってないよ！」",
       choices: [
         {
           id: "A",
@@ -279,10 +281,10 @@
         },
         {
           id: "B",
-          type: "bluff",
-          text: "「天の恵みだ！ 雨の日限定、濡れても乾くうちわ、今だけお値段二倍！」",
-          effects: { revenue: 2200, laughter: 14, humanity: -8, trouble: 18 },
-          result: "強気の値段に客は苦笑い。あとで「足元を見た」と噂になった。"
+          type: "honest",
+          text: "「すまねえ、商売道具が濡れたら明日がねえ。先に品物をしまわせてくれ！」",
+          effects: { revenue: 900, laughter: 0, humanity: -2, trouble: 0 },
+          result: "品物は無事。雨上がりに残りも売れたが、濡れて走っていく人たちの背中が少し胸に刺さった。"
         },
         {
           id: "C",
