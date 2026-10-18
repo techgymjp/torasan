@@ -707,6 +707,53 @@ body {
   padding: 0 6px;
 }
 
+.share {
+  text-align: center;
+  margin: 0 0 18px;
+  padding: 12px 14px 8px;
+  background: #fffaf0;
+  border: 3px solid var(--ink);
+  border-radius: var(--radius);
+}
+.share__heading {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.1rem;
+}
+.share__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.share__btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 112px;
+  min-height: 44px;
+  padding: 6px 14px;
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 3px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer;
+  transition: transform .08s, box-shadow .08s;
+}
+.share__btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.share__btn--native { background: var(--shu); }
+.share__btn--x { background: #111; }
+.share__btn--facebook { background: #1877f2; }
+.share__btn--line { background: #06a74a; }
+.share__btn--copy { color: var(--ink); background: var(--paper-deep); }
+.share__status { min-height: 1.7em; margin: 6px 0 0; font-size: .88rem; font-weight: 700; }
+
 .log {
   background: #fffaf0;
   border: 2px solid var(--ink);
@@ -788,6 +835,7 @@ body {
   .zukan { grid-template-columns: 1fr; }
   .kamishibai { margin: 4px; padding: 20px 14px; }
   .menu--row .btn { flex-basis: 100%; }
+  .share__btn { flex: 1 1 40%; min-width: 0; padding: 6px 8px; }
 }
 
 /* =========================================================

@@ -14,6 +14,8 @@
   const RECORDS_KEY = "tankabai.records.v1";
   const PREFS_KEY = "tankabai.prefs.v1";
   const FX_DURATION = 1200;
+  const SHARE_URL = "https://techgym.jp/column/claude-code-game-tankabai/";
+  const SHARE_HASHTAG = "啖呵売昭和人情商店街";
   const ACT_NAMES = ["第一幕", "第二幕", "第三幕", "第四幕", "第五幕"];
 
   const $ = function (id) { return document.getElementById(id); };
@@ -288,6 +290,8 @@
     $("res-humanity").textContent = state.humanity;
     $("res-trouble").textContent = state.trouble;
 
+    setupShare(ending);
+
     const list = $("history");
     list.textContent = "";
     state.history.forEach(function (h) {
@@ -310,6 +314,57 @@
     Sound.sfx.curtain(ending.id === "chaos");
     showScreen("result");
     $("ending-name").focus({ preventScroll: true });
+  }
+
+  // ---------- シェア ----------
+
+  let shareData = null;
+
+  function shareText(ending) {
+    return "『啖呵売！昭和人情商店街』で結末「" + ending.name + "」にたどり着いた！" +
+      "称号は「" + ending.title + "」、売上" + formatYen(state.revenue) + "円。";
+  }
+
+  function setupShare(ending) {
+    const text = shareText(ending);
+    const enc = encodeURIComponent;
+    $("share-x").href = "https://twitter.com/intent/tweet?text=" + enc(text) +
+      "&url=" + enc(SHARE_URL) + "&hashtags=" + enc(SHARE_HASHTAG);
+    $("share-facebook").href = "https://www.facebook.com/sharer/sharer.php?u=" + enc(SHARE_URL);
+    $("share-line").href = "https://social-plugins.line.me/lineit/share?url=" + enc(SHARE_URL) +
+      "&text=" + enc(text);
+    $("share-native").hidden = typeof navigator.share !== "function";
+    $("share-status").textContent = "";
+    shareData = { title: "啖呵売！昭和人情商店街", text: text, url: SHARE_URL };
+  }
+
+  function shareNative() {
+    if (!shareData || typeof navigator.share !== "function") return;
+    navigator.share(shareData).catch(function () { /* キャンセル時は何もしない */ });
+  }
+
+  function copyShareUrl() {
+    const done = function (ok) {
+      $("share-status").textContent = ok ? "URLをコピーしました！" : "コピーできませんでした。URL：" + SHARE_URL;
+    };
+    const fallback = function () {
+      const area = document.createElement("textarea");
+      area.value = SHARE_URL;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(area);
+      done(ok);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(SHARE_URL).then(function () { done(true); }, fallback);
+    } else {
+      fallback();
+    }
   }
 
   // ---------- 開始・記録 ----------
@@ -441,6 +496,8 @@
     $("btn-next").addEventListener("click", next);
     $("btn-retry").addEventListener("click", start);
     $("btn-to-title").addEventListener("click", toTitle);
+    $("share-native").addEventListener("click", shareNative);
+    $("share-copy").addEventListener("click", copyShareUrl);
     document.addEventListener("keydown", onKey);
 
     showScreen("title");
