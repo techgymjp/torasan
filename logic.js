@@ -132,12 +132,12 @@
   }
 
   function pickStamp(type, affinity, overheated, deltas) {
-    if (overheated) return { text: "調子に乗りすぎ！", kind: "bad" };
-    if (affinity === "dislike") return { text: "大失敗！", kind: "bad" };
-    if (deltas.laughter >= CROWD_LAUGHTER) return { text: "大ウケ！", kind: "good" };
-    if (deltas.trouble >= 15) return { text: "大騒ぎ！", kind: "bad" };
-    if (deltas.humanity >= 12) return { text: "人情！", kind: "warm" };
-    if (deltas.revenue > 0) return { text: "毎度あり！", kind: "good" };
+    if (overheated) return { id: "overheat", text: "調子に乗りすぎ！", kind: "bad" };
+    if (affinity === "dislike") return { id: "flop", text: "大失敗！", kind: "bad" };
+    if (deltas.laughter >= CROWD_LAUGHTER) return { id: "hit", text: "大ウケ！", kind: "good" };
+    if (deltas.trouble >= 15) return { id: "uproar", text: "大騒ぎ！", kind: "bad" };
+    if (deltas.humanity >= 12) return { id: "ninjo", text: "人情！", kind: "warm" };
+    if (deltas.revenue > 0) return { id: "sale", text: "毎度あり！", kind: "good" };
     return null;
   }
 

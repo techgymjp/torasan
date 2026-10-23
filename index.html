@@ -19,43 +19,47 @@
     <section class="screen screen--title" id="screen-title" aria-labelledby="title-heading">
       <div class="poster">
         <div class="awning" aria-hidden="true"></div>
-        <p class="poster__kicker">昭和人情喜劇　日和町商店街の巻</p>
+        <p class="poster__kicker" data-i18n="title.kicker">昭和人情喜劇　日和町商店街の巻</p>
         <h1 class="poster__title" id="title-heading" tabindex="-1">
-          <span class="poster__title-main">啖呵売！</span>
-          <span class="poster__title-sub">昭和人情商店街</span>
+          <span class="poster__title-main" data-i18n="title.main">啖呵売！</span>
+          <span class="poster__title-sub" data-i18n="title.sub">昭和人情商店街</span>
         </h1>
-        <p class="poster__copy">売って笑わせ、失敗して、最後は人情。</p>
+        <p class="poster__copy" data-i18n="title.copy">売って笑わせ、失敗して、最後は人情。</p>
         <div class="poster__street" aria-hidden="true">
           <span class="lantern"></span><span class="lantern"></span><span class="lantern"></span>
-          <span class="shopfront">飴</span><span class="shopfront">団子</span><span class="shopfront">金物</span><span class="shopfront">八百屋</span>
+          <span class="shopfront" data-i18n="title.shop1">飴</span><span class="shopfront" data-i18n="title.shop2">団子</span><span class="shopfront" data-i18n="title.shop3">金物</span><span class="shopfront" data-i18n="title.shop4">八百屋</span>
         </div>
-        <nav class="menu" aria-label="タイトルメニュー">
-          <button type="button" class="btn btn--primary btn--big" id="btn-start">商売を始める</button>
-          <button type="button" class="btn" id="btn-howto">遊び方</button>
-          <button type="button" class="btn" id="btn-records">記録を見る</button>
+        <nav class="menu" aria-label="タイトルメニュー" data-i18n-attr="aria-label:title.menu">
+          <button type="button" class="btn btn--primary btn--big" id="btn-start" data-i18n="title.start">商売を始める</button>
+          <button type="button" class="btn" id="btn-howto" data-i18n="title.howto">遊び方</button>
+          <button type="button" class="btn" id="btn-records" data-i18n="title.records">記録を見る</button>
         </nav>
         <div class="options">
           <span class="options__sound" id="sound-options">
             <label class="toggle">
               <input type="checkbox" id="opt-music" checked>
-              <span>音楽</span>
+              <span data-i18n="opt.music">音楽</span>
             </label>
             <label class="toggle">
               <input type="checkbox" id="opt-sfx" checked>
-              <span>効果音</span>
+              <span data-i18n="opt.sfx">効果音</span>
             </label>
           </span>
           <label class="toggle">
             <input type="checkbox" id="opt-reduce-motion">
-            <span>演出を控えめにする</span>
+            <span data-i18n="opt.motion">演出を控えめにする</span>
           </label>
         </div>
+        <p class="lang-sel" role="group" aria-label="言語 / Language">
+          <button type="button" class="lang-btn" data-lang="ja" lang="ja">日本語</button>
+          <button type="button" class="lang-btn" data-lang="en" lang="en">English</button>
+        </p>
         <p class="legal">
           <span id="build-info"></span>
-          <a href="https://techgym.jp/privacy-policy/" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>
-          <span id="ad-privacy" hidden>｜<a href="#" id="ad-privacy-link">広告の設定</a></span>
+          <a href="https://techgym.jp/privacy-policy/" target="_blank" rel="noopener noreferrer" data-i18n="legal.privacy" data-i18n-attr="href:url.privacy">プライバシーポリシー</a>
+          <span id="ad-privacy" hidden>｜<a href="#" id="ad-privacy-link" data-i18n="legal.adSettings">広告の設定</a></span>
         </p>
-        <p class="poster__note">※本作は昭和の露店と人情喜劇から着想を得たオリジナル作品です。登場人物・台詞はすべて創作です。</p>
+        <p class="poster__note" data-i18n="title.note">※本作は昭和の露店と人情喜劇から着想を得たオリジナル作品です。登場人物・台詞はすべて創作です。</p>
       </div>
     </section>
 
@@ -63,24 +67,24 @@
     <section class="screen screen--play" id="screen-play" aria-labelledby="event-title" hidden>
       <header class="hud">
         <div class="hud__row">
-          <p class="hud__turn"><span class="hud__act" id="turn-label">第一幕</span><span class="hud__of"> ／ 全五幕</span></p>
-          <p class="hud__money">売上 <strong id="stat-revenue">0</strong>円<span class="hud__sep">・</span>客 <strong id="stat-customers">0</strong>人
+          <p class="hud__turn"><span class="hud__act" id="turn-label">第一幕</span><span class="hud__of" data-i18n="hud.of"> ／ 全五幕</span></p>
+          <p class="hud__money"><span data-i18n="stat.revenue">売上</span> <strong id="stat-revenue">0円</strong><span class="hud__sep" data-i18n="hud.sep">・</span><span data-i18n="stat.customers">客</span> <strong id="stat-customers">0人</strong>
             <button type="button" class="mute" id="btn-mute" aria-pressed="false" aria-label="音を消す" title="音を消す">🔊</button></p>
         </div>
-        <ul class="gauges" aria-label="パラメーター">
+        <ul class="gauges" aria-label="パラメーター" data-i18n-attr="aria-label:hud.params">
           <li class="gauge gauge--laughter">
-            <span class="gauge__label">😄 笑い</span>
-            <span class="gauge__bar" role="meter" aria-label="笑い" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10" id="meter-laughter"><span class="gauge__fill" id="fill-laughter"></span></span>
+            <span class="gauge__label">😄 <span data-i18n="stat.laughter">笑い</span></span>
+            <span class="gauge__bar" role="meter" aria-label="笑い" data-i18n-attr="aria-label:stat.laughter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10" id="meter-laughter"><span class="gauge__fill" id="fill-laughter"></span></span>
             <span class="gauge__num" id="stat-laughter">10</span>
           </li>
           <li class="gauge gauge--humanity">
-            <span class="gauge__label">🤝 人情</span>
-            <span class="gauge__bar" role="meter" aria-label="人情" aria-valuemin="0" aria-valuemax="100" aria-valuenow="30" id="meter-humanity"><span class="gauge__fill" id="fill-humanity"></span></span>
+            <span class="gauge__label">🤝 <span data-i18n="stat.humanity">人情</span></span>
+            <span class="gauge__bar" role="meter" aria-label="人情" data-i18n-attr="aria-label:stat.humanity" aria-valuemin="0" aria-valuemax="100" aria-valuenow="30" id="meter-humanity"><span class="gauge__fill" id="fill-humanity"></span></span>
             <span class="gauge__num" id="stat-humanity">30</span>
           </li>
           <li class="gauge gauge--trouble">
-            <span class="gauge__label">💥 騒動</span>
-            <span class="gauge__bar" role="meter" aria-label="騒動" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="meter-trouble"><span class="gauge__fill" id="fill-trouble"></span></span>
+            <span class="gauge__label">💥 <span data-i18n="stat.trouble">騒動</span></span>
+            <span class="gauge__bar" role="meter" aria-label="騒動" data-i18n-attr="aria-label:stat.trouble" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="meter-trouble"><span class="gauge__fill" id="fill-trouble"></span></span>
             <span class="gauge__num" id="stat-trouble">0</span>
           </li>
         </ul>
@@ -114,14 +118,14 @@
         <p class="trait" id="char-trait"></p>
         <p class="bubble" id="dialogue"></p>
 
-        <div class="choices" id="choices" role="group" aria-label="口上を選ぶ（数字キー1〜3でも選べます）"></div>
+        <div class="choices" id="choices" role="group" aria-label="口上を選ぶ（数字キー1〜3でも選べます）" data-i18n-attr="aria-label:play.choices"></div>
 
         <div class="reaction" id="reaction" hidden>
           <p class="reaction__stamp" id="reaction-stamp"></p>
           <p class="reaction__text" id="reaction-text"></p>
           <p class="reaction__voice" id="reaction-voice"></p>
           <p class="reaction__note" id="reaction-note"></p>
-          <ul class="deltas" id="reaction-deltas" aria-label="今回の変化"></ul>
+          <ul class="deltas" id="reaction-deltas" aria-label="今回の変化" data-i18n-attr="aria-label:play.deltas"></ul>
           <button type="button" class="btn btn--primary" id="btn-next">次の幕へ ▶</button>
         </div>
         <p class="visually-hidden" id="live" aria-live="polite"></p>
@@ -131,32 +135,32 @@
     <!-- 04 結果画面 -->
     <section class="screen screen--result" id="screen-result" aria-labelledby="ending-name" hidden>
       <div class="kamishibai">
-        <p class="kamishibai__kicker">本日の商い、これにて幕</p>
-        <p class="badge" id="badge-new" hidden>新しい結末を発見！</p>
+        <p class="kamishibai__kicker" data-i18n="result.kicker">本日の商い、これにて幕</p>
+        <p class="badge" id="badge-new" hidden data-i18n="result.new">新しい結末を発見！</p>
         <h2 class="kamishibai__title" id="ending-name" tabindex="-1"></h2>
         <p class="kamishibai__text" id="ending-text"></p>
-        <p class="kamishibai__honor">称号：<strong id="ending-title"></strong></p>
+        <p class="kamishibai__honor"><span data-i18n="result.honor">称号：</span><strong id="ending-title"></strong></p>
       </div>
       <dl class="scores">
-        <div><dt>売上</dt><dd><span id="res-revenue">0</span>円<span class="best" id="badge-best" hidden>自己ベスト！</span></dd></div>
-        <div><dt>客数</dt><dd><span id="res-customers">0</span>人</dd></div>
-        <div><dt>笑い</dt><dd id="res-laughter">0</dd></div>
-        <div><dt>人情</dt><dd id="res-humanity">0</dd></div>
-        <div><dt>騒動</dt><dd id="res-trouble">0</dd></div>
+        <div><dt data-i18n="stat.revenue">売上</dt><dd><span id="res-revenue">0円</span><span class="best" id="badge-best" hidden data-i18n="result.best">自己ベスト！</span></dd></div>
+        <div><dt data-i18n="stat.customersLong">客数</dt><dd id="res-customers">0人</dd></div>
+        <div><dt data-i18n="stat.laughter">笑い</dt><dd id="res-laughter">0</dd></div>
+        <div><dt data-i18n="stat.humanity">人情</dt><dd id="res-humanity">0</dd></div>
+        <div><dt data-i18n="stat.trouble">騒動</dt><dd id="res-trouble">0</dd></div>
       </dl>
       <section class="share" aria-labelledby="share-heading">
-        <h3 class="share__heading" id="share-heading">結果をシェアする</h3>
+        <h3 class="share__heading" id="share-heading" data-i18n="share.heading">結果をシェアする</h3>
         <div class="share__buttons">
-          <button type="button" class="share__btn share__btn--native" id="share-native" hidden>📤 シェア</button>
-          <a class="share__btn share__btn--x" id="share-x" href="#" target="_blank" rel="noopener noreferrer">𝕏 ポスト</a>
+          <button type="button" class="share__btn share__btn--native" id="share-native" hidden data-i18n="share.native">📤 シェア</button>
+          <a class="share__btn share__btn--x" id="share-x" href="#" target="_blank" rel="noopener noreferrer" data-i18n="share.x">𝕏 ポスト</a>
           <a class="share__btn share__btn--facebook" id="share-facebook" href="#" target="_blank" rel="noopener noreferrer">Facebook</a>
           <a class="share__btn share__btn--line" id="share-line" href="#" target="_blank" rel="noopener noreferrer">LINE</a>
-          <button type="button" class="share__btn share__btn--copy" id="share-copy">🔗 URLをコピー</button>
+          <button type="button" class="share__btn share__btn--copy" id="share-copy" data-i18n="share.copy">🔗 URLをコピー</button>
         </div>
         <p class="share__status" id="share-status" role="status"></p>
       </section>
       <details class="log">
-        <summary>本日の口上をふりかえる</summary>
+        <summary data-i18n="result.log">本日の口上をふりかえる</summary>
         <ol class="log__list" id="history"></ol>
       </details>
       <div class="redo">
@@ -164,47 +168,49 @@
         <p class="redo__note" id="redo-note" role="status"></p>
       </div>
       <div class="menu menu--row">
-        <button type="button" class="btn btn--primary" id="btn-retry">もう一度商売する</button>
-        <button type="button" class="btn" id="btn-to-title">タイトルへ</button>
+        <button type="button" class="btn btn--primary" id="btn-retry" data-i18n="result.retry">もう一度商売する</button>
+        <button type="button" class="btn" id="btn-to-title" data-i18n="result.toTitle">タイトルへ</button>
       </div>
     </section>
   </main>
 
   <dialog class="sheet" id="dlg-howto" aria-labelledby="howto-heading">
-    <h2 id="howto-heading">遊び方</h2>
+    <h2 id="howto-heading" data-i18n="howto.heading">遊び方</h2>
     <ol class="howto">
-      <li>あなたは旅商人<strong>風間まこと</strong>。日和町商店街の露店で、<strong>全五幕</strong>の商売に挑みます。</li>
-      <li>各幕に客や騒動が現れます。<strong>3つの口上</strong>から1つを選びましょう<span class="kbd-only">（数字キー1〜3でも選べます）</span>。</li>
-      <li>口上には型があります。<br>
-        <span class="type type--bluff">大風呂敷</span>笑いと売上が大きいが、騒動も増える。<br>
-        <span class="type type--wit">機転</span>売上と笑いをバランスよく。<br>
-        <span class="type type--honest">正直</span>人情が上がる。売上は控えめ。<br>
-        <span class="type type--flatter">お世辞</span>機嫌は取れるが、見抜かれると逆効果。<br>
-        <span class="type type--help">お助け</span>人情が大きく上がるが、売上を失うことも。
+      <li data-i18n-html="howto.1">あなたは旅商人<strong>風間まこと</strong>。日和町商店街の露店で、<strong>全五幕</strong>の商売に挑みます。</li>
+      <li data-i18n-html="howto.2">各幕に客や騒動が現れます。<strong>3つの口上</strong>から1つを選びましょう<span class="kbd-only">（数字キー1〜3でも選べます）</span>。</li>
+      <li><span data-i18n="howto.3">口上には型があります。</span><br>
+        <span class="type type--bluff" data-i18n="type.bluff">大風呂敷</span><span data-i18n="howto.bluff">笑いと売上が大きいが、騒動も増える。</span><br>
+        <span class="type type--wit" data-i18n="type.wit">機転</span><span data-i18n="howto.wit">売上と笑いをバランスよく。</span><br>
+        <span class="type type--honest" data-i18n="type.honest">正直</span><span data-i18n="howto.honest">人情が上がる。売上は控えめ。</span><br>
+        <span class="type type--flatter" data-i18n="type.flatter">お世辞</span><span data-i18n="howto.flatter">機嫌は取れるが、見抜かれると逆効果。</span><br>
+        <span class="type type--help" data-i18n="type.help">お助け</span><span data-i18n="howto.help">人情が大きく上がるが、売上を失うことも。</span>
       </li>
-      <li>客にはそれぞれ<strong>好きな口上・嫌いな口上</strong>があります。人物紹介のヒントをよく読みましょう。</li>
-      <li><strong>大風呂敷を続けると「調子に乗りすぎ」</strong>で騒動が上乗せされます。</li>
-      <li>最後に、売上・笑い・人情・騒動のバランスで<strong>結末</strong>が決まります。全5種の結末を集めましょう。</li>
+      <li data-i18n-html="howto.4">客にはそれぞれ<strong>好きな口上・嫌いな口上</strong>があります。人物紹介のヒントをよく読みましょう。</li>
+      <li data-i18n-html="howto.5"><strong>大風呂敷を続けると「調子に乗りすぎ」</strong>で騒動が上乗せされます。</li>
+      <li data-i18n-html="howto.6">最後に、売上・笑い・人情・騒動のバランスで<strong>結末</strong>が決まります。全5種の結末を集めましょう。</li>
     </ol>
-    <form method="dialog"><button class="btn btn--primary" value="close">わかった！</button></form>
+    <form method="dialog"><button class="btn btn--primary" value="close" data-i18n="howto.ok">わかった！</button></form>
   </dialog>
 
   <dialog class="sheet" id="dlg-records" aria-labelledby="records-heading">
-    <h2 id="records-heading">商い帳（記録）</h2>
+    <h2 id="records-heading" data-i18n="records.heading">商い帳（記録）</h2>
     <dl class="records">
-      <div><dt>プレイ回数</dt><dd id="rec-plays">0回</dd></div>
-      <div><dt>最高売上</dt><dd id="rec-best">0円</dd></div>
-      <div><dt>最後の称号</dt><dd id="rec-title">—</dd></div>
+      <div><dt data-i18n="records.plays">プレイ回数</dt><dd id="rec-plays">0回</dd></div>
+      <div><dt data-i18n="records.best">最高売上</dt><dd id="rec-best">0円</dd></div>
+      <div><dt data-i18n="records.lastTitle">最後の称号</dt><dd id="rec-title">—</dd></div>
     </dl>
-    <h3>結末図鑑 <small id="rec-count"></small></h3>
+    <h3><span data-i18n="records.zukan">結末図鑑</span> <small id="rec-count"></small></h3>
     <ul class="zukan" id="rec-endings"></ul>
-    <p class="sheet__note" id="rec-warning" hidden>※このブラウザでは記録を保存できません。ゲームはそのまま遊べます。</p>
-    <form method="dialog"><button class="btn btn--primary" value="close">閉じる</button></form>
+    <p class="sheet__note" id="rec-warning" hidden data-i18n="records.warning">※このブラウザでは記録を保存できません。ゲームはそのまま遊べます。</p>
+    <form method="dialog"><button class="btn btn--primary" value="close" data-i18n="records.close">閉じる</button></form>
   </dialog>
 
   <script src="data/characters.js"></script>
   <script src="data/events.js"></script>
   <script src="data/endings.js"></script>
+  <script src="data/en.js"></script>
+  <script src="i18n.js"></script>
   <script src="logic.js"></script>
   <script src="portrait.js"></script>
   <script src="audio.js"></script>

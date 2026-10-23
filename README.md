@@ -23,6 +23,7 @@ logic.js            ゲームロジック（DOM非依存・Node でもテスト�
 portrait.js         人物の立ち絵（SVG、4種の表情差分）を生成
 audio.js            音楽・効果音（Web Audio API でその場で合成）
 game.js             画面制御・演出・localStorage への記録・Android 向けの処理
+i18n.js             表示言語（日本語 / 英語）の切り替えと画面の文言
 ads.js              Google AdMob 広告（Android アプリのみ）
 ads-config.js       広告のモード（test / production。ビルド時に生成し直す）
 build-info.js       タイトル画面に出すバージョン（ビルド時に生成し直す）
@@ -30,6 +31,7 @@ icon.svg            Web 版のアイコン（assets/ に Android 用のアイコ
 data/characters.js  登場人物（性格・相性・外見）
 data/events.js      イベント10種（発生条件・会話・選択肢・効果量）
 data/endings.js     エンディング5種（判定順・条件・称号）
+data/en.js          人物・イベント・結末の英訳（同じ ID で対応）
 tests/              ロジックの自動テスト
 android/            Android アプリのプロジェクト（Capacitor）
 scripts/            Android に同梱する Web ファイルを www/ にまとめるスクリプト
@@ -74,6 +76,16 @@ scripts/            Android に同梱する Web ファイルを www/ にまと�
 | 3 | 売上8,000円以上 かつ 笑い60以上 | 露店の大繁盛 |
 | 4 | 笑い70以上 | 笑いの名人 |
 | 5 | 上記以外 | また明日、旅の空 |
+
+## 英語対応
+
+日本語と英語で遊べます。端末の言語が日本語なら日本語、それ以外は英語で始まり、タイトル画面の「日本語 / English」で切り替えられます（選んだ言語は保存されます）。
+
+- 画面の文言は `i18n.js`、人物・イベント・結末の文章は `data/en.js` にあります。英訳がない項目は日本語のまま表示されます
+- 英語版のタイトルは「Tankabai! Showa Shopping Street」、通貨は「¥1,500」の形式です
+- シェア文も表示中の言語で作ります（英語のハッシュタグは「#Tankabai」）。プライバシーポリシーは英語版のページ（https://techgym.jp/privacy-policy-en/）を開きます
+- Android の端末が英語のときは、ホーム画面のアプリ名も「Tankabai!」になります
+- テストで、日英の文言のキーがそろっていること、すべての人物・イベント・選択肢・結末に英訳があること、英訳に日本語が残っていないことを確かめています
 
 ## 結果のシェア
 

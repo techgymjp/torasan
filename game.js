@@ -11,6 +11,8 @@
   const Portrait = window.TankaPortrait;
   const Sound = window.TankaAudio;
   const Ads = window.TankaAds;
+  const I18n = window.TankaI18n;
+  const t = I18n.t;
 
   // Android アプリ（Capacitor）で動いているか
   const NATIVE = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
@@ -22,8 +24,6 @@
   const PREFS_KEY = "tankabai.prefs.v1";
   const FX_DURATION = 1200;
   const SHARE_URL = "https://techgym.jp/column/claude-code-game-tankabai/";
-  const SHARE_HASHTAG = "啖呵売昭和人情商店街";
-  const ACT_NAMES = ["第一幕", "第二幕", "第三幕", "第四幕", "第五幕"];
 
   const $ = function (id) { return document.getElementById(id); };
 
@@ -64,6 +64,7 @@
       bestRevenue: Number.isFinite(r.bestRevenue) ? r.bestRevenue : 0,
       endings: Array.isArray(r.endings) ? r.endings.filter(function (id) { return known.indexOf(id) !== -1; }) : [],
       playCount: Number.isFinite(r.playCount) ? r.playCount : 0,
+      lastEnding: known.indexOf(r.lastEnding) !== -1 ? r.lastEnding : null,
       lastTitle: typeof r.lastTitle === "string" ? r.lastTitle : null
     };
   }
@@ -87,12 +88,53 @@
 
   // ---------- 共通 ----------
 
-  function formatYen(n) {
-    return n.toLocaleString("ja-JP");
+  function formatNumber(n) {
+    return n.toLocaleString(I18n.lang === "ja" ? "ja-JP" : "en-US");
   }
 
-  function signed(n) {
-    return (n > 0 ? "+" : n < 0 ? "−" : "±") + formatYen(Math.abs(n));
+  function money(n) {
+    return t("money", { n: formatNumber(n) });
+  }
+
+  function sign(n) {
+    return n > 0 ? "+" : n < 0 ? "−" : "±";
+  }
+
+  function actName(turn) {
+    return turn >= 1 ? t("act." + turn) : "";
+  }
+
+  // ---------- 表示言語に合わせた人物・イベント・結末の文章 ----------
+
+  function charText(id) {
+    const c = D.characters[id];
+    const en = I18n.data("characters", id);
+    return {
+      name: en.name || c.name,
+      role: en.role || c.role,
+      trait: en.trait || c.trait,
+      reactions: Object.assign({}, c.reactions, en.reactions)
+    };
+  }
+
+  function eventText(event) {
+    const en = I18n.data("events", event.id);
+    const choices = en.choices || {};
+    return {
+      title: en.title || event.title,
+      dialogue: en.dialogue || event.dialogue,
+      product: event.product ? Object.assign({}, event.product, en.product) : null,
+      choices: event.choices.map(function (c) { return Object.assign({}, c, choices[c.id]); })
+    };
+  }
+
+  function endingText(ending) {
+    const en = I18n.data("endings", ending.id);
+    return {
+      name: en.name || ending.name,
+      title: en.title || ending.title,
+      text: en.text || ending.text
+    };
   }
 
   function showScreen(name) {
@@ -113,9 +155,9 @@
   // ---------- HUD ----------
 
   function renderHud() {
-    $("turn-label").textContent = ACT_NAMES[state.turn - 1] || "";
-    $("stat-revenue").textContent = formatYen(state.revenue);
-    $("stat-customers").textContent = state.customers;
+    $("turn-label").textContent = actName(state.turn);
+    $("stat-revenue").textContent = money(state.revenue);
+    $("stat-customers").textContent = t("people", { n: state.customers });
     ["laughter", "humanity", "trouble"].forEach(function (k) {
       $("stat-" + k).textContent = state[k];
       $("fill-" + k).style.width = state[k] + "%";
@@ -130,20 +172,22 @@
   function renderEvent() {
     const event = L.getCurrentEvent(state);
     const character = D.characters[event.character];
+    const text = eventText(event);
+    const who = charText(event.character);
 
     $("event-id").textContent = event.id;
-    $("event-title").textContent = event.title;
-    $("char-name").textContent = character.name;
-    $("char-role").textContent = character.role;
-    $("char-trait").textContent = "人物メモ：" + character.trait;
-    $("dialogue").textContent = event.dialogue;
+    $("event-title").textContent = text.title;
+    $("char-name").textContent = who.name;
+    $("char-role").textContent = who.role;
+    $("char-trait").textContent = t("play.trait", { t: who.trait });
+    $("dialogue").textContent = text.dialogue;
 
     const product = $("product");
-    if (event.product) {
+    if (text.product) {
       product.hidden = false;
-      $("product-icon").textContent = event.product.icon;
-      $("product-name").textContent = event.product.name;
-      $("product-blurb").textContent = event.product.blurb;
+      $("product-icon").textContent = text.product.icon;
+      $("product-name").textContent = text.product.name;
+      $("product-blurb").textContent = text.product.blurb;
     } else {
       product.hidden = true;
     }
@@ -152,7 +196,7 @@
 
     const box = $("choices");
     box.textContent = "";
-    event.choices.forEach(function (choice, i) {
+    text.choices.forEach(function (choice, i) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "choice";
@@ -164,13 +208,13 @@
 
       const tag = document.createElement("span");
       tag.className = "type type--" + choice.type;
-      tag.textContent = L.CHOICE_TYPES[choice.type].label;
+      tag.textContent = t("type." + choice.type);
 
-      const text = document.createElement("span");
-      text.className = "choice__text";
-      text.textContent = choice.text;
+      const line = document.createElement("span");
+      line.className = "choice__text";
+      line.textContent = choice.text;
 
-      btn.append(key, tag, text);
+      btn.append(key, tag, line);
       btn.addEventListener("click", function () { choose(choice.id); });
       box.appendChild(btn);
     });
@@ -190,61 +234,65 @@
     showReaction(result.outcome);
   }
 
-  function deltaItem(label, value, unit, goodWhenUp) {
+  function deltaItem(label, value, shown, goodWhenUp) {
     const li = document.createElement("li");
     const cls = value === 0 ? "flat" : (value > 0) === goodWhenUp ? "up" : "down";
     li.className = "delta delta--" + cls;
-    li.textContent = label + " " + signed(value) + unit;
+    li.textContent = label + " " + sign(value) + shown;
     return li;
   }
 
   function showReaction(outcome) {
     const event = L.getEvent(outcome.eventId);
     const character = D.characters[event.character];
+    const who = charText(event.character);
+    const choice = eventText(event).choices.find(function (c) { return c.id === outcome.choiceId; });
+    const voice = outcome.affinity === "neutral" ? "" : who.reactions[outcome.affinity];
+    const stampText = outcome.stamp ? t("stamp." + outcome.stamp.id) : "";
     Portrait.render($("portrait"), character, outcome.expression);
 
     $("choices").hidden = true;
 
-    $("reaction-stamp").textContent = outcome.stamp ? outcome.stamp.text : "";
+    $("reaction-stamp").textContent = stampText;
     $("reaction-stamp").className = "reaction__stamp" + (outcome.stamp ? " reaction__stamp--" + outcome.stamp.kind : "");
-    $("reaction-text").textContent = outcome.resultText;
-    $("reaction-voice").textContent = outcome.reactionText ? character.name + "：" + outcome.reactionText : "";
+    $("reaction-text").textContent = choice.result;
+    $("reaction-voice").textContent = voice ? t("play.voice", { name: who.name, text: voice }) : "";
 
     const notes = [];
-    if (outcome.affinity === "like") notes.push("相性◎ — " + character.name + "の好む口上だった！");
-    if (outcome.affinity === "dislike") notes.push("相性× — " + character.name + "の嫌う口上だった……");
-    if (outcome.overheated) notes.push("大風呂敷の連発で調子に乗りすぎた！ 騒動が上乗せされた。");
-    $("reaction-note").textContent = notes.join("　");
+    if (outcome.affinity === "like") notes.push(t("play.like", { name: who.name }));
+    if (outcome.affinity === "dislike") notes.push(t("play.dislike", { name: who.name }));
+    if (outcome.overheated) notes.push(t("play.overheat"));
+    $("reaction-note").textContent = notes.join(I18n.lang === "ja" ? "　" : " ");
 
     const d = outcome.deltas;
     const list = $("reaction-deltas");
     list.textContent = "";
     list.append(
-      deltaItem("売上", d.revenue, "円", true),
-      deltaItem("笑い", d.laughter, "", true),
-      deltaItem("人情", d.humanity, "", true),
-      deltaItem("騒動", d.trouble, "", false)
+      deltaItem(t("stat.revenue"), d.revenue, money(Math.abs(d.revenue)), true),
+      deltaItem(t("stat.laughter"), d.laughter, Math.abs(d.laughter), true),
+      deltaItem(t("stat.humanity"), d.humanity, Math.abs(d.humanity), true),
+      deltaItem(t("stat.trouble"), d.trouble, Math.abs(d.trouble), false)
     );
     if (d.customers > 0) {
       const li = document.createElement("li");
       li.className = "delta delta--up";
-      li.textContent = "客 +" + d.customers + "人";
+      li.textContent = t("play.customers", { n: d.customers });
       list.appendChild(li);
     }
 
-    $("btn-next").textContent = outcome.isLastTurn ? "本日の結果を見る ▶" : "次の幕へ ▶";
+    $("btn-next").textContent = t(outcome.isLastTurn ? "play.result" : "play.next");
     $("reaction").hidden = false;
     renderHud();
-    playFx(outcome.stamp);
+    playFx(stampText, outcome.stamp);
     if (outcome.stamp) Sound.sfx.stamp(outcome.stamp.kind);
     else Sound.sfx.select();
     if (d.revenue > 0) Sound.sfx.coin();
-    announce((outcome.stamp ? outcome.stamp.text + "。" : "") + outcome.resultText);
+    announce((stampText ? stampText + " " : "") + choice.result);
     $("btn-next").focus({ preventScroll: true });
     $("reaction").scrollIntoView({ block: "nearest", behavior: document.body.classList.contains("reduce-motion") ? "auto" : "smooth" });
   }
 
-  function playFx(stamp) {
+  function playFx(text, stamp) {
     const fx = $("fx");
     const stage = $("stage");
     clearTimeout(fxTimer);
@@ -252,7 +300,7 @@
     stage.classList.remove("shake");
     if (!stamp) return;
     void fx.offsetWidth;
-    $("fx-stamp").textContent = stamp.text;
+    $("fx-stamp").textContent = text;
     fx.classList.add("fx--on", "fx--" + stamp.kind);
     if (stamp.kind === "bad") stage.classList.add("shake");
     fxTimer = setTimeout(function () {
@@ -272,7 +320,7 @@
       if (state.turn === state.maxTurns) finalActState = state;
       renderEvent();
       $("event-title").focus({ preventScroll: true });
-      announce(ACT_NAMES[state.turn - 1] + "　" + L.getCurrentEvent(state).title);
+      announce(actName(state.turn) + " " + eventText(L.getCurrentEvent(state)).title);
     }
   }
 
@@ -288,21 +336,23 @@
       bestRevenue: Math.max(records.bestRevenue, state.revenue),
       endings: isNew ? records.endings.concat(ending.id) : records.endings,
       playCount: records.playCount + (redoing ? 0 : 1),
+      lastEnding: ending.id,
       lastTitle: ending.title
     });
 
-    $("ending-name").textContent = "「" + ending.name + "」";
-    $("ending-text").textContent = ending.text;
-    $("ending-title").textContent = ending.title;
+    const text = endingText(ending);
+    $("ending-name").textContent = t("result.ending", { name: text.name });
+    $("ending-text").textContent = text.text;
+    $("ending-title").textContent = text.title;
     $("badge-new").hidden = !isNew;
     $("badge-best").hidden = !(isBest && state.revenue > 0);
-    $("res-revenue").textContent = formatYen(state.revenue);
-    $("res-customers").textContent = state.customers;
+    $("res-revenue").textContent = money(state.revenue);
+    $("res-customers").textContent = t("people", { n: state.customers });
     $("res-laughter").textContent = state.laughter;
     $("res-humanity").textContent = state.humanity;
     $("res-trouble").textContent = state.trouble;
 
-    setupShare(ending);
+    setupShare(text);
     setupRedo();
     redoing = false;
 
@@ -311,14 +361,15 @@
     state.history.forEach(function (h) {
       const li = document.createElement("li");
       const head = document.createElement("strong");
-      head.textContent = ACT_NAMES[h.turn - 1] + "「" + h.eventTitle + "」";
+      const ev = eventText(L.getEvent(h.eventId));
+      head.textContent = t("result.logHead", { act: actName(h.turn), title: ev.title });
       const tag = document.createElement("span");
       tag.className = "type type--" + h.choiceType;
-      tag.textContent = L.CHOICE_TYPES[h.choiceType].label;
-      const text = document.createElement("span");
-      text.className = "log__text";
-      text.textContent = h.choiceText;
-      li.append(head, tag, text);
+      tag.textContent = t("type." + h.choiceType);
+      const line = document.createElement("span");
+      line.className = "log__text";
+      line.textContent = ev.choices.find(function (c) { return c.id === h.choiceId; }).text;
+      li.append(head, tag, line);
       list.appendChild(li);
     });
 
@@ -334,22 +385,17 @@
 
   let shareData = null;
 
-  function shareText(ending) {
-    return "『啖呵売！昭和人情商店街』で結末「" + ending.name + "」にたどり着いた！" +
-      "称号は「" + ending.title + "」、売上" + formatYen(state.revenue) + "円。";
-  }
-
   function setupShare(ending) {
-    const text = shareText(ending);
+    const text = t("share.text", { name: ending.name, title: ending.title, revenue: money(state.revenue) });
     const enc = encodeURIComponent;
     $("share-x").href = "https://twitter.com/intent/tweet?text=" + enc(text) +
-      "&url=" + enc(SHARE_URL) + "&hashtags=" + enc(SHARE_HASHTAG);
+      "&url=" + enc(SHARE_URL) + "&hashtags=" + enc(t("share.hashtag"));
     $("share-facebook").href = "https://www.facebook.com/sharer/sharer.php?u=" + enc(SHARE_URL);
     $("share-line").href = "https://social-plugins.line.me/lineit/share?url=" + enc(SHARE_URL) +
       "&text=" + enc(text);
     $("share-native").hidden = !plugin("Share") && typeof navigator.share !== "function";
     $("share-status").textContent = "";
-    shareData = { title: "啖呵売！昭和人情商店街", text: text, url: SHARE_URL };
+    shareData = { title: t("share.title"), text: text, url: SHARE_URL };
   }
 
   function shareNative() {
@@ -357,7 +403,7 @@
     // アプリでは Android の共有メニューを出す
     const nativeShare = plugin("Share");
     if (nativeShare) {
-      nativeShare.share(Object.assign({ dialogTitle: "結果をシェア" }, shareData)).catch(function () { /* キャンセル */ });
+      nativeShare.share(Object.assign({ dialogTitle: t("share.dialog") }, shareData)).catch(function () { /* キャンセル */ });
       return;
     }
     if (typeof navigator.share !== "function") return;
@@ -366,7 +412,7 @@
 
   function copyShareUrl() {
     const done = function (ok) {
-      $("share-status").textContent = ok ? "URLをコピーしました！" : "コピーできませんでした。URL：" + SHARE_URL;
+      $("share-status").textContent = ok ? t("share.copied") : t("share.copyFail", { url: SHARE_URL });
     };
     const fallback = function () {
       const area = document.createElement("textarea");
@@ -394,7 +440,7 @@
     const btn = $("btn-redo");
     btn.hidden = !(Ads.available && finalActState && !redoUsed);
     btn.disabled = false;
-    btn.textContent = "📺 広告を見て第五幕をやり直す";
+    btn.textContent = t("redo.button");
     $("redo-note").textContent = "";
   }
 
@@ -403,15 +449,13 @@
     const btn = $("btn-redo");
     if (btn.disabled || !finalActState || redoUsed) return;
     btn.disabled = true;
-    btn.textContent = "広告を読み込み中…";
+    btn.textContent = t("redo.loading");
     const result = await Ads.showRewarded();
     if (state.status !== "result") return;
     if (result !== "rewarded") {
       btn.disabled = false;
-      btn.textContent = "📺 広告を見て第五幕をやり直す";
-      $("redo-note").textContent = result === "unavailable"
-        ? "広告を読み込めませんでした。少し時間をおいて試してください。"
-        : "広告を最後まで見ると、やり直せます。";
+      btn.textContent = t("redo.button");
+      $("redo-note").textContent = t(result === "unavailable" ? "redo.unavailable" : "redo.skipped");
       return;
     }
     redoUsed = true;
@@ -463,10 +507,11 @@
 
   function openRecords() {
     const r = loadRecords();
-    $("rec-plays").textContent = r.playCount + "回";
-    $("rec-best").textContent = formatYen(r.bestRevenue) + "円";
-    $("rec-title").textContent = r.lastTitle || "—";
-    $("rec-count").textContent = "（" + r.endings.length + " / " + D.endings.length + "）";
+    const last = D.endings.find(function (e) { return e.id === r.lastEnding; });
+    $("rec-plays").textContent = t("times", { n: r.playCount });
+    $("rec-best").textContent = money(r.bestRevenue);
+    $("rec-title").textContent = last ? endingText(last).title : r.lastTitle || "—";
+    $("rec-count").textContent = t("records.count", { n: r.endings.length, total: D.endings.length });
     const list = $("rec-endings");
     list.textContent = "";
     D.endings.forEach(function (e, i) {
@@ -475,11 +520,12 @@
       li.className = "zukan__item" + (seen ? " zukan__item--seen" : "");
       const num = document.createElement("span");
       num.className = "zukan__num";
-      num.textContent = "其の" + "一二三四五六七八九十"[i];
+      num.textContent = I18n.ordinal(i);
+      const text = endingText(e);
       const name = document.createElement("strong");
-      name.textContent = seen ? e.name : "？？？";
+      name.textContent = seen ? text.name : t("records.unknown");
       const title = document.createElement("small");
-      title.textContent = seen ? "称号：" + e.title : "まだ見ぬ結末";
+      title.textContent = seen ? t("records.honor", { t: text.title }) : t("records.unseen");
       li.append(num, name, title);
       list.appendChild(li);
     });
@@ -512,8 +558,8 @@
     const btn = $("btn-mute");
     btn.setAttribute("aria-pressed", String(!on));
     btn.textContent = on ? "🔊" : "🔇";
-    btn.setAttribute("aria-label", on ? "音を消す" : "音を鳴らす");
-    btn.title = on ? "音を消す" : "音を鳴らす";
+    btn.setAttribute("aria-label", t(on ? "mute.off" : "mute.on"));
+    btn.title = t(on ? "mute.off" : "mute.on");
   }
 
   // Android アプリ向けの設定（Web 版では、ビルド番号とプライバシーポリシーの表示以外は何もしない）
@@ -541,7 +587,7 @@
         if (dlg) {
           dlg.close();
         } else if (state.status === "playing") {
-          if (window.confirm("商売をやめて、タイトルに戻りますか？")) toTitle();
+          if (window.confirm(t("play.quit"))) toTitle();
         } else {
           App.exitApp();
         }
@@ -550,6 +596,12 @@
   }
 
   function init() {
+    I18n.apply();
+    document.querySelectorAll("[data-lang]").forEach(function (b) {
+      b.addEventListener("click", function () { I18n.setLang(b.dataset.lang); });
+    });
+    I18n.onChange(syncMuteButton);
+
     const prefs = loadPrefs();
     const toggle = $("opt-reduce-motion");
     toggle.checked = prefs.reduceMotion;

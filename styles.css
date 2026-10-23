@@ -285,6 +285,25 @@ body {
 }
 .mute[aria-pressed="true"] { opacity: .7; }
 
+.lang-sel { display: flex; justify-content: center; gap: 8px; margin: 10px 0 0; }
+.lang-btn {
+  appearance: none;
+  font: inherit;
+  font-size: .88rem;
+  font-weight: 700;
+  min-height: 40px;
+  padding: 4px 16px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.lang-btn.is-on { color: #fff; background: var(--ai); }
+
+/* 英語のときは看板の文字を横倒しにする（縦書き用の upright だと読みにくいため） */
+:lang(en) .shopfront { text-orientation: mixed; font-size: .8rem; }
+
 .legal { margin: 10px 0 0; font-size: .82rem; color: var(--ink-soft); }
 .legal a { color: var(--ink-soft); padding: 6px 4px; }
 #build-info:not(:empty) { margin-right: 10px; }
@@ -501,7 +520,8 @@ body {
   box-shadow: 6px 6px 0 var(--ink);
   -webkit-text-stroke: 1.5px var(--ink);
   transform: rotate(-8deg);
-  white-space: nowrap;
+  max-width: 88%;
+  text-align: center;
 }
 .fx--good .fx__stamp { background: var(--kihada); }
 .fx--warm .fx__stamp { background: var(--matcha); }
