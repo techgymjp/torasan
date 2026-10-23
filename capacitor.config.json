@@ -1,0 +1,8 @@
+{
+  "appId": "jp.techgym.torasan",
+  "appName": "啖呵売！昭和人情商店街",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#3b2414"
+  }
+}

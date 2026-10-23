@@ -285,6 +285,10 @@ body {
 }
 .mute[aria-pressed="true"] { opacity: .7; }
 
+.legal { margin: 10px 0 0; font-size: .82rem; color: var(--ink-soft); }
+.legal a { color: var(--ink-soft); padding: 6px 4px; }
+#build-info:not(:empty) { margin-right: 10px; }
+
 .poster__note { font-size: .75rem; color: var(--ink-soft); margin: 8px 0 0; }
 
 /* =========================================================
@@ -753,6 +757,14 @@ body {
 .share__btn--line { background: #06a74a; }
 .share__btn--copy { color: var(--ink); background: var(--paper-deep); }
 .share__status { min-height: 1.7em; margin: 6px 0 0; font-size: .88rem; font-weight: 700; }
+
+.redo { text-align: center; margin: 0 0 14px; }
+.redo .btn { width: min(100%, 360px); }
+.redo__note { min-height: 1.4em; margin: 6px 0 0; font-size: .88rem; font-weight: 700; color: var(--shu); }
+.redo__note:empty { display: none; }
+
+/* アプリでは数字キーの案内を出さない */
+.is-app .kbd-only { display: none; }
 
 .log {
   background: #fffaf0;

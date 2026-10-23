@@ -51,6 +51,7 @@
   let playing = null; // { name, step, nextTime }
   let tempoScale = 1;
   let timer = null;
+  let held = false; // 広告の表示中など、外から止められている
 
   function midiToFreq(m) {
     return 440 * Math.pow(2, (m - 69) / 12);
@@ -81,10 +82,10 @@
         document.addEventListener("visibilitychange", function () {
           if (!ctx) return;
           if (document.hidden) ctx.suspend();
-          else ctx.resume();
+          else if (!held) ctx.resume();
         });
       }
-      if (ctx.state === "suspended") ctx.resume();
+      if (ctx.state === "suspended" && !held) ctx.resume();
       syncMusic();
       return true;
     } catch (e) {
@@ -372,8 +373,21 @@
     }
   };
 
+  // 広告の表示中は音を止める
+  function suspend() {
+    held = true;
+    if (ctx) ctx.suspend();
+  }
+
+  function resume() {
+    held = false;
+    if (ctx && !document.hidden) ctx.resume();
+  }
+
   root.TankaAudio = {
     supported: !!AudioCtor,
+    suspend: suspend,
+    resume: resume,
     unlock: unlock,
     setMusic: setMusic,
     setTension: setTension,

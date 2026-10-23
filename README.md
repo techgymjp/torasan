@@ -22,11 +22,17 @@ styles.css          昭和紙芝居風デザイン（色・フォントは :root
 logic.js            ゲームロジック（DOM非依存・Node でもテスト可能）
 portrait.js         人物の立ち絵（SVG、4種の表情差分）を生成
 audio.js            音楽・効果音（Web Audio API でその場で合成）
-game.js             画面制御・演出・localStorage への記録
+game.js             画面制御・演出・localStorage への記録・Android 向けの処理
+ads.js              Google AdMob 広告（Android アプリのみ）
+ads-config.js       広告のモード（test / production。ビルド時に生成し直す）
+build-info.js       タイトル画面に出すバージョン（ビルド時に生成し直す）
+icon.svg            Web 版のアイコン（assets/ に Android 用のアイコン・起動画面の元画像）
 data/characters.js  登場人物（性格・相性・外見）
 data/events.js      イベント10種（発生条件・会話・選択肢・効果量）
 data/endings.js     エンディング5種（判定順・条件・称号）
 tests/              ロジックの自動テスト
+android/            Android アプリのプロジェクト（Capacitor）
+scripts/            Android に同梱する Web ファイルを www/ にまとめるスクリプト
 ```
 
 シナリオを増やすときは `data/` 内のファイルにデータを追加するだけで、ゲーム本体の変更は不要です。データは文章と数値のみで、コードとして実行されることはありません。
@@ -102,6 +108,71 @@ tests/              ロジックの自動テスト
 - キーボード操作（Tab／Enter、数字キーで口上選択）、結果の読み上げ用ライブリージョン
 - OS の「視差効果を減らす」設定、またはタイトル画面の「演出を控えめにする」で集中線・揺れなどを抑制
 
+## Android 版（Google Play 配布用）
+
+[Capacitor](https://capacitorjs.com/) 8 でゲームのファイルをアプリ内に同梱しているため、ネットにつながっていなくても遊べます。
+
+- 縦画面固定・全画面表示（システムバーを隠す）、プレイ中は画面が暗くならない
+- Android の戻るボタン：ダイアログを閉じる／商売中は確認してタイトルへ／タイトル・結果画面ではアプリを終了
+- 別のアプリに切り替えると音が止まる
+- 「📤 シェア」は Android の共有メニューから LINE や X などを選べる
+- 数字キーの案内は出さない
+- タイトル画面にビルド番号・プライバシーポリシー・（EU など必要な地域だけ）「広告の設定」を表示
+
+アプリ ID（パッケージ名）は `jp.techgym.torasan` です（Google Play に一度公開すると変更できません）。
+
+### 広告（Google AdMob）
+
+Android アプリでのみ広告を表示します（Web 版には広告は出ません）。
+
+| 広告 | タイミング |
+| --- | --- |
+| インタースティシャル（全画面） | 結果画面で「もう一度商売する」を押したとき、2 回に 1 回 |
+| リワード | 結果画面の「📺 広告を見て第五幕をやり直す」。最後まで見ると第五幕の選択からやり直せる（1 プレイ 1 回、やり直しはプレイ回数に数えない） |
+
+起動時に Google の同意確認（UMP）を行い、確認でエラーになっても広告は出せるようにしています。広告は先読みし、失敗したら 20 秒後に再挑戦、表示時に未読み込みなら最大 8 秒待ちます。
+
+動作確認用の APK は Google 公式のテスト広告を表示します。Google Play 用の AAB だけが本番の広告になります（`ADMOB_MODE=production npm run build`）。
+
+**本番の AdMob ID はまだ入っていません。** AdMob でアプリと広告ユニットを作成したら、次の 2 か所を差し替えてください。未設定のまま Google Play 用にビルドしようとすると、ビルドが止まります。
+
+| 場所 | 値 |
+| --- | --- |
+| `android/app/src/main/res/values/strings.xml` の `admob_app_id` | アプリ ID（`ca-app-pub-…~…`）。いまは Google のテスト用アプリ ID |
+| `ads.js` の `UNITS.production` | インタースティシャルとリワードの広告ユニット ID（`ca-app-pub-…/…`） |
+
+### 動作確認用 APK
+
+既定ブランチへの push で GitHub Actions がビルドし、Release（`android-latest`）に載せます。Android 端末で次の URL を開くか QR コードを読み取るだけで最新版をダウンロードできます（デバッグ署名・テスト広告）。
+
+https://github.com/techgymjp/torasan/releases/latest/download/torasan.apk
+
+どのビルドが入っているかは、タイトル画面のビルド番号で確認できます。
+
+**手元の PC（Android Studio）**:
+
+```bash
+npm ci
+npm run android:sync   # Web ファイルを www/ にまとめて Android プロジェクトへコピー
+npm run android:open   # Android Studio で開く
+```
+
+### Google Play へ公開する手順
+
+1. AdMob でアプリ（Android・ストア未掲載）を追加し、インタースティシャルとリワードの広告ユニットを作成して、上の 2 か所に ID を入れる。「プライバシーとメッセージ」→「欧州の規制」のメッセージに、このアプリを対象として追加する
+2. リポジトリの Settings → Secrets and variables → Actions に、アップロード鍵の 4 つを登録する
+   （`ANDROID_KEYSTORE_BASE64` / `ANDROID_KEYSTORE_PASSWORD` / `ANDROID_KEY_ALIAS` / `ANDROID_KEY_PASSWORD`）
+3. Actions の「Android build」を実行すると、署名済みの `torasan-release-aab`（.aab）ができる
+4. [Google Play Console](https://play.google.com/console) でアプリを作成し、.aab をアップロードする
+   （ストア掲載情報・スクリーンショット・プライバシーポリシー https://techgym.jp/privacy-policy/ ・コンテンツのレーティング・広告を含む・広告 ID の申告・データセーフティ・ターゲットユーザー 13 歳以上などの入力が必要です）
+5. 公開後、AdMob でアプリを Google Play のストアに紐づける
+
+アップロード鍵とパスワードは、チャットやリポジトリで共有しないでください。本番の広告を自分でタップしないでください（動作確認は Release の APK で行う）。
+
+## Web 版の公開
+
+`vercel.json` で、Vercel が `npm run build` を実行して `www/` を公開するよう設定しています（Android アプリに同梱するのと同じファイルです）。
+
 ## テスト
 
 ```sh
@@ -109,6 +180,11 @@ npm test
 ```
 
 Node.js 18 以上の標準テストランナーで、データ定義、5幕進行、値の範囲、不正操作の無視、相性補正、エンディング判定、全6結末への到達可能性を検証します。
+
+## ライセンス
+
+All rights reserved. 著作権はテックジム株式会社に帰属します。無断での複製・改変・再配布、Web サイトやアプリとしての公開を禁止します。ただし、テックジムの受講生が学習目的で複製・改変することは許可します（商用利用は不可。詳しくは `LICENSE`）。
+Android アプリが使う Capacitor と AdMob プラグインは MIT License、見出しフォントの Dela Gothic One は SIL Open Font License です。
 
 ## 権利について
 

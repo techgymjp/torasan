@@ -10,6 +10,13 @@
   const L = window.TankaLogic;
   const Portrait = window.TankaPortrait;
   const Sound = window.TankaAudio;
+  const Ads = window.TankaAds;
+
+  // Android アプリ（Capacitor）で動いているか
+  const NATIVE = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  const plugin = function (name) {
+    return NATIVE && window.Capacitor.Plugins ? window.Capacitor.Plugins[name] || null : null;
+  };
 
   const RECORDS_KEY = "tankabai.records.v1";
   const PREFS_KEY = "tankabai.prefs.v1";
@@ -23,6 +30,10 @@
   let state = L.createInitialState();
   let fxTimer = null;
   let storageOk = true;
+  let finalActState = null; // 最終幕の開始時点（リワード広告でやり直すため）
+  let redoUsed = false;     // 1 プレイ 1 回まで
+  let redoing = false;      // やり直し中はプレイ回数を数えない
+  let retries = 0;          // 「もう一度」の回数（2 回に 1 回、全画面広告）
 
   // ---------- 保存（失敗してもゲームは続行） ----------
 
@@ -258,6 +269,7 @@
       finish();
     } else {
       Sound.sfx.next();
+      if (state.turn === state.maxTurns) finalActState = state;
       renderEvent();
       $("event-title").focus({ preventScroll: true });
       announce(ACT_NAMES[state.turn - 1] + "　" + L.getCurrentEvent(state).title);
@@ -275,7 +287,7 @@
     writeJson(RECORDS_KEY, {
       bestRevenue: Math.max(records.bestRevenue, state.revenue),
       endings: isNew ? records.endings.concat(ending.id) : records.endings,
-      playCount: records.playCount + 1,
+      playCount: records.playCount + (redoing ? 0 : 1),
       lastTitle: ending.title
     });
 
@@ -291,6 +303,8 @@
     $("res-trouble").textContent = state.trouble;
 
     setupShare(ending);
+    setupRedo();
+    redoing = false;
 
     const list = $("history");
     list.textContent = "";
@@ -333,13 +347,20 @@
     $("share-facebook").href = "https://www.facebook.com/sharer/sharer.php?u=" + enc(SHARE_URL);
     $("share-line").href = "https://social-plugins.line.me/lineit/share?url=" + enc(SHARE_URL) +
       "&text=" + enc(text);
-    $("share-native").hidden = typeof navigator.share !== "function";
+    $("share-native").hidden = !plugin("Share") && typeof navigator.share !== "function";
     $("share-status").textContent = "";
     shareData = { title: "啖呵売！昭和人情商店街", text: text, url: SHARE_URL };
   }
 
   function shareNative() {
-    if (!shareData || typeof navigator.share !== "function") return;
+    if (!shareData) return;
+    // アプリでは Android の共有メニューを出す
+    const nativeShare = plugin("Share");
+    if (nativeShare) {
+      nativeShare.share(Object.assign({ dialogTitle: "結果をシェア" }, shareData)).catch(function () { /* キャンセル */ });
+      return;
+    }
+    if (typeof navigator.share !== "function") return;
     navigator.share(shareData).catch(function () { /* キャンセル時は何もしない */ });
   }
 
@@ -367,6 +388,55 @@
     }
   }
 
+  // ---------- 広告（Android アプリのみ） ----------
+
+  function setupRedo() {
+    const btn = $("btn-redo");
+    btn.hidden = !(Ads.available && finalActState && !redoUsed);
+    btn.disabled = false;
+    btn.textContent = "📺 広告を見て第五幕をやり直す";
+    $("redo-note").textContent = "";
+  }
+
+  // リワード広告を最後まで見たら、最終幕の選択からやり直せる
+  async function redo() {
+    const btn = $("btn-redo");
+    if (btn.disabled || !finalActState || redoUsed) return;
+    btn.disabled = true;
+    btn.textContent = "広告を読み込み中…";
+    const result = await Ads.showRewarded();
+    if (state.status !== "result") return;
+    if (result !== "rewarded") {
+      btn.disabled = false;
+      btn.textContent = "📺 広告を見て第五幕をやり直す";
+      $("redo-note").textContent = result === "unavailable"
+        ? "広告を読み込めませんでした。少し時間をおいて試してください。"
+        : "広告を最後まで見ると、やり直せます。";
+      return;
+    }
+    redoUsed = true;
+    redoing = true;
+    state = finalActState;
+    Sound.setMusic("street");
+    showScreen("play");
+    renderEvent();
+    $("event-title").focus({ preventScroll: true });
+  }
+
+  let retryBusy = false;
+
+  // 2 回に 1 回、「もう一度」の前に全画面広告を出す
+  async function retry() {
+    if (retryBusy) return;
+    retries++;
+    if (Ads.available && retries % 2 === 0) {
+      retryBusy = true;
+      await Ads.showInterstitial();
+      retryBusy = false;
+    }
+    start();
+  }
+
   // ---------- 開始・記録 ----------
 
   function start() {
@@ -374,6 +444,9 @@
     Sound.setMusic("street");
     Sound.sfx.start();
     state = L.startGame();
+    finalActState = null;
+    redoUsed = false;
+    redoing = false;
     showScreen("play");
     renderEvent();
     $("event-title").focus({ preventScroll: true });
@@ -443,6 +516,39 @@
     btn.title = on ? "音を消す" : "音を鳴らす";
   }
 
+  // Android アプリ向けの設定（Web 版では、ビルド番号とプライバシーポリシーの表示以外は何もしない）
+  function setupApp() {
+    document.body.classList.toggle("is-app", NATIVE);
+
+    // どのビルドが入っているか分かるよう、アプリ版はタイトル画面にバージョンを出す
+    if (window.APP_VERSION && window.APP_VERSION !== "dev") $("build-info").textContent = window.APP_VERSION;
+
+    // EU など同意が必要な地域では、タイトル画面から広告の同意内容を変更できるようにする
+    Ads.initDone.then(function () {
+      if (Ads.privacyOptionsRequired) $("ad-privacy").hidden = false;
+    });
+    $("ad-privacy-link").addEventListener("click", function (e) {
+      e.preventDefault();
+      Ads.showPrivacyOptions();
+    });
+
+    // Android の戻るボタン：ダイアログを閉じる／商売中はタイトルへ戻る／タイトル・結果画面ではアプリを終了
+    const App = plugin("App");
+    if (App) {
+      App.addListener("backButton", function () {
+        if (Ads.showing) return;
+        const dlg = document.querySelector("dialog[open]");
+        if (dlg) {
+          dlg.close();
+        } else if (state.status === "playing") {
+          if (window.confirm("商売をやめて、タイトルに戻りますか？")) toTitle();
+        } else {
+          App.exitApp();
+        }
+      });
+    }
+  }
+
   function init() {
     const prefs = loadPrefs();
     const toggle = $("opt-reduce-motion");
@@ -494,11 +600,13 @@
     $("btn-howto").addEventListener("click", function () { openDialog($("dlg-howto")); });
     $("btn-records").addEventListener("click", openRecords);
     $("btn-next").addEventListener("click", next);
-    $("btn-retry").addEventListener("click", start);
+    $("btn-retry").addEventListener("click", retry);
+    $("btn-redo").addEventListener("click", redo);
     $("btn-to-title").addEventListener("click", toTitle);
     $("share-native").addEventListener("click", shareNative);
     $("share-copy").addEventListener("click", copyShareUrl);
     document.addEventListener("keydown", onKey);
+    setupApp();
 
     showScreen("title");
   }

@@ -6,6 +6,7 @@
   <title>啖呵売！昭和人情商店街</title>
   <meta name="description" content="売って笑わせ、失敗して、最後は人情。旅商人の口上と騒動を楽しむ、ブラウザで遊べる会話選択型ドタバタ喜劇。">
   <meta name="theme-color" content="#3b2414">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap">
@@ -49,6 +50,11 @@
             <span>演出を控えめにする</span>
           </label>
         </div>
+        <p class="legal">
+          <span id="build-info"></span>
+          <a href="https://techgym.jp/privacy-policy/" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>
+          <span id="ad-privacy" hidden>｜<a href="#" id="ad-privacy-link">広告の設定</a></span>
+        </p>
         <p class="poster__note">※本作は昭和の露店と人情喜劇から着想を得たオリジナル作品です。登場人物・台詞はすべて創作です。</p>
       </div>
     </section>
@@ -153,6 +159,10 @@
         <summary>本日の口上をふりかえる</summary>
         <ol class="log__list" id="history"></ol>
       </details>
+      <div class="redo">
+        <button type="button" class="btn" id="btn-redo" hidden>📺 広告を見て第五幕をやり直す</button>
+        <p class="redo__note" id="redo-note" role="status"></p>
+      </div>
       <div class="menu menu--row">
         <button type="button" class="btn btn--primary" id="btn-retry">もう一度商売する</button>
         <button type="button" class="btn" id="btn-to-title">タイトルへ</button>
@@ -164,7 +174,7 @@
     <h2 id="howto-heading">遊び方</h2>
     <ol class="howto">
       <li>あなたは旅商人<strong>風間まこと</strong>。日和町商店街の露店で、<strong>全五幕</strong>の商売に挑みます。</li>
-      <li>各幕に客や騒動が現れます。<strong>3つの口上</strong>から1つを選びましょう（数字キー1〜3でも選べます）。</li>
+      <li>各幕に客や騒動が現れます。<strong>3つの口上</strong>から1つを選びましょう<span class="kbd-only">（数字キー1〜3でも選べます）</span>。</li>
       <li>口上には型があります。<br>
         <span class="type type--bluff">大風呂敷</span>笑いと売上が大きいが、騒動も増える。<br>
         <span class="type type--wit">機転</span>売上と笑いをバランスよく。<br>
@@ -198,6 +208,9 @@
   <script src="logic.js"></script>
   <script src="portrait.js"></script>
   <script src="audio.js"></script>
+  <script src="build-info.js"></script>
+  <script src="ads-config.js"></script>
+  <script src="ads.js"></script>
   <script src="game.js"></script>
 </body>
 </html>
