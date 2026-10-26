@@ -352,3 +352,13 @@ test("旅：10の町と道。最初は日和町、次からはつながった町
   walk([]);
   assert.equal(reach.size, 10);
 });
+
+test("旅：鍵を開けて行った町のあとは、元の町に戻って道をたどる", () => {
+  assert.equal(L.homeTown(["hiyori", "aoba"], ["aoba"]), "hiyori");
+  assert.deepEqual(L.openTowns(["hiyori", "aoba"], ["aoba"]).sort(), ["joka", "shiomi", "touge", "yunosawa"]);
+  // 最初の町に鍵を開けて行ったら、次は出発の町から
+  assert.equal(L.homeTown(["nagi"], ["nagi"]), null);
+  assert.deepEqual(L.openTowns(["nagi"], ["nagi"]), ["hiyori"]);
+  // 鍵なしなら、最後の町から
+  assert.deepEqual(L.openTowns(["hiyori", "shiomi"], []).sort(), ["kuroiwa", "nagi"]);
+});

@@ -35,7 +35,7 @@
   let fxTimer = null;
   let storageOk = true;
   let mode = "day";         // "day"（1日の商売）/ "journey"（10 の町から 3 つを回る旅）
-  let journey = null;       // { results: [], carry, pick: 商売する町, unlocked: 広告で鍵を開けた町, unlockUsed }
+  let journey = null;       // { results: [], carry, pick: 商売する町, unlocked: 広告で鍵を開けた町, unlockUsed, warps: 鍵を開けて行った町 }
   let beforeChoice = null;  // 口上を選ぶ直前の状態（リワード広告で言い直すため）
   let redoUsed = false;     // 言い直しは 1 プレイ 1 回まで
 
@@ -505,7 +505,12 @@
   // 旅：町ごとの結果。最後の町なら旅全体の結末
   function finishTown() {
     const town = state.town;
+    // 鍵を開けて行った町なら、商売のあとは元の町に戻る
+    const warp = town === journey.unlocked;
+    if (warp) journey.warps.push(town);
     journey.results.push({ town: town, revenue: state.revenue, humanity: state.humanity, ending: state.ending });
+    const route = journey.results.map(function (r) { return r.town; });
+    const home = L.homeTown(route, journey.warps);
     journey.carry = L.carryOver(state);
     journey.pick = null;
     const last = journey.results.length >= D.journeyLength;
@@ -514,7 +519,9 @@
     const townBest = Object.assign({}, before.townBest);
     townBest[town] = Math.max(Number(townBest[town]) || 0, state.revenue);
     const towns = before.towns.indexOf(town) === -1 ? before.towns.concat(town) : before.towns;
-    saveRecords({ towns: towns, townBest: townBest, currentTown: town });
+    const change = { towns: towns, townBest: townBest };
+    if (home) change.currentTown = home;
+    saveRecords(change);
     const completed = towns.length === D.towns.length && before.towns.length < D.towns.length;
     const log = $("journey-log");
     log.textContent = "";
@@ -543,7 +550,9 @@
     if (!last) {
       showEnding(
         t("journey.townDone", { town: townText(town).name }),
-        t("journey.townText", { humanity: journey.carry.humanity }),
+        warp
+          ? t("journey.townTextBack", { humanity: journey.carry.humanity, town: townText(home || D.journeyStart).name })
+          : t("journey.townText", { humanity: journey.carry.humanity }),
         ""
       );
       $("badge-new").hidden = true;
@@ -787,7 +796,7 @@
     $("map-note").textContent = "";
     const records = loadRecords();
     const route = journey.results.map(function (r) { return r.town; });
-    const open = L.openTowns(route);
+    const open = L.openTowns(route, journey.warps);
     if (journey.unlocked && route.indexOf(journey.unlocked) === -1 && open.indexOf(journey.unlocked) === -1) open.push(journey.unlocked);
     $("map-step").textContent = t("map.step", { n: route.length + 1, total: D.journeyLength });
     $("map-progress").textContent = records.towns.length === D.towns.length
@@ -862,7 +871,7 @@
 
   function beginJourney() {
     mode = "journey";
-    journey = { results: [], carry: null, pick: null, unlocked: null, unlockUsed: false };
+    journey = { results: [], carry: null, pick: null, unlocked: null, unlockUsed: false, warps: [] };
     showMap();
   }
 

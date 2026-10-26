@@ -195,13 +195,22 @@
 
   // ---------- 旅モード ----------
 
-  // 旅で次に行ける町：最初は出発の町、そのあとは今の町と道でつながった、まだ行っていない町
-  function openTowns(route) {
+  // 旅で次に行ける町：最初は出発の町、そのあとは今の町と道でつながった、まだ行っていない町。
+  // warps は鍵を開けて（道を通らずに）行った町。そこで商売したあとは元の町に戻るので、道は元の町から数える
+  function openTowns(route, warps) {
     const towns = Data.towns || [];
-    if (!route || route.length === 0) return Data.journeyStart ? [Data.journeyStart] : [];
+    route = route || [];
     if (route.length >= (Data.journeyLength || 3)) return [];
-    const here = towns.find(function (t) { return t.id === route[route.length - 1]; });
+    const hereId = homeTown(route, warps);
+    if (!hereId) return Data.journeyStart && route.indexOf(Data.journeyStart) === -1 ? [Data.journeyStart] : [];
+    const here = towns.find(function (t) { return t.id === hereId; });
     return ((here && here.links) || []).filter(function (id) { return route.indexOf(id) === -1; });
+  }
+
+  // 旅でいまいる町：鍵を開けて行った町を除いた、最後に商売した町（まだなければ null）
+  function homeTown(route, warps) {
+    const real = (route || []).filter(function (id) { return !warps || warps.indexOf(id) === -1; });
+    return real.length ? real[real.length - 1] : null;
   }
 
   // 町を出るとき、人情（評判）の半分と縁を次の町へ持ち越す
@@ -435,6 +444,7 @@
     validStock: validStock,
     carryOver: carryOver,
     openTowns: openTowns,
+    homeTown: homeTown,
     summarizeJourney: summarizeJourney,
     judgeJourney: judgeJourney,
     stockCost: stockCost,
