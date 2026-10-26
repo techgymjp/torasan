@@ -651,6 +651,12 @@
 
     $("btn-start").addEventListener("click", startWithAd);
     $("btn-howto").addEventListener("click", function () { openDialog($("dlg-howto")); });
+    // 遊び方・記録を閉じてタイトル画面に戻るときも全画面広告を出す（閉じるボタン・Esc・戻るボタンのどれでも）
+    ["dlg-howto", "dlg-records"].forEach(function (id) {
+      $(id).addEventListener("close", function () {
+        if (Ads.available) Ads.showInterstitial();
+      });
+    });
     $("btn-records").addEventListener("click", openRecords);
     $("btn-next").addEventListener("click", next);
     $("btn-retry").addEventListener("click", startWithAd);
