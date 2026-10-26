@@ -77,7 +77,9 @@
         : [],
       // 旅で商売したことのある町（全町制覇をめざす）と、町ごとの最高売上
       towns: Array.isArray(r.towns) ? r.towns.filter(function (id) { return D.towns.some(function (x) { return x.id === id; }); }) : [],
-      townBest: r.townBest && typeof r.townBest === "object" ? r.townBest : {}
+      townBest: r.townBest && typeof r.townBest === "object" ? r.townBest : {},
+      // いまいる町：旅で最後に商売した町。「商売を始める」はこの町で開く
+      currentTown: D.towns.some(function (x) { return x.id === r.currentTown; }) ? r.currentTown : D.journeyStart
     };
   }
 
@@ -251,10 +253,9 @@
       $("fill-" + k).style.width = state[k] + "%";
       $("meter-" + k).setAttribute("aria-valuenow", state[k]);
     });
-    $("hud-town").hidden = mode !== "journey";
     $("hud-town").textContent = mode === "journey"
       ? t("journey.hud", { n: journey.results.length + 1, total: D.journeyLength, town: townText(state.town).name })
-      : "";
+      : townText(state.town).name;
     $("hud-goods").textContent = (state.goods || []).map(function (id) {
       const g = goodText(id);
       return g.icon + " " + g.name;
@@ -513,7 +514,7 @@
     const townBest = Object.assign({}, before.townBest);
     townBest[town] = Math.max(Number(townBest[town]) || 0, state.revenue);
     const towns = before.towns.indexOf(town) === -1 ? before.towns.concat(town) : before.towns;
-    saveRecords({ towns: towns, townBest: townBest });
+    saveRecords({ towns: towns, townBest: townBest, currentTown: town });
     const completed = towns.length === D.towns.length && before.towns.length < D.towns.length;
     const log = $("journey-log");
     log.textContent = "";
@@ -745,13 +746,13 @@
 
   function goStock() {
     Sound.unlock();
-    const town = mode === "journey" ? D.towns.find(function (x) { return x.id === journey.pick; }) : null;
-    $("stock-heading").textContent = town
+    const id = mode === "journey" ? journey.pick : loadRecords().currentTown;
+    const town = D.towns.find(function (x) { return x.id === id; });
+    $("stock-heading").textContent = mode === "journey"
       ? t("journey.stockHeading", { n: journey.results.length + 1, town: townText(town.id).name })
-      : t("stock.heading");
-    $("btn-stock-back").textContent = t(town ? "map.back" : "result.toTitle");
-    $("stock-town").hidden = !town;
-    $("stock-town").textContent = town ? townText(town.id).blurb : "";
+      : t("stock.headingTown", { town: townText(town.id).name });
+    $("btn-stock-back").textContent = t(mode === "journey" ? "map.back" : "result.toTitle");
+    $("stock-town").textContent = townText(town.id).blurb;
     renderStock();
     showScreen("stock");
     $("stock-heading").focus({ preventScroll: true });
@@ -889,6 +890,8 @@
     if (mode === "journey") {
       options.town = journey.pick;
       if (journey.carry) Object.assign(options, journey.carry);
+    } else {
+      options.town = loadRecords().currentTown; // 1日の商売は、いまいる町で
     }
     state = L.startGame(undefined, loadRecent(), options);
     beforeChoice = null;
@@ -904,7 +907,13 @@
     Sound.setTension(false);
     Sound.setMusic("street");
     showScreen("title");
+    syncKicker();
     $("title-heading").focus({ preventScroll: true });
+  }
+
+  // タイトルの「〇〇の巻」は、いまいる町
+  function syncKicker() {
+    $("title-kicker").textContent = t("title.kicker", { town: townText(loadRecords().currentTown).name });
   }
 
 
@@ -1073,6 +1082,8 @@
       b.addEventListener("click", function () { I18n.setLang(b.dataset.lang); });
     });
     I18n.onChange(syncMuteButton);
+    I18n.onChange(syncKicker);
+    syncKicker();
 
     const prefs = loadPrefs();
     const toggle = $("opt-reduce-motion");

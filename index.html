@@ -19,7 +19,7 @@
     <section class="screen screen--title" id="screen-title" aria-labelledby="title-heading">
       <div class="poster">
         <div class="awning" aria-hidden="true"></div>
-        <p class="poster__kicker" data-i18n="title.kicker">昭和人情喜劇　日和町商店街の巻</p>
+        <p class="poster__kicker" id="title-kicker">昭和人情喜劇　日和町商店街の巻</p>
         <h1 class="poster__title" id="title-heading" tabindex="-1">
           <span class="poster__title-main" data-i18n="title.main">啖呵売！</span>
           <span class="poster__title-sub" data-i18n="title.sub">昭和人情商店街</span>
@@ -80,7 +80,7 @@
 
     <section class="screen screen--stock" id="screen-stock" aria-labelledby="stock-heading" hidden>
       <h2 class="stock__heading" id="stock-heading" tabindex="-1" data-i18n="stock.heading">開店前の仕入れ</h2>
-      <p class="stock__town" id="stock-town" hidden></p>
+      <p class="stock__town" id="stock-town"></p>
       <p class="stock__lead" data-i18n="stock.lead">予算の中で、今日の品を3つまで選びましょう。品ごとに効く口上や相手が違います。</p>
       <p class="stock__budget" id="stock-budget"></p>
       <ul class="stock__list" id="stock-list"></ul>
@@ -98,7 +98,7 @@
           <p class="hud__money"><span data-i18n="stat.revenue">売上</span> <strong id="stat-revenue">0円</strong><span class="hud__sep" data-i18n="hud.sep">・</span><span data-i18n="stat.customers">客</span> <strong id="stat-customers">0人</strong>
             <button type="button" class="mute" id="btn-mute" aria-pressed="false" aria-label="音を消す" title="音を消す">🔊</button></p>
         </div>
-        <p class="hud__town" id="hud-town" hidden></p>
+        <p class="hud__town" id="hud-town"></p>
         <p class="hud__goods" id="hud-goods"></p>
         <p class="momentum" id="momentum">
           <span class="momentum__label" data-i18n="hud.momentum">勢い</span>
@@ -224,7 +224,7 @@
         <span class="type type--help" data-i18n="type.help">お助け</span><span data-i18n="howto.help">人情が大きく上がるが、売上を失うことも。</span>
       </li>
       <li data-i18n-html="howto.4">客にはそれぞれ<strong>好きな口上・嫌いな口上</strong>があります。最初は分かりませんが、相性◎や×が出ると<strong>常連帳</strong>に書き込まれ、次からは選択肢に印が付きます。</li>
-      <li data-i18n-html="howto.journey"><strong>旅に出る</strong>：10の町から3つを回ります。最初は日和町商店街、次からは道でつながった町を町一覧から選びます（Android 版では、広告を見て鍵を開ければ、つながっていない町にも旅に1回行けます）。全部の町で商売して「全町制覇」をめざしましょう。町ごとに仕入れ直し、人情（評判）の半分と縁を次の町へ持ち越し、最後に旅全体の結末が決まります。</li>
+      <li data-i18n-html="howto.journey"><strong>旅に出る</strong>：10の町から3つを回ります。最初は日和町商店街、次からは道でつながった町を町一覧から選びます（Android 版では、広告を見て鍵を開ければ、つながっていない町にも旅に1回行けます）。全部の町で商売して「全町制覇」をめざしましょう。町ごとに仕入れ直し、人情（評判）の半分と縁を次の町へ持ち越し、最後に旅全体の結末が決まります。「商売を始める」は、いまいる町（旅で最後に商売した町）で1日の商売をします。</li>
       <li data-i18n-html="howto.stock"><strong>仕入れ</strong>：開店前に、予算3,000円で品を3つまで選びます。品ごとに効く口上や相手が違います。</li>
       <li data-i18n-html="howto.momentum"><strong>勢い</strong>：笑いを取るとたまり（最大3）、大風呂敷の売上が伸びます。満タンで大風呂敷を切ると大騒動。正直・お助けに切り替えると、勢いを売上に変えて締められます。</li>
       <li data-i18n-html="howto.5"><strong>大風呂敷を続けると「調子に乗りすぎ」</strong>で騒動が上乗せされます。</li>
