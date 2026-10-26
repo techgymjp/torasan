@@ -3,6 +3,7 @@
  *
  * インタースティシャル：結果画面で「もう一度商売する」を押したとき、2 回に 1 回
  * リワード：結果画面の「広告を見て第五幕をやり直す」（1 プレイ 1 回）
+ * バナー：タイトル画面（遊び方・記録のダイアログを含む）と結果画面の下。商売中は出さない
  */
 (function (root) {
   "use strict";
@@ -11,12 +12,14 @@
     // Google 公式のテスト用広告ユニット
     test: {
       interstitial: "ca-app-pub-3940256099942544/1033173712",
-      rewarded: "ca-app-pub-3940256099942544/5224354917"
+      rewarded: "ca-app-pub-3940256099942544/5224354917",
+      banner: "ca-app-pub-3940256099942544/9214589741"
     },
     // AdMob で作成した本番の広告ユニット（未設定の間は Google Play 用のビルドが止まる）
     production: {
       interstitial: "ca-app-pub-6411535997477460/9183794755",
-      rewarded: ""
+      rewarded: "ca-app-pub-6411535997477460/9794168844",
+      banner: "ca-app-pub-6411535997477460/4733413854"
     }
   };
   const RETRY_MS = 20000; // 読み込みに失敗したら少し待って再挑戦する
@@ -33,6 +36,7 @@
   let showing = false;
   let privacyRequired = false; // 「広告の設定」を利用者が開けるようにする必要があるか（EU など）
   const waiters = {};          // 表示中の広告が閉じたときに呼ぶ処理
+  const banner = { wanted: false, created: false, visible: false, retry: null };
 
   // 広告の種類ごとの読み込み状態
   const slots = {
@@ -100,8 +104,48 @@
     AdMob.addListener("onRewardedVideoAdReward", function () { rewarded = true; });
     AdMob.addListener("onRewardedVideoAdDismissed", function () { finish("reward", rewarded); });
     AdMob.addListener("onRewardedVideoAdFailedToShow", function () { finish("reward", false); });
+    AdMob.addListener("bannerAdSizeChanged", function (size) {
+      setBannerSpace(banner.visible && size ? size.height : 0);
+    });
+    AdMob.addListener("bannerAdFailedToLoad", function () {
+      // 読み込めなかったら場所を空けずに、少し待って出し直す
+      banner.created = false;
+      banner.visible = false;
+      setBannerSpace(0);
+      AdMob.removeBanner().catch(function () {});
+      clearTimeout(banner.retry);
+      banner.retry = setTimeout(syncBanner, RETRY_MS);
+    });
     prepare("inter");
     prepare("reward");
+    syncBanner();
+  }
+
+  // バナーの高さだけ、画面の下に余白を空ける（ボタンや文字が広告に隠れないように）
+  function setBannerSpace(px) {
+    root.document.documentElement.style.setProperty("--ad-banner-h", Math.max(0, Math.round(px || 0)) + "px");
+  }
+
+  function syncBanner() {
+    if (!AdMob || !ready) return;
+    if (banner.wanted && !banner.visible) {
+      banner.visible = true;
+      const shown = banner.created
+        ? AdMob.resumeBanner()
+        : AdMob.showBanner({ adId: ids.banner, adSize: "ADAPTIVE_BANNER", position: "BOTTOM_CENTER", isTesting: testing });
+      banner.created = true;
+      shown.catch(function () { banner.visible = false; banner.created = false; setBannerSpace(0); });
+    } else if (!banner.wanted && banner.visible) {
+      banner.visible = false;
+      setBannerSpace(0);
+      AdMob.hideBanner().catch(function () {});
+    }
+  }
+
+  // 画面に合わせてバナーを出し入れする（Web 版では何もしない）
+  function setBanner(visible) {
+    banner.wanted = !!visible;
+    syncBanner();
   }
 
   // 全画面広告を表示し、閉じられたら resolve する（読み込めていないときは出さずにすぐ resolve）
@@ -145,6 +189,7 @@
     initDone: initDone,
     showInterstitial: showInterstitial,
     showRewarded: showRewarded,
-    showPrivacyOptions: showPrivacyOptions
+    showPrivacyOptions: showPrivacyOptions,
+    setBanner: setBanner
   };
 })(window);

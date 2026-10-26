@@ -141,6 +141,8 @@
     ["title", "play", "result"].forEach(function (s) {
       $("screen-" + s).hidden = s !== name;
     });
+    // バナー広告はタイトル（遊び方・記録を含む）と結果画面だけ。商売中は出さない
+    Ads.setBanner(name !== "play");
     window.scrollTo(0, 0);
   }
 

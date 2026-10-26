@@ -41,6 +41,7 @@ html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
+  padding-bottom: var(--ad-banner-h, 0px); /* バナー広告の高さ（アプリのみ） */
   min-height: 100vh;
   color: var(--ink);
   font-family: var(--font-body);
@@ -803,8 +804,9 @@ body {
    ========================================================= */
 .sheet {
   width: min(560px, calc(100vw - 32px));
-  max-height: calc(100vh - 32px);
+  max-height: calc(100vh - 32px - var(--ad-banner-h, 0px));
   overflow-y: auto;
+  transform: translateY(calc(var(--ad-banner-h, 0px) / -2)); /* バナーに重ならないよう少し上げる */
   padding: 20px 22px;
   color: var(--ink);
   background: var(--paper);

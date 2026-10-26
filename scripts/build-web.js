@@ -21,7 +21,9 @@ if (mode === 'production') {
   // 本番の広告 ID が未設定のまま Google Play 用にビルドしないようにする
   const ads = fs.readFileSync(path.join(root, 'ads.js'), 'utf8');
   const strings = fs.readFileSync(path.join(root, 'android/app/src/main/res/values/strings.xml'), 'utf8');
-  const unitsSet = /production:\s*\{\s*interstitial:\s*'ca-app-pub-[^']+',\s*rewarded:\s*'ca-app-pub-[^']+'/.test(ads);
+  const prod = (ads.match(/production:\s*\{([^}]*)\}/) || [])[1] || '';
+  const unitsSet = ['interstitial', 'rewarded', 'banner'].every(k =>
+    new RegExp(`${k}:\\s*["']ca-app-pub-\\d+/\\d{10}["']`).test(prod));
   const appIdSet = !strings.includes('ca-app-pub-3940256099942544');
   if (!unitsSet || !appIdSet) {
     console.error('本番の AdMob ID が未設定です。ads.js の UNITS.production と strings.xml の admob_app_id を設定してください。');
