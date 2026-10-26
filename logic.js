@@ -59,9 +59,11 @@
       customers: 0,
       usedEvents: [],
       recentEvents: [],
+      seenEvents: [],
       ties: [],
       momentum: 0,
       goods: [],
+      town: "hiyori",
       history: [],
       status: "title",
       phase: null,
@@ -111,20 +113,26 @@
 
   function pickEvent(state, turn, rng) {
     const tier = tierForTurn(turn, state.maxTurns);
-    const unused = Data.events.filter(function (e) { return state.usedEvents.indexOf(e.id) === -1; });
+    const here = function (e) { return !e.town || e.town === state.town; };
+    const unused = Data.events.filter(function (e) { return state.usedEvents.indexOf(e.id) === -1 && here(e); });
     const allowed = unused.filter(function (e) { return meetsCondition(state, e.condition) && hasTies(state, e.requiresTies); });
     const free = unused.filter(function (e) { return !e.requiresTies; });
+    // 旅の中ですでに見た場面は、ほかに候補があるかぎり出さない
+    const fresh = allowed.filter(function (e) { return state.seenEvents.indexOf(e.id) === -1; });
     const pools = [
+      fresh.filter(function (e) { return e.tier === tier; }),
       allowed.filter(function (e) { return e.tier === tier; }),
+      fresh.filter(function (e) { return e.tier === "normal"; }),
       allowed.filter(function (e) { return e.tier === "normal"; }),
       allowed,
       free,
-      Data.events.filter(function (e) { return !e.requiresTies; })
+      Data.events.filter(function (e) { return !e.requiresTies && here(e); })
     ];
     const pool = pools.find(function (p) { return p.length > 0; });
     // weight が大きいイベントほど選ばれやすい（省略時は1）。最近見たイベントは出にくい
     const weights = pool.map(function (e) {
-      return (e.weight || 1) * (state.recentEvents.indexOf(e.id) !== -1 ? RECENT_WEIGHT : 1);
+      return (e.weight || 1) *
+        (state.recentEvents.indexOf(e.id) !== -1 ? RECENT_WEIGHT : 1);
     });
     const total = weights.reduce(function (a, b) { return a + b; }, 0);
     let r = rng() * total;
@@ -169,13 +177,47 @@
 
   // recentEvents：最近のプレイで出たイベント ID（出にくくする。保存は画面側）
   // options.goods：開店前に仕入れた品の ID
+  // options.town / humanity / ties：旅モードで町と、前の町から持ち越した評判・縁
   function startGame(rng, recentEvents, options) {
+    const o = options || {};
+    const towns = (Data.towns || []).map(function (t) { return t.id; });
     const state = Object.assign(createInitialState(), {
       status: "playing",
       recentEvents: Array.isArray(recentEvents) ? recentEvents.slice() : [],
-      goods: validStock(options && options.goods)
+      goods: validStock(o.goods)
     });
+    if (towns.indexOf(o.town) !== -1) state.town = o.town;
+    if (typeof o.humanity === "number") state.humanity = clampStat(o.humanity);
+    if (Array.isArray(o.ties)) state.ties = o.ties.slice();
+    if (Array.isArray(o.seen)) state.seenEvents = o.seen.slice();
     return beginTurn(state, rng || Math.random);
+  }
+
+  // ---------- 旅モード ----------
+
+  // 町を出るとき、人情（評判）の半分と縁を次の町へ持ち越す
+  function carryOver(state) {
+    const start = createInitialState().humanity;
+    return {
+      humanity: clampStat(start + Math.round((state.humanity - start) / 2)),
+      ties: state.ties.slice(),
+      seen: (state.seenEvents || []).concat(state.usedEvents)
+    };
+  }
+
+  // results：町ごとの結果 { revenue, humanity, ending } の配列（回った順）
+  function summarizeJourney(results) {
+    return {
+      revenue: results.reduce(function (sum, r) { return sum + r.revenue; }, 0),
+      humanity: results.length ? results[results.length - 1].humanity : 0,
+      chaos: results.filter(function (r) { return r.ending === "chaos"; }).length
+    };
+  }
+
+  function judgeJourney(results) {
+    const summary = summarizeJourney(results);
+    const list = Data.journeyEndings;
+    return list.find(function (e) { return meetsCondition(summary, e.condition); }) || list[list.length - 1];
   }
 
   // この幕で効く仕入れの品
@@ -250,7 +292,8 @@
     if (overheated) trouble += OVERHEAT_TROUBLE;
 
     // 前の幕で結んだ縁が、この幕で効いてくる
-    const echo = event.echo && state.ties.indexOf(event.echo.tie) !== -1 ? event.echo : null;
+    const echo = event.echo && state.ties.indexOf(event.echo.tie) !== -1 &&
+      (!event.echo.town || event.echo.town === state.town) ? event.echo : null;
     if (echo) {
       revenue += echo.effects.revenue || 0;
       laughter += echo.effects.laughter || 0;
@@ -381,6 +424,9 @@
     CHOICE_TYPES: CHOICE_TYPES,
     MOMENTUM: MOMENTUM,
     validStock: validStock,
+    carryOver: carryOver,
+    summarizeJourney: summarizeJourney,
+    judgeJourney: judgeJourney,
     stockCost: stockCost,
     MAX_TURNS: MAX_TURNS,
     createInitialState: createInitialState,

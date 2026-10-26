@@ -34,6 +34,8 @@
   let state = L.createInitialState();
   let fxTimer = null;
   let storageOk = true;
+  let mode = "day";         // "day"（1日の商売）/ "journey"（3つの町を回る旅）
+  let journey = null;       // { index, results: [], carry }
   let beforeChoice = null;  // 口上を選ぶ直前の状態（リワード広告で言い直すため）
   let redoUsed = false;     // 言い直しは 1 プレイ 1 回まで
 
@@ -67,8 +69,17 @@
       endings: Array.isArray(r.endings) ? r.endings.filter(function (id) { return known.indexOf(id) !== -1; }) : [],
       playCount: Number.isFinite(r.playCount) ? r.playCount : 0,
       lastEnding: known.indexOf(r.lastEnding) !== -1 ? r.lastEnding : null,
-      lastTitle: typeof r.lastTitle === "string" ? r.lastTitle : null
+      lastTitle: typeof r.lastTitle === "string" ? r.lastTitle : null,
+      journeyBest: Number.isFinite(r.journeyBest) ? r.journeyBest : 0,
+      lastJourneyEnding: D.journeyEndings.some(function (e) { return e.id === r.lastJourneyEnding; }) ? r.lastJourneyEnding : null,
+      journeyEndings: Array.isArray(r.journeyEndings)
+        ? r.journeyEndings.filter(function (id) { return D.journeyEndings.some(function (e) { return e.id === id; }); })
+        : []
     };
+  }
+
+  function saveRecords(changes) {
+    writeJson(RECORDS_KEY, Object.assign(loadRecords(), changes));
   }
 
   // ---------- 常連帳（相性◎・×が出た口上を覚えておく） ----------
@@ -183,6 +194,17 @@
     };
   }
 
+  function townText(id) {
+    const tw = D.towns.find(function (x) { return x.id === id; });
+    const en = I18n.data("towns", id);
+    return { name: en.name || tw.name, blurb: en.blurb || tw.blurb };
+  }
+
+  function journeyEndingText(ending) {
+    const en = I18n.data("journeyEndings", ending.id);
+    return { name: en.name || ending.name, title: en.title || ending.title, text: en.text || ending.text };
+  }
+
   function goodText(id) {
     const g = D.goods.find(function (x) { return x.id === id; });
     const en = I18n.data("goods", id);
@@ -226,6 +248,10 @@
       $("fill-" + k).style.width = state[k] + "%";
       $("meter-" + k).setAttribute("aria-valuenow", state[k]);
     });
+    $("hud-town").hidden = mode !== "journey";
+    $("hud-town").textContent = mode === "journey"
+      ? t("journey.hud", { n: journey.index + 1, total: D.towns.length, town: townText(state.town).name })
+      : "";
     $("hud-goods").textContent = (state.goods || []).map(function (id) {
       const g = goodText(id);
       return g.icon + " " + g.name;
@@ -433,28 +459,115 @@
     const isBest = state.revenue > records.bestRevenue;
 
     saveRecent(state.usedEvents);
-    writeJson(RECORDS_KEY, {
+    if (mode === "journey") {
+      finishTown();
+      return;
+    }
+    saveRecords({
       bestRevenue: Math.max(records.bestRevenue, state.revenue),
       endings: isNew ? records.endings.concat(ending.id) : records.endings,
       playCount: records.playCount + 1,
       lastEnding: ending.id,
+      lastJourneyEnding: null,
       lastTitle: ending.title
     });
 
     const text = endingText(ending);
-    $("ending-name").textContent = t("result.ending", { name: text.name });
-    $("ending-text").textContent = text.text;
-    $("ending-title").textContent = text.title;
+    showEnding(t("result.ending", { name: text.name }), text.text, text.title);
     $("badge-new").hidden = !isNew;
     $("badge-best").hidden = !(isBest && state.revenue > 0);
+    setupShare(t("share.text", { name: text.name, title: text.title, revenue: money(state.revenue) }));
+    setResultButtons(false);
+    fillResult();
+    $("journey-log").hidden = true;
+    closeResult(ending.id === "chaos");
+  }
+
+  function showEnding(name, text, title) {
+    $("ending-name").textContent = name;
+    $("ending-text").textContent = text;
+    $("ending-title").textContent = title || "";
+    $("ending-honor").hidden = !title;
+  }
+
+  // 旅の途中なら「次の町へ」、それ以外は「もう一度」
+  function setResultButtons(midJourney) {
+    $("btn-next-town").hidden = !midJourney;
+    $("btn-retry").hidden = midJourney;
+    $("btn-retry").textContent = t(mode === "journey" ? "journey.again" : "result.retry");
+    document.querySelector(".share").hidden = midJourney;
+  }
+
+  // 旅：町ごとの結果。最後の町なら旅全体の結末
+  function finishTown() {
+    const town = D.towns[journey.index];
+    journey.results.push({ town: town.id, revenue: state.revenue, humanity: state.humanity, ending: state.ending });
+    journey.carry = L.carryOver(state);
+    const last = journey.index >= D.towns.length - 1;
+    const log = $("journey-log");
+    log.textContent = "";
+    journey.results.forEach(function (r, i) {
+      const li = document.createElement("li");
+      li.textContent = t("journey.logLine", {
+        n: i + 1, town: townText(r.town).name, revenue: money(r.revenue), humanity: r.humanity
+      });
+      log.appendChild(li);
+    });
+    const summary = L.summarizeJourney(journey.results);
+    if (journey.results.length > 1) {
+      const li = document.createElement("li");
+      li.className = "journey-log__total";
+      li.textContent = t("journey.total", { revenue: money(summary.revenue) });
+      log.appendChild(li);
+    }
+    log.hidden = false;
+
+    if (!last) {
+      showEnding(
+        t("journey.townDone", { n: journey.index + 1, town: townText(town.id).name }),
+        t("journey.townText", { humanity: journey.carry.humanity, next: townText(D.towns[journey.index + 1].id).name }),
+        ""
+      );
+      $("badge-new").hidden = true;
+      $("badge-best").hidden = true;
+      setResultButtons(true);
+      fillResult();
+      closeResult(state.ending === "chaos");
+      return;
+    }
+
+    const ending = L.judgeJourney(journey.results);
+    const records = loadRecords();
+    const isNew = records.journeyEndings.indexOf(ending.id) === -1;
+    const isBest = summary.revenue > records.journeyBest;
+    saveRecords({
+      journeyBest: Math.max(records.journeyBest, summary.revenue),
+      journeyEndings: isNew ? records.journeyEndings.concat(ending.id) : records.journeyEndings,
+      playCount: records.playCount + 1,
+      lastTitle: ending.title,
+      lastEnding: null,
+      lastJourneyEnding: ending.id
+    });
+    const text = journeyEndingText(ending);
+    showEnding(t("journey.ending", { name: text.name }), text.text, text.title);
+    $("badge-new").hidden = !isNew;
+    // 自己ベストは旅の合計の行に付ける（売上の欄はこの町だけの売上なので）
+    $("badge-best").hidden = true;
+    const totalLine = log.querySelector(".journey-log__total");
+    if (totalLine && isBest && summary.revenue > 0) totalLine.textContent += " " + t("journey.best");
+    setupShare(t("share.journeyText", { name: text.name, title: text.title, revenue: money(summary.revenue) }));
+    setResultButtons(false);
+    fillResult();
+    closeResult(ending.id === "j_chaos");
+  }
+
+  function fillResult() {
     $("res-revenue").textContent = money(state.revenue);
     $("res-customers").textContent = t("people", { n: state.customers });
     $("res-laughter").textContent = state.laughter;
     $("res-humanity").textContent = state.humanity;
     $("res-trouble").textContent = state.trouble;
     $("res-cost").textContent = money(L.stockCost(state.goods));
-
-    setupShare(text);
 
     const list = $("history");
     list.textContent = "";
@@ -472,11 +585,13 @@
       li.append(head, tag, line);
       list.appendChild(li);
     });
+  }
 
+  function closeResult(bad) {
     document.body.classList.remove("is-danger");
     Sound.setTension(false);
     Sound.setMusic("ending");
-    Sound.sfx.curtain(ending.id === "chaos");
+    Sound.sfx.curtain(bad);
     showScreen("result");
     $("ending-name").focus({ preventScroll: true });
   }
@@ -485,8 +600,7 @@
 
   let shareData = null;
 
-  function setupShare(ending) {
-    const text = t("share.text", { name: ending.name, title: ending.title, revenue: money(state.revenue) });
+  function setupShare(text) {
     const enc = encodeURIComponent;
     $("share-x").href = "https://twitter.com/intent/tweet?text=" + enc(text) +
       "&url=" + enc(SHARE_URL) + "&hashtags=" + enc(t("share.hashtag"));
@@ -614,9 +728,21 @@
 
   function goStock() {
     Sound.unlock();
+    const town = mode === "journey" ? D.towns[journey.index] : null;
+    $("stock-heading").textContent = town
+      ? t("journey.stockHeading", { n: journey.index + 1, town: townText(town.id).name })
+      : t("stock.heading");
+    $("stock-town").hidden = !town;
+    $("stock-town").textContent = town ? townText(town.id).blurb : "";
     renderStock();
     showScreen("stock");
     $("stock-heading").focus({ preventScroll: true });
+  }
+
+  function beginJourney() {
+    mode = "journey";
+    journey = { index: 0, results: [], carry: null };
+    goStock();
   }
 
   let startBusy = false;
@@ -639,7 +765,12 @@
     Sound.unlock();
     Sound.setMusic("street");
     Sound.sfx.start();
-    state = L.startGame(undefined, loadRecent(), { goods: stockPick });
+    const options = { goods: stockPick };
+    if (mode === "journey") {
+      options.town = D.towns[journey.index].id;
+      if (journey.carry) Object.assign(options, journey.carry);
+    }
+    state = L.startGame(undefined, loadRecent(), options);
     beforeChoice = null;
     redoUsed = false;
     showScreen("play");
@@ -672,7 +803,9 @@
     const last = D.endings.find(function (e) { return e.id === r.lastEnding; });
     $("rec-plays").textContent = t("times", { n: r.playCount });
     $("rec-best").textContent = money(r.bestRevenue);
-    $("rec-title").textContent = last ? endingText(last).title : r.lastTitle || "—";
+    const lastJourney = D.journeyEndings.find(function (e) { return e.id === r.lastJourneyEnding; });
+    $("rec-title").textContent = last ? endingText(last).title
+      : lastJourney ? journeyEndingText(lastJourney).title : r.lastTitle || "—";
     $("rec-count").textContent = t("records.count", { n: r.endings.length, total: D.endings.length });
     const list = $("rec-endings");
     list.textContent = "";
@@ -706,6 +839,25 @@
       regulars.appendChild(li);
     });
     $("rec-regulars-empty").hidden = regulars.children.length > 0;
+    $("rec-journey-count").textContent = t("records.count", { n: r.journeyEndings.length, total: D.journeyEndings.length });
+    $("rec-journey-best").textContent = t("records.journeyBest", { revenue: money(r.journeyBest) });
+    const jl = $("rec-journeys");
+    jl.textContent = "";
+    D.journeyEndings.forEach(function (e, i) {
+      const seen = r.journeyEndings.indexOf(e.id) !== -1;
+      const text = journeyEndingText(e);
+      const li = document.createElement("li");
+      li.className = "zukan__item" + (seen ? " zukan__item--seen" : "");
+      const num = document.createElement("span");
+      num.className = "zukan__num";
+      num.textContent = I18n.ordinal(i);
+      const name = document.createElement("strong");
+      name.textContent = seen ? text.name : t("records.unknown");
+      const title = document.createElement("small");
+      title.textContent = seen ? t("records.honor", { t: text.title }) : t("records.unseen");
+      li.append(num, name, title);
+      jl.appendChild(li);
+    });
     $("rec-warning").hidden = storageOk;
     openDialog($("dlg-records"));
   }
@@ -827,7 +979,17 @@
     document.addEventListener("pointerdown", firstGesture);
     document.addEventListener("keydown", firstGesture);
 
-    $("btn-start").addEventListener("click", goStock);
+    $("btn-start").addEventListener("click", function () {
+      mode = "day";
+      journey = null;
+      goStock();
+    });
+    $("btn-journey").addEventListener("click", beginJourney);
+    $("btn-next-town").addEventListener("click", function () {
+      if (!journey) return;
+      journey.index++;
+      goStock();
+    });
     $("btn-open").addEventListener("click", startWithAd);
     $("btn-stock-back").addEventListener("click", toTitle);
     $("btn-howto").addEventListener("click", function () { openDialog($("dlg-howto")); });
@@ -839,7 +1001,10 @@
     });
     $("btn-records").addEventListener("click", openRecords);
     $("btn-next").addEventListener("click", next);
-    $("btn-retry").addEventListener("click", goStock);
+    $("btn-retry").addEventListener("click", function () {
+      if (mode === "journey") beginJourney();
+      else goStock();
+    });
     $("btn-redo").addEventListener("click", redo);
     $("btn-to-title").addEventListener("click", quitToTitle);
     $("share-native").addEventListener("click", shareNative);

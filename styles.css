@@ -860,6 +860,13 @@ body {
 .good__name { grid-area: name; }
 .good__cost { grid-area: cost; font-weight: 700; font-variant-numeric: tabular-nums; }
 .good__blurb { grid-area: blurb; font-size: .85rem; color: var(--ink-soft); }
+.btn--journey { background: var(--ai); color: #fff; text-shadow: 1px 1px 0 var(--ink); }
+.btn--journey:hover { background: #3a5d93; }
+.stock__town { margin: 0 0 6px; font-weight: 700; color: var(--ai); }
+.hud .hud__town { margin: 0 0 4px; font-size: .85rem; font-weight: 700; color: var(--kihada); }
+.journey-log { text-align: left; max-width: 30em; margin: 10px auto 0; padding-left: 0; list-style: none; font-size: .9rem; }
+.journey-log li { border-top: 1px dashed var(--ink-soft); padding: 4px 0; }
+.journey-log__total { font-weight: 700; }
 .hud .hud__goods { margin: 4px 0 0; font-size: .8rem; opacity: .9; }
 .hud__goods:empty { display: none; }
 .known { flex: none; font-size: .75rem; font-weight: 700; padding: 1px 6px; border-radius: 4px; border: 1.5px solid var(--ink); margin-top: 2px; }

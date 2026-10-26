@@ -8,7 +8,8 @@
  * effects   : パラメーター変化の基本値（客との相性で補正される）
  * ties      : その口上を選ぶと結ばれる「縁」。あとの幕のイベントや効果が変わる
  * requiresTies : この縁がすべて結ばれているときだけ発生する（縁の続きのイベント）
- * echo      : { tie, effects, text } その縁があると、どの口上を選んでも効果と一文が上乗せされる
+ * echo      : { tie, town?, effects, text } その縁があると、どの口上を選んでも効果と一文が上乗せされる
+ * town      : この町でだけ出る（hiyori / shiomi / yunosawa）。省略するとどの町でも出る
  *
  * 文章と数値のみを持ち、コードは含めない。ゲーム側は定義済みの効果量だけを反映する。
  */
@@ -19,6 +20,7 @@
   D.events = [
     {
       id: "E01",
+      town: "hiyori",
       title: "値切り名人",
       tier: "normal",
       character: "matsuko",
@@ -50,6 +52,7 @@
     },
     {
       id: "E02",
+      town: "hiyori",
       title: "大げさな実演",
       tier: "normal",
       character: "koharu",
@@ -112,6 +115,7 @@
     },
     {
       id: "E04",
+      town: "hiyori",
       title: "ライバル商人",
       tier: "normal",
       character: "ginji",
@@ -145,6 +149,7 @@
     },
     {
       id: "E05",
+      town: "hiyori",
       title: "子どもの質問",
       tier: "normal",
       character: "kenta",
@@ -178,6 +183,7 @@
     },
     {
       id: "E06",
+      town: "hiyori",
       title: "頑固な職人",
       tier: "mid",
       character: "genzo",
@@ -210,6 +216,7 @@
     },
     {
       id: "E07",
+      town: "hiyori",
       title: "おかみさんの叱責",
       tier: "mid",
       character: "toki",
@@ -282,6 +289,7 @@
       product: { icon: "🪭", name: "和紙のうちわ", blurb: "夏祭りにぴったりの手刷り柄" },
       echo: {
         tie: "genzo_trust",
+        town: "hiyori",
         effects: { revenue: 0, laughter: 0, humanity: 4, trouble: -6 },
         text: "源造が「うちの軒先を使いな」と工房のひさしを貸してくれた。品物も客も濡れずに済んだ。"
       },
@@ -312,6 +320,7 @@
     },
     {
       id: "E10",
+      town: "hiyori",
       title: "閉店間際の客",
       tier: "final",
       character: "kenta",
@@ -349,6 +358,7 @@
     // ---------- 縁の続き（前の幕の選択で出てくるイベント） ----------
     {
       id: "E11",
+      town: "hiyori",
       title: "恩返しの参拝客",
       tier: "final",
       character: "sayori",
@@ -382,6 +392,7 @@
     },
     {
       id: "E12",
+      town: "hiyori",
       title: "行き止まりの苦情",
       tier: "normal",
       character: "toki",
@@ -415,6 +426,7 @@
     },
     {
       id: "E13",
+      town: "hiyori",
       title: "銀二の助け舟",
       tier: "final",
       character: "ginji",
@@ -448,6 +460,7 @@
     },
     {
       id: "E14",
+      town: "hiyori",
       title: "銀二の仕返し",
       tier: "normal",
       character: "ginji",
@@ -483,6 +496,7 @@
     // ---------- 追加の場面 ----------
     {
       id: "E15",
+      town: "hiyori",
       title: "巡査の見回り",
       tier: "normal",
       character: "tamura",
@@ -545,6 +559,7 @@
     },
     {
       id: "E17",
+      town: "hiyori",
       title: "お梅ばあさんの昔話",
       tier: "normal",
       character: "ume",
@@ -576,6 +591,7 @@
     },
     {
       id: "E18",
+      town: "hiyori",
       title: "回覧板で宣伝",
       tier: "normal",
       character: "koharu",
@@ -607,6 +623,7 @@
     },
     {
       id: "E19",
+      town: "hiyori",
       title: "色が変わらない飴",
       tier: "normal",
       character: "matsuko",
@@ -638,6 +655,7 @@
     },
     {
       id: "E20",
+      town: "hiyori",
       title: "子どもたちの行列",
       tier: "normal",
       character: "kenta",
@@ -700,6 +718,7 @@
     },
     {
       id: "E22",
+      town: "hiyori",
       title: "源造の頼みごと",
       tier: "mid",
       character: "genzo",
@@ -731,6 +750,7 @@
     },
     {
       id: "E23",
+      town: "hiyori",
       title: "夏祭りの準備",
       tier: "mid",
       character: "toki",
@@ -762,6 +782,7 @@
     },
     {
       id: "E24",
+      town: "hiyori",
       title: "町内会の大口注文",
       tier: "final",
       character: "matsuko",
@@ -824,6 +845,7 @@
     },
     {
       id: "E26",
+      town: "hiyori",
       title: "飛び入り口上大会",
       tier: "final",
       character: "toki",
@@ -850,6 +872,328 @@
           text: "「今夜は客席で、皆さんの口上を勉強させてもらいます」",
           effects: { revenue: 500, laughter: 2, humanity: 12, trouble: -4 },
           result: "「殊勝だね」とときが笑い、出場者たちからは飴の注文が入った。"
+        }
+      ]
+    },
+
+    // ---------- 旅の町の場面 ----------
+    {
+      id: "S01",
+      town: "shiomi",
+      title: "大漁祝い",
+      tier: "normal",
+      character: "tatsu",
+      product: { icon: "🐱", name: "福招き猫のお守り", blurb: "持てば運気が上向く……かもしれない" },
+      dialogue: "今日は大漁だ！ 兄さん、景気のいい口上で祝ってくれや！",
+      choices: [
+        {
+          id: "A",
+          type: "bluff",
+          text: "「大漁を呼ぶ招き猫！ 明日の網は魚で破れるぞ！」",
+          effects: { revenue: 1700, laughter: 16, humanity: 0, trouble: 8 },
+          result: "漁師たちは大笑いで、招き猫を船ごとに一つずつ買っていった。"
+        },
+        {
+          id: "B",
+          type: "flatter",
+          text: "「さすが親方、海の男の中の男！」",
+          effects: { revenue: 900, laughter: 4, humanity: 0, trouble: 2 },
+          result: "「世辞はいらねえ。魚と同じで、話も鮮度が命だ」と親方は笑い飛ばした。"
+        },
+        {
+          id: "C",
+          type: "help",
+          text: "「網の繕い、手伝いますよ。口上はそのあとで」",
+          effects: { revenue: 600, laughter: 4, humanity: 14, trouble: -2 },
+          result: "繕い終わると、漁師たちが「礼だ」と干物を持たせ、品も買ってくれた。"
+        }
+      ]
+    },
+    {
+      id: "S02",
+      town: "shiomi",
+      title: "海女の頼み",
+      tier: "normal",
+      character: "minami",
+      product: { icon: "🪭", name: "和紙のうちわ", blurb: "夏祭りにぴったりの手刷り柄" },
+      dialogue: "この浜の子たちに、何か夏の思い出になるもの、ないかな？",
+      choices: [
+        {
+          id: "A",
+          type: "honest",
+          text: "「高いもんはないけど、うちわなら子どもの手にちょうどいい」",
+          effects: { revenue: 900, laughter: 2, humanity: 10, trouble: -2 },
+          result: "美波は子どもの数だけうちわを買い、浜にうちわの花が咲いた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「この飴を海に沈めると七色の魚に……はならないけど、子どもは喜ぶよ」",
+          effects: { revenue: 1100, laughter: 12, humanity: 2, trouble: 0 },
+          result: "「ならないんかい」と美波が吹き出し、飴を大袋で買っていった。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「この笛を吹けば、イルカが寄ってくる！」",
+          effects: { revenue: 1400, laughter: 12, humanity: -4, trouble: 10 },
+          result: "子どもたちが一日中笛を吹き続け、浜は大騒ぎになった。"
+        }
+      ]
+    },
+    {
+      id: "S03",
+      town: "shiomi",
+      title: "時化の知らせ",
+      tier: "mid",
+      character: "tatsu",
+      product: null,
+      dialogue: "おい、午後から時化るぞ！ 港の荷を片付けにゃならん！",
+      choices: [
+        {
+          id: "A",
+          type: "help",
+          text: "「店はたたんで手伝います！」",
+          effects: { revenue: -400, laughter: 2, humanity: 18, trouble: -6 },
+          result: "荷を運び終えた頃、雨が降り出した。漁師たちの見る目が変わった。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「時化の前に、時化てない値段で売り切りだ！」",
+          effects: { revenue: 1300, laughter: 12, humanity: -2, trouble: 4 },
+          result: "駆け込みの客で品は売り切れたが、片付けには間に合わなかった。"
+        },
+        {
+          id: "C",
+          type: "honest",
+          text: "「すまねえ、俺の荷を先に守らせてくれ」",
+          effects: { revenue: 600, laughter: 0, humanity: -2, trouble: 0 },
+          result: "品は無事だったが、漁師たちの輪には入りそびれた。"
+        }
+      ]
+    },
+    {
+      id: "S04",
+      town: "shiomi",
+      title: "浜の花火",
+      tier: "final",
+      character: "minami",
+      product: { icon: "🍬", name: "七色ハッカ飴", blurb: "舐めるたびに色が変わる、日和町名物" },
+      dialogue: "今夜、浜で小さな花火をやるの。お店、出してくれる？",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「花火の合間に、一発ずつ口上を打ち上げましょう！」",
+          effects: { revenue: 2000, laughter: 14, humanity: 6, trouble: 2 },
+          result: "花火と口上の掛け合いに浜じゅうが沸き、品は残らず売れた。"
+        },
+        {
+          id: "B",
+          type: "help",
+          text: "「売るより、子どもたちに線香花火を配りましょう」",
+          effects: { revenue: -300, laughter: 4, humanity: 18, trouble: -4 },
+          result: "小さな火を囲む子どもたちの顔を、まことはきっと忘れないだろう。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「この港いちばんの花火、打ち上げは俺の口上だ！」",
+          effects: { revenue: 1800, laughter: 16, humanity: -6, trouble: 14 },
+          result: "盛り上がりすぎて見物の船が岸に寄りすぎ、漁師に怒鳴られた。"
+        }
+      ]
+    },
+    {
+      id: "Y01",
+      town: "yunosawa",
+      title: "宿の若旦那",
+      tier: "normal",
+      character: "seikichi",
+      product: { icon: "🍬", name: "七色ハッカ飴", blurb: "舐めるたびに色が変わる、日和町名物" },
+      dialogue: "うちの宿のお客に、何か面白い土産はないかね。売れるなら帳場に置いてもいい。",
+      choices: [
+        {
+          id: "A",
+          type: "flatter",
+          text: "「湯ノ沢一の名宿の若旦那に見込まれちゃ、光栄でさあ」",
+          effects: { revenue: 1600, laughter: 6, humanity: 2, trouble: 0 },
+          result: "若旦那は鼻高々で、宿の帳場に品を並べてくれた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「湯けむりの向こうで色が変わる、湯ノ沢限定の七色飴でどうです」",
+          effects: { revenue: 1400, laughter: 12, humanity: 2, trouble: 2 },
+          result: "「限定」の一言が効き、宿の客がこぞって買っていった。"
+        },
+        {
+          id: "C",
+          type: "honest",
+          text: "「正直、ここの名物饅頭にはかないません」",
+          effects: { revenue: 300, laughter: 2, humanity: 6, trouble: 0 },
+          result: "「そんなこと言われてもねえ」と若旦那は興ざめした顔をした。"
+        }
+      ]
+    },
+    {
+      id: "Y02",
+      town: "yunosawa",
+      title: "湯治客の相談",
+      tier: "normal",
+      character: "shige",
+      product: { icon: "🪵", name: "肩たたき棒「ぽんぽこ」", blurb: "叩けば叩くほど肩が軽くなる" },
+      dialogue: "腰を悪くしてね。何か楽になる道具はないかね。",
+      choices: [
+        {
+          id: "A",
+          type: "honest",
+          text: "「治す道具はねえです。でも肩たたき棒で、少しは楽になるかもしれません」",
+          effects: { revenue: 900, laughter: 2, humanity: 12, trouble: -2 },
+          result: "繁蔵は「正直でいい」と笑い、二本買っていった。"
+        },
+        {
+          id: "B",
+          type: "bluff",
+          text: "「この肩たたき棒で、腰もたちまち二十歳に！」",
+          effects: { revenue: 1300, laughter: 10, humanity: -6, trouble: 10 },
+          result: "繁蔵は眉をひそめ、「温泉より効くとは大きく出たね」と首を振った。"
+        },
+        {
+          id: "C",
+          type: "help",
+          text: "「宿まで荷物、お持ちしますよ」",
+          effects: { revenue: 200, laughter: 2, humanity: 14, trouble: -2 },
+          result: "宿に着くと、繁蔵は「礼だよ」と土産を三つ買ってくれた。"
+        }
+      ]
+    },
+    {
+      id: "Y03",
+      town: "yunosawa",
+      title: "足湯の口上",
+      tier: "mid",
+      character: "crowd",
+      product: { icon: "🔧", name: "なんでも開けるくん", blurb: "瓶のフタから缶詰まで、これ一本" },
+      dialogue: "見物の衆「兄さん、足湯につかりながら口上やってくれよ！」",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「湯加減も口上も、ちょうどいい塩梅でございます！」",
+          effects: { revenue: 1100, laughter: 14, humanity: 4, trouble: 2 },
+          result: "足湯の客が笑いながら、湯から上がるたびに品を買っていった。"
+        },
+        {
+          id: "B",
+          type: "bluff",
+          text: "「この足湯につかれば、品物の御利益も倍増！」",
+          effects: { revenue: 1400, laughter: 14, humanity: -4, trouble: 12 },
+          result: "足湯に人が押し寄せ、宿から「定員を守って」と苦情が来た。"
+        },
+        {
+          id: "C",
+          type: "honest",
+          text: "「足湯は足湯、商いは商い。今日は湯を楽しみます」",
+          effects: { revenue: 0, laughter: 4, humanity: 8, trouble: -4 },
+          result: "湯につかって世間話をするうち、自然と客が寄ってきた。"
+        }
+      ]
+    },
+    {
+      id: "Y04",
+      town: "yunosawa",
+      title: "宴会の余興",
+      tier: "final",
+      character: "seikichi",
+      product: null,
+      dialogue: "今夜の宴会で余興を頼みたい。口上を一席、お礼ははずむよ。",
+      choices: [
+        {
+          id: "A",
+          type: "bluff",
+          text: "「天下一の口上で、宴会場をひっくり返してみせましょう！」",
+          effects: { revenue: 2200, laughter: 18, humanity: -4, trouble: 12 },
+          result: "宴会場は大盛り上がり。お膳が一つひっくり返ったのはご愛嬌。"
+        },
+        {
+          id: "B",
+          type: "flatter",
+          text: "「若旦那の宿の宴会に呼ばれるとは、旅商人冥利に尽きます」",
+          effects: { revenue: 1600, laughter: 6, humanity: 4, trouble: 0 },
+          result: "若旦那は上機嫌で、ご祝儀をはずんでくれた。"
+        },
+        {
+          id: "C",
+          type: "help",
+          text: "「お礼はいらねえ。宿の皆さんへの恩返しってことで」",
+          effects: { revenue: 0, laughter: 6, humanity: 18, trouble: -4 },
+          result: "無償の余興に宿の者たちが感激し、翌朝、見送りが大勢並んだ。"
+        }
+      ]
+    },
+    {
+      id: "S05",
+      town: "shiomi",
+      title: "朝市の場所取り",
+      tier: "normal",
+      character: "crowd",
+      product: { icon: "🍬", name: "七色ハッカ飴", blurb: "舐めるたびに色が変わる、日和町名物" },
+      dialogue: "見物の衆「朝市はもう始まってるぞ！ 兄さん、どこに店を出すんだい？」",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「魚屋の隣に陣取って、『魚もびっくりの安さ』で行こう！」",
+          effects: { revenue: 1300, laughter: 14, humanity: 0, trouble: 2 },
+          result: "魚屋の親父まで笑い出し、客が両方の店を行き来した。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「端っこで十分です。邪魔にならないところでやらせてもらいます」",
+          effects: { revenue: 600, laughter: 2, humanity: 10, trouble: -2 },
+          result: "控えめな場所取りが好印象で、朝市の人たちが品を見に来てくれた。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「朝市の真ん中、一番いい場所は俺のもんだ！」",
+          effects: { revenue: 1600, laughter: 12, humanity: -6, trouble: 14 },
+          result: "場所取りでもめ、朝市の世話役に呼び出されてしまった。"
+        }
+      ]
+    },
+    {
+      id: "Y05",
+      town: "yunosawa",
+      title: "湯上がりの土産選び",
+      tier: "normal",
+      character: "crowd",
+      product: { icon: "🪭", name: "和紙のうちわ", blurb: "夏祭りにぴったりの手刷り柄" },
+      dialogue: "見物の衆「湯上がりで気分がいいんだ。何か面白いもん見せてくれよ」",
+      choices: [
+        {
+          id: "A",
+          type: "bluff",
+          text: "「湯上がりの肌にこの飴！ 舐めればもうひと風呂分あったまる！」",
+          effects: { revenue: 1500, laughter: 14, humanity: -2, trouble: 8 },
+          result: "浴衣姿の客たちが、げらげら笑いながら飴を買っていった。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「湯冷めしないうちに、うちわであおいで……あれ、冷えちまう！」",
+          effects: { revenue: 1100, laughter: 14, humanity: 2, trouble: 0 },
+          result: "一人ボケツッコミに温泉客が大笑いし、うちわが売れた。"
+        },
+        {
+          id: "C",
+          type: "help",
+          text: "「足元、気をつけて。宿まで灯りを持っていきますよ」",
+          effects: { revenue: 300, laughter: 2, humanity: 14, trouble: -2 },
+          result: "夜道を照らして送り届けると、客たちが翌朝そろって店に来てくれた。"
         }
       ]
     }

@@ -31,6 +31,7 @@
         </div>
         <nav class="menu" aria-label="タイトルメニュー" data-i18n-attr="aria-label:title.menu">
           <button type="button" class="btn btn--primary btn--big" id="btn-start" data-i18n="title.start">商売を始める</button>
+          <button type="button" class="btn btn--journey" id="btn-journey" data-i18n="title.journey">旅に出る（3つの町）</button>
           <button type="button" class="btn" id="btn-howto" data-i18n="title.howto">遊び方</button>
           <button type="button" class="btn" id="btn-records" data-i18n="title.records">記録を見る</button>
         </nav>
@@ -66,6 +67,7 @@
     <!-- 仕入れ画面（開店前） -->
     <section class="screen screen--stock" id="screen-stock" aria-labelledby="stock-heading" hidden>
       <h2 class="stock__heading" id="stock-heading" tabindex="-1" data-i18n="stock.heading">開店前の仕入れ</h2>
+      <p class="stock__town" id="stock-town" hidden></p>
       <p class="stock__lead" data-i18n="stock.lead">予算の中で、今日の品を3つまで選びましょう。品ごとに効く口上や相手が違います。</p>
       <p class="stock__budget" id="stock-budget"></p>
       <ul class="stock__list" id="stock-list"></ul>
@@ -83,6 +85,7 @@
           <p class="hud__money"><span data-i18n="stat.revenue">売上</span> <strong id="stat-revenue">0円</strong><span class="hud__sep" data-i18n="hud.sep">・</span><span data-i18n="stat.customers">客</span> <strong id="stat-customers">0人</strong>
             <button type="button" class="mute" id="btn-mute" aria-pressed="false" aria-label="音を消す" title="音を消す">🔊</button></p>
         </div>
+        <p class="hud__town" id="hud-town" hidden></p>
         <p class="hud__goods" id="hud-goods"></p>
         <p class="momentum" id="momentum">
           <span class="momentum__label" data-i18n="hud.momentum">勢い</span>
@@ -161,7 +164,8 @@
         <p class="badge" id="badge-new" hidden data-i18n="result.new">新しい結末を発見！</p>
         <h2 class="kamishibai__title" id="ending-name" tabindex="-1"></h2>
         <p class="kamishibai__text" id="ending-text"></p>
-        <p class="kamishibai__honor"><span data-i18n="result.honor">称号：</span><strong id="ending-title"></strong></p>
+        <p class="kamishibai__honor" id="ending-honor"><span data-i18n="result.honor">称号：</span><strong id="ending-title"></strong></p>
+        <ol class="journey-log" id="journey-log" hidden></ol>
       </div>
       <dl class="scores">
         <div><dt data-i18n="stat.revenue">売上</dt><dd><span id="res-revenue">0円</span><span class="best" id="badge-best" hidden data-i18n="result.best">自己ベスト！</span></dd></div>
@@ -187,6 +191,7 @@
         <ol class="log__list" id="history"></ol>
       </details>
       <div class="menu menu--row">
+        <button type="button" class="btn btn--primary" id="btn-next-town" hidden data-i18n="journey.nextTown">次の町へ ▶</button>
         <button type="button" class="btn btn--primary" id="btn-retry" data-i18n="result.retry">もう一度商売する</button>
         <button type="button" class="btn" id="btn-to-title" data-i18n="result.toTitle">タイトルへ</button>
       </div>
@@ -206,6 +211,7 @@
         <span class="type type--help" data-i18n="type.help">お助け</span><span data-i18n="howto.help">人情が大きく上がるが、売上を失うことも。</span>
       </li>
       <li data-i18n-html="howto.4">客にはそれぞれ<strong>好きな口上・嫌いな口上</strong>があります。最初は分かりませんが、相性◎や×が出ると<strong>常連帳</strong>に書き込まれ、次からは選択肢に印が付きます。</li>
+      <li data-i18n-html="howto.journey"><strong>旅に出る</strong>：日和町商店街・潮見港・湯ノ沢温泉の3つの町を続けて回ります。町ごとに仕入れ直し、人情（評判）の半分と縁を次の町へ持ち越し、最後に旅全体の結末が決まります。</li>
       <li data-i18n-html="howto.stock"><strong>仕入れ</strong>：開店前に、予算3,000円で品を3つまで選びます。品ごとに効く口上や相手が違います。</li>
       <li data-i18n-html="howto.momentum"><strong>勢い</strong>：笑いを取るとたまり（最大3）、大風呂敷の売上が伸びます。満タンで大風呂敷を切ると大騒動。正直・お助けに切り替えると、勢いを売上に変えて締められます。</li>
       <li data-i18n-html="howto.5"><strong>大風呂敷を続けると「調子に乗りすぎ」</strong>で騒動が上乗せされます。</li>
@@ -223,6 +229,9 @@
     </dl>
     <h3><span data-i18n="records.zukan">結末図鑑</span> <small id="rec-count"></small></h3>
     <ul class="zukan" id="rec-endings"></ul>
+    <h3><span data-i18n="records.journeys">旅の結末</span> <small id="rec-journey-count"></small></h3>
+    <p class="sheet__muted" id="rec-journey-best"></p>
+    <ul class="zukan" id="rec-journeys"></ul>
     <h3 data-i18n="records.regulars">常連帳</h3>
     <ul class="regulars" id="rec-regulars"></ul>
     <p class="sheet__muted" id="rec-regulars-empty" data-i18n="records.regularsEmpty">まだ誰の好みも分かっていません。相性◎や×が出ると書き込まれます。</p>
@@ -234,6 +243,7 @@
   <script src="data/events.js"></script>
   <script src="data/endings.js"></script>
   <script src="data/goods.js"></script>
+  <script src="data/towns.js"></script>
   <script src="data/en.js"></script>
   <script src="i18n.js"></script>
   <script src="logic.js"></script>

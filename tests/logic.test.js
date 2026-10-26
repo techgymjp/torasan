@@ -7,6 +7,7 @@ require("../data/characters.js");
 require("../data/events.js");
 require("../data/endings.js");
 require("../data/goods.js");
+require("../data/towns.js");
 const L = require("../logic.js");
 const D = globalThis.TankaData;
 
@@ -83,12 +84,17 @@ test("5幕で終わり、3幕目は中規模・5幕目は最終イベント、�
   }
 });
 
-test("10種類すべてのイベントが実際のプレイで登場する", () => {
+test("すべてのイベントが実際のプレイで登場する（3つの町）", () => {
   const seen = new Set();
-  for (let seed = 0; seed < 500; seed++) {
+  const towns = ["hiyori", "shiomi", "yunosawa"];
+  for (let seed = 0; seed < 900; seed++) {
     const rng = seeded(seed);
-    const { final } = playThrough(rng, (e) => e.choices[Math.floor(rng() * 3)].id);
-    final.usedEvents.forEach((id) => seen.add(id));
+    let s = L.startGame(rng, [], { town: towns[seed % 3] });
+    while (s.status === "playing") {
+      const e = L.getCurrentEvent(s);
+      s = L.advance(L.applyChoice(s, e.choices[Math.floor(rng() * 3)].id).state, rng);
+    }
+    s.usedEvents.forEach((id) => seen.add(id));
   }
   for (const e of D.events) assert.ok(seen.has(e.id), `未登場: ${e.id}`);
 });
@@ -266,4 +272,53 @@ test("仕入れ：予算と個数の範囲に収め、条件に合う幕で効�
   assert.deepEqual(withGood.goodsUsed, ["opener"]);
   assert.ok(withGood.deltas.revenue > plain.deltas.revenue);
   assert.deepEqual(L.applyChoice(base, "A").outcome.goodsUsed, []); // 大風呂敷には効かない
+});
+
+test("旅：町ごとに、その町の場面と町を問わない場面だけが出る", () => {
+  for (const town of ["hiyori", "shiomi", "yunosawa"]) {
+    for (let seed = 0; seed < 200; seed++) {
+      const rng = seeded(seed);
+      let s = L.startGame(rng, [], { town });
+      assert.equal(s.town, town);
+      while (s.status === "playing") {
+        const e = L.getCurrentEvent(s);
+        assert.ok(!e.town || e.town === town, `${town} に ${e.id}`);
+        s = L.advance(L.applyChoice(s, e.choices[Math.floor(rng() * 3)].id).state, rng);
+      }
+      assert.equal(s.history.length, 5);
+    }
+  }
+});
+
+test("旅：評判（人情）の半分と縁を持ち越し、旅の結末を判定する", () => {
+  const s = Object.assign(L.createInitialState(), { humanity: 80, ties: ["kenta_fan"] });
+  assert.deepEqual(L.carryOver(s), { humanity: 55, ties: ["kenta_fan"], seen: [] });
+  const next = L.startGame(seeded(11), [], { town: "shiomi", humanity: 55, ties: ["kenta_fan"] });
+  assert.equal(next.humanity, 55);
+  assert.deepEqual(next.ties, ["kenta_fan"]);
+  const r = (revenue, humanity, ending) => ({ revenue, humanity, ending });
+  assert.equal(L.judgeJourney([r(10000, 50, "a"), r(9000, 60, "b"), r(8000, 65, "c")]).id, "j_grand");
+  assert.equal(L.judgeJourney([r(3000, 30, "a"), r(3000, 30, "chaos"), r(3000, 90, "x")]).id, "j_chaos");
+  assert.equal(L.judgeJourney([r(3000, 50, "a"), r(3000, 60, "b"), r(3000, 86, "c")]).id, "j_kind");
+  assert.equal(L.judgeJourney([r(10000, 30, "a"), r(9000, 30, "b"), r(8000, 64, "c")]).id, "j_rich");
+  assert.equal(L.judgeJourney([r(3000, 30, "a"), r(3000, 30, "b"), r(3000, 40, "c")]).id, "j_onward");
+});
+
+test("旅：前の町で見た場面は、次の町で出ない", () => {
+  let repeats = 0;
+  for (let seed = 0; seed < 300; seed++) {
+    const rng = seeded(seed);
+    let carry = {};
+    const seen = new Set();
+    for (const town of ["hiyori", "shiomi", "yunosawa"]) {
+      let s = L.startGame(rng, [], Object.assign({ town }, carry));
+      while (s.status === "playing") {
+        const e = L.getCurrentEvent(s);
+        s = L.advance(L.applyChoice(s, e.choices[Math.floor(rng() * 3)].id).state, rng);
+      }
+      s.usedEvents.forEach((id) => { if (seen.has(id)) repeats++; seen.add(id); });
+      carry = L.carryOver(s);
+    }
+  }
+  assert.equal(repeats, 0, `重複 ${repeats} 回`);
 });

@@ -121,6 +121,46 @@
           like: "\"Ha, you're a funny one. I'll take one.\"",
           dislike: "\"Huh. That's boring.\""
         }
+      },
+      tatsu: {
+        name: "Tatsugoro",
+        role: "Fishing boss",
+        hint: "The leader of Shiomi Harbor's fishermen.",
+        trait: "Loves big, cheerful talk and people who work up a sweat. Hates flattery.",
+        reactions: {
+          like: "\"Ha! I like you!\"",
+          dislike: "\"Smooth talkers get tossed into the sea.\""
+        }
+      },
+      minami: {
+        name: "Minami",
+        role: "Harbor diver",
+        hint: "A diver the beach kids adore.",
+        trait: "Cares about the kids. Likes straight talk and a good joke, dislikes exaggeration.",
+        reactions: {
+          like: "\"Heh. You're a good one.\"",
+          dislike: "\"Kids believe that stuff. Cut it out.\""
+        }
+      },
+      seikichi: {
+        name: "Seikichi",
+        role: "Young innkeeper",
+        hint: "The young master of an old Yunosawa inn.",
+        trait: "Weak to flattery and loves a clever sales line. Too much honesty kills his mood.",
+        reactions: {
+          like: "\"Oh, I like that.\"",
+          dislike: "\"Well, that's a buzzkill.\""
+        }
+      },
+      shige: {
+        name: "Shigezo",
+        role: "Elderly spa guest",
+        hint: "An elderly gentleman here to soak a bad back.",
+        trait: "Soft on honesty and kindness. Doesn't believe in miracle claims.",
+        reactions: {
+          like: "\"Hm. You, I can trust.\"",
+          dislike: "\"Don't tease an old man.\""
+        }
       }
     },
 
@@ -472,7 +512,119 @@
           B: { text: "\"A wandering peddler, here to give Hiyori-cho one pitch!\"", result: "A pitch woven with local specialties wins big laughs — and a special prize." },
           C: { text: "\"Tonight I'll sit in the audience and learn from everyone's pitches.\"", result: "\"How modest,\" Toki laughs, and the contestants order drops from the stall." }
         }
+      },
+      S01: {
+        title: "Celebrating the Big Catch",
+        product: { name: "Lucky Cat Charm", blurb: "Brings good fortune... maybe" },
+        dialogue: "Huge catch today! Come on, pal, give us a pitch worthy of the celebration!",
+        choices: {
+          A: { text: "\"The lucky cat that calls the catch! Tomorrow your nets will burst with fish!\"", result: "The fishermen roar with laughter and buy one lucky cat for every boat." },
+          B: { text: "\"That's our boss — the manliest man of the sea!\"", result: "\"Spare me. Talk's like fish — it's all about freshness,\" the boss laughs it off." },
+          C: { text: "\"Let me help mend the nets. The pitch can wait.\"", result: "When the mending's done, the fishermen hand over dried fish — \"Our thanks\" — and buy a few goods too." }
+        }
+      },
+      S02: {
+        title: "The Diver's Request",
+        product: { name: "Washi Paper Fans", blurb: "Hand-printed fans, perfect for summer festivals" },
+        dialogue: "Got anything that would make a nice summer memory for the kids on this beach?",
+        choices: {
+          A: { text: "\"Nothing fancy, but these fans are just the right size for little hands.\"", result: "Minami buys one fan for every kid, and the beach blooms with fans." },
+          B: { text: "\"Drop this candy in the sea and it turns into a rainbow fish... no, it doesn't. But kids love it.\"", result: "\"It doesn't?\" Minami bursts out laughing and buys a big bag." },
+          C: { text: "\"Blow this whistle and the dolphins will come!\"", result: "The kids blow whistles all day long, and the beach turns into chaos." }
+        }
+      },
+      S03: {
+        title: "Storm Warning",
+        dialogue: "Hey, a storm's coming this afternoon! We've got to secure the cargo at the docks!",
+        choices: {
+          A: { text: "\"I'll close up and help!\"", result: "Just as the last crate is moved, the rain begins. The fishermen look at Makoto differently now." },
+          B: { text: "\"Before the storm hits — a sale with no stormy prices!\"", result: "Last-minute buyers clear out the stock, but Makoto misses the cleanup." },
+          C: { text: "\"Sorry, I need to protect my own goods first.\"", result: "The goods are safe, but Makoto never quite joins the fishermen's circle." }
+        }
+      },
+      S04: {
+        title: "Fireworks on the Beach",
+        product: { name: "Rainbow Mint Drops", blurb: "Changes color as you suck it — a Hiyori-cho specialty" },
+        dialogue: "We're having small fireworks on the beach tonight. Will you set up your stall?",
+        choices: {
+          A: { text: "\"Between each firework, I'll launch a pitch of my own!\"", result: "Fireworks and patter trade off, the whole beach cheers, and every last item sells." },
+          B: { text: "\"Instead of selling, let's hand out sparklers to the kids.\"", result: "Makoto will never forget the kids' faces lit by those tiny sparks." },
+          C: { text: "\"The biggest firework in this harbor? My pitch!\"", result: "It gets so lively that spectator boats crowd the shore, and the fishermen yell at everyone." }
+        }
+      },
+      Y01: {
+        title: "The Young Innkeeper",
+        product: { name: "Rainbow Mint Drops", blurb: "Changes color as you suck it — a Hiyori-cho specialty" },
+        dialogue: "Got any fun souvenirs for my inn's guests? If they sell, I'll put them at the front desk.",
+        choices: {
+          A: { text: "\"Chosen by the young master of the finest inn in Yunosawa? What an honor.\"", result: "The young master puffs up with pride and lines the goods up at the front desk." },
+          B: { text: "\"How about Yunosawa-limited rainbow drops that change color through the steam?\"", result: "The word \"limited\" does the trick, and the inn's guests snap them up." },
+          C: { text: "\"Honestly, nothing beats the local steamed buns here.\"", result: "\"Well, that's not much help,\" says the young master, deflated." }
+        }
+      },
+      Y02: {
+        title: "The Spa Guest's Question",
+        product: { name: "Pon-Pon Shoulder Tapper", blurb: "The more you tap, the lighter your shoulders" },
+        dialogue: "My back's been bad. Have you got anything that might ease it?",
+        choices: {
+          A: { text: "\"Nothing that'll cure it. But this shoulder tapper might help a little.\"", result: "\"I like your honesty,\" Shigezo smiles, and buys two." },
+          B: { text: "\"With this tapper, your back will feel twenty again in no time!\"", result: "Shigezo frowns. \"Better than the hot springs? That's a big claim,\" he says, shaking his head." },
+          C: { text: "\"Let me carry your bags to the inn.\"", result: "At the inn, Shigezo buys three souvenirs: \"For your trouble.\"" }
+        }
+      },
+      Y03: {
+        title: "A Pitch from the Foot Bath",
+        product: { name: "The Open-Anything", blurb: "Jar lids, cans and more — all with one tool" },
+        dialogue: "The onlookers: \"Hey pal, give us a pitch while you soak your feet!\"",
+        choices: {
+          A: { text: "\"The water's just right, and so is my pitch!\"", result: "The foot-bath crowd laughs and buys something every time they step out." },
+          B: { text: "\"Soak in this foot bath and my goods' blessings double!\"", result: "People flood the foot bath, and the inn complains about the crowding." },
+          C: { text: "\"A foot bath is for soaking. Business can wait — I'm enjoying the water today.\"", result: "Chatting away in the warm water, customers start drifting over on their own." }
+        }
+      },
+      Y04: {
+        title: "The Banquet Act",
+        dialogue: "I'd like you to perform at tonight's banquet. One pitch — I'll pay you well.",
+        choices: {
+          A: { text: "\"With the greatest pitch in the land, I'll turn this banquet hall upside down!\"", result: "The hall goes wild. One tray gets flipped over, but nobody minds." },
+          B: { text: "\"Invited to your inn's banquet — a traveling peddler couldn't ask for more.\"", result: "The young master, in high spirits, tips generously." },
+          C: { text: "\"No payment needed. Call it thanks to everyone at the inn.\"", result: "The staff are so moved by the free show that a crowd lines up to see Makoto off the next morning." }
+        }
+      },
+      S05: {
+        title: "Claiming a Spot at the Morning Market",
+        product: { name: "Rainbow Mint Drops", blurb: "Changes color as you suck it — a Hiyori-cho specialty" },
+        dialogue: "The onlookers: \"The morning market's already started! Where are you setting up, pal?\"",
+        choices: {
+          A: { text: "\"Right next to the fishmonger — with prices so low even the fish are shocked!\"", result: "Even the fishmonger laughs, and customers go back and forth between both stalls." },
+          B: { text: "\"The far end is fine. I'll set up where I won't be in anyone's way.\"", result: "The modest choice makes a good impression, and market folks come by to browse." },
+          C: { text: "\"The best spot, right in the middle of the market, is mine!\"", result: "A fight over the spot breaks out, and the market organizer calls Makoto in." }
+        }
+      },
+      Y05: {
+        title: "After-Bath Souvenirs",
+        product: { name: "Washi Paper Fans", blurb: "Hand-printed fans, perfect for summer festivals" },
+        dialogue: "The onlookers: \"We're feeling great after the bath. Show us something fun!\"",
+        choices: {
+          A: { text: "\"Fresh from the bath? Try this candy — it warms you up like another soak!\"", result: "Guests in cotton robes buy drops, laughing out loud." },
+          B: { text: "\"Fan yourself before you catch a chill... wait, that'll chill you!\"", result: "The one-man comedy routine cracks up the spa guests, and the fans sell." },
+          C: { text: "\"Watch your step. I'll carry a lantern for you back to the inn.\"", result: "After Makoto lights their way home, the guests all come by the stall the next morning." }
+        }
       }
+    },
+
+    towns: {
+      hiyori: { name: "Hiyori-cho Shopping Street", blurb: "An old-fashioned shopping street full of familiar faces." },
+      shiomi: { name: "Shiomi Harbor", blurb: "A harbor town of fishermen and divers. Big talk goes over well." },
+      yunosawa: { name: "Yunosawa Hot Springs", blurb: "A steamy hot-spring town. Inn guests loosen their purse strings." }
+    },
+
+    journeyEndings: {
+      j_grand: { name: "A Grand Finale", title: "Peddler of Renown", text: "Three towns of profit, laughter and new ties. At the teahouse on the mountain pass, a stranger says, \"I've heard all about you.\"" },
+      j_chaos: { name: "Bird of Trouble", title: "Notorious Troublemaker", text: "Trouble followed Makoto from town to town — one day ended in being all but chased out. Word spread ahead: \"That pitchman is coming!\" Still, Makoto walks on with a light step." },
+      j_kind: { name: "The Kind Road", title: "Welcome Anywhere", text: "The profits were modest. But in all three towns, someone now says, \"Come back anytime.\" That's the greatest fortune of all." },
+      j_rich: { name: "Famous Peddler", title: "Top-Earning Traveler", text: "Three towns, sold and sold again. Hugging a heavy wallet, Makoto unfolds the map to the next stop." },
+      j_onward: { name: "Onward to the Next Journey", title: "Wanderer of the Winds", text: "Three towns without great fortune or great trouble — yet each left a small memory. Today, too, Makoto sets off for the next town." }
     },
 
     goods: {

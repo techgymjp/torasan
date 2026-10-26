@@ -7,6 +7,7 @@ require("../data/characters.js");
 require("../data/events.js");
 require("../data/endings.js");
 require("../data/goods.js");
+require("../data/towns.js");
 require("../data/en.js");
 const D = globalThis.TankaData;
 
@@ -66,5 +67,13 @@ test("英訳：仕入れの品すべてに訳がある", () => {
   for (const g of D.goods) {
     const en = D.en.goods[g.id];
     assert.ok(en && en.name && en.blurb, `品 ${g.id}`);
+  }
+});
+
+test("英訳：町と旅の結末すべてに訳がある", () => {
+  for (const t of D.towns) assert.ok(D.en.towns[t.id] && D.en.towns[t.id].name && D.en.towns[t.id].blurb, `町 ${t.id}`);
+  for (const j of D.journeyEndings) {
+    const en = D.en.journeyEndings[j.id];
+    assert.ok(en && en.name && en.title && en.text, `旅の結末 ${j.id}`);
   }
 });

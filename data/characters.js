@@ -164,6 +164,60 @@
         dislike: "「なんだ、つまんないの」"
       },
       look: { skin: "#f2c9a0", hair: "#2b1a10", hairStyle: "slick", clothes: "#4a4a5a", accent: "#c8102e" }
+    },
+
+    // ---------- 旅の町の人々 ----------
+    tatsu: {
+      name: "辰五郎",
+      role: "漁師の親方",
+      hint: "潮見港の漁師たちのまとめ役。",
+      trait: "景気のいい話と、汗をかく人間が好き。おべっかは大嫌い。",
+      likes: ["bluff", "help"],
+      dislikes: ["flatter"],
+      reactions: {
+        like: "「おう、気に入った！」",
+        dislike: "「口先だけの奴は、海に放り込むぞ」"
+      },
+      look: { skin: "#d9a27a", hair: "#1c1c1c", hairStyle: "headband", clothes: "#1f4e79", accent: "#f2e6c8" }
+    },
+    minami: {
+      name: "美波",
+      role: "浜の海女",
+      hint: "浜の子どもたちに慕われる海女。",
+      trait: "子ども思いで、まっすぐな話と気の利いた冗談が好き。大げさな話は嫌う。",
+      likes: ["honest", "wit"],
+      dislikes: ["bluff"],
+      reactions: {
+        like: "「ふふ、あんた、いい人だね」",
+        dislike: "「そういうの、子どもが真に受けるからやめて」"
+      },
+      look: { skin: "#e3b58c", hair: "#1e1410", hairStyle: "long", clothes: "#2f7f8a", accent: "#f2e6c8" }
+    },
+    seikichi: {
+      name: "清吉",
+      role: "老舗旅館の若旦那",
+      hint: "湯ノ沢の老舗旅館の若旦那。",
+      trait: "持ち上げられると弱く、気の利いた売り文句が好き。正直すぎる話には興ざめする。",
+      likes: ["flatter", "wit"],
+      dislikes: ["honest"],
+      reactions: {
+        like: "「いいねえ、気に入ったよ」",
+        dislike: "「なんだか白けるねえ」"
+      },
+      look: { skin: "#f2c9a0", hair: "#2b1a10", hairStyle: "slick", clothes: "#5a3e2b", accent: "#d9a62e" }
+    },
+    shige: {
+      name: "繁蔵",
+      role: "湯治客の老紳士",
+      hint: "腰を痛めて湯治に来た老紳士。",
+      trait: "誠実な話と親切に弱い。大げさな効能書きは信じない。",
+      likes: ["honest", "help"],
+      dislikes: ["bluff"],
+      reactions: {
+        like: "「うむ、あんたは信用できる」",
+        dislike: "「年寄りをからかっちゃいかんよ」"
+      },
+      look: { skin: "#e8bc94", hair: "#bfbfbf", hairStyle: "short", clothes: "#6b5a48", accent: "#c8102e" }
     }
   };
 })(typeof globalThis !== "undefined" ? globalThis : window);
