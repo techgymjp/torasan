@@ -297,11 +297,12 @@ test("旅：評判（人情）の半分と縁を持ち越し、旅の結末を�
   assert.equal(next.humanity, 55);
   assert.deepEqual(next.ties, ["kenta_fan"]);
   const r = (revenue, humanity, ending) => ({ revenue, humanity, ending });
-  assert.equal(L.judgeJourney([r(10000, 50, "a"), r(9000, 60, "b"), r(8000, 65, "c")]).id, "j_grand");
-  assert.equal(L.judgeJourney([r(3000, 30, "a"), r(3000, 30, "chaos"), r(3000, 90, "x")]).id, "j_chaos");
-  assert.equal(L.judgeJourney([r(3000, 50, "a"), r(3000, 60, "b"), r(3000, 86, "c")]).id, "j_kind");
-  assert.equal(L.judgeJourney([r(10000, 30, "a"), r(9000, 30, "b"), r(8000, 64, "c")]).id, "j_rich");
-  assert.equal(L.judgeJourney([r(3000, 30, "a"), r(3000, 30, "b"), r(3000, 40, "c")]).id, "j_onward");
+  const ten = (rev, lastHum, chaos = 0) => Array.from({ length: 10 }, (_, i) => r(rev, i === 9 ? lastHum : 50, i < chaos ? "chaos" : "x"));
+  assert.equal(L.judgeJourney(ten(10000, 65)).id, "j_grand");
+  assert.equal(L.judgeJourney(ten(3000, 90, 2)).id, "j_chaos");
+  assert.equal(L.judgeJourney(ten(3000, 90, 1)).id, "j_kind");
+  assert.equal(L.judgeJourney(ten(9500, 64)).id, "j_rich");
+  assert.equal(L.judgeJourney(ten(3000, 40)).id, "j_onward");
 });
 
 test("旅：前の町で見た場面は、次の町で出ない", () => {
@@ -311,7 +312,7 @@ test("旅：前の町で見た場面は、次の町で出ない", () => {
     let carry = {};
     const seen = new Set();
     const route = [];
-    for (let i = 0; i < D.journeyLength; i++) {
+    for (let i = 0; i < 3; i++) {
       const open = L.openTowns(route);
       const town = open[Math.floor(rng() * open.length)];
       route.push(town);
@@ -327,38 +328,24 @@ test("旅：前の町で見た場面は、次の町で出ない", () => {
   assert.equal(repeats, 0, `重複 ${repeats} 回`);
 });
 
-test("旅：10の町と道。最初は日和町、次からはつながった町へ。どの町にも行ける", () => {
+test("旅：10の町を順番に回る。どの町にも山場の場面がある", () => {
   assert.equal(D.towns.length, 10);
-  const ids = D.towns.map((t) => t.id);
+  assert.equal(D.journeyLength, 10);
   for (const t of D.towns) {
-    for (const id of t.links) {
-      assert.ok(ids.includes(id), `${t.id} → ${id}`);
-      assert.ok(D.towns.find((x) => x.id === id).links.includes(t.id), `道が片道: ${t.id} → ${id}`);
-    }
     const own = D.events.filter((e) => e.town === t.id);
     assert.ok(own.length >= 5, `${t.id} の場面 ${own.length}`);
     assert.ok(own.some((e) => e.tier === "final") && own.some((e) => e.tier === "mid"), `${t.id} の山場`);
   }
   assert.deepEqual(L.openTowns([]), ["hiyori"]);
-  assert.deepEqual(L.openTowns(["hiyori"]).sort(), ["joka", "shiomi", "touge", "yunosawa"]);
-  assert.ok(!L.openTowns(["hiyori", "shiomi"]).includes("hiyori"));
-  assert.deepEqual(L.openTowns(["hiyori", "shiomi", "nagi"]), []);
-  // 旅の道順だけで、すべての町に行ける
-  const reach = new Set();
-  const walk = (route) => {
-    route.forEach((id) => reach.add(id));
-    L.openTowns(route).forEach((id) => walk(route.concat(id)));
-  };
-  walk([]);
-  assert.equal(reach.size, 10);
+  assert.deepEqual(L.openTowns(["hiyori"]), [D.towns[1].id]);
+  assert.deepEqual(L.openTowns(D.towns.map((t) => t.id)), []);
 });
 
-test("旅：鍵を開けて行った町のあとは、元の町に戻って道をたどる", () => {
-  assert.equal(L.homeTown(["hiyori", "aoba"], ["aoba"]), "hiyori");
-  assert.deepEqual(L.openTowns(["hiyori", "aoba"], ["aoba"]).sort(), ["joka", "shiomi", "touge", "yunosawa"]);
-  // 最初の町に鍵を開けて行ったら、次は出発の町から
-  assert.equal(L.homeTown(["nagi"], ["nagi"]), null);
-  assert.deepEqual(L.openTowns(["nagi"], ["nagi"]), ["hiyori"]);
-  // 鍵なしなら、最後の町から
-  assert.deepEqual(L.openTowns(["hiyori", "shiomi"], []).sort(), ["kuroiwa", "nagi"]);
+test("旅：鍵を開けて先の町に行ったあとは、元の順番に戻る", () => {
+  const ids = D.towns.map((t) => t.id);
+  const last = ids[ids.length - 1];
+  assert.equal(L.homeTown(["hiyori", last], [last]), "hiyori");
+  assert.deepEqual(L.openTowns(["hiyori", last]), [ids[1]]);
+  assert.equal(L.homeTown([last], [last]), null);
+  assert.deepEqual(L.openTowns([last]), ["hiyori"]);
 });

@@ -1117,11 +1117,11 @@
     },
 
     journeyEndings: {
-      j_grand: { name: "A Grand Finale", title: "Peddler of Renown", text: "Three towns of profit, laughter and new ties. At the teahouse on the mountain pass, a stranger says, \"I've heard all about you.\"" },
-      j_chaos: { name: "Bird of Trouble", title: "Notorious Troublemaker", text: "Trouble followed Makoto from town to town — one day ended in being all but chased out. Word spread ahead: \"That pitchman is coming!\" Still, Makoto walks on with a light step." },
-      j_kind: { name: "The Kind Road", title: "Welcome Anywhere", text: "The profits were modest. But in all three towns, someone now says, \"Come back anytime.\" That's the greatest fortune of all." },
-      j_rich: { name: "Famous Peddler", title: "Top-Earning Traveler", text: "Three towns, sold and sold again. Hugging a heavy wallet, Makoto unfolds the map to the next stop." },
-      j_onward: { name: "Onward to the Next Journey", title: "Wanderer of the Winds", text: "Three towns without great fortune or great trouble — yet each left a small memory. Today, too, Makoto sets off for the next town." }
+      j_grand: { name: "A Grand Finale", title: "Peddler of Renown", text: "Ten towns of profit, laughter and new ties. As Makoto closes the last stall on Nagi's beach, a bundle of letters from every town waits on the ferry." },
+      j_chaos: { name: "Bird of Trouble", title: "Notorious Troublemaker", text: "Trouble followed Makoto from town to town — some days ended in being all but chased out. Even before reaching the last island, word spread: \"That pitchman is coming!\" Still, Makoto walks on with a light step." },
+      j_kind: { name: "The Kind Road", title: "Welcome Anywhere", text: "The profits were modest. But in all ten towns, someone now says, \"Come back anytime.\" That's the greatest fortune of all." },
+      j_rich: { name: "Famous Peddler", title: "Top-Earning Traveler", text: "Ten towns, sold and sold again. Hugging a heavy wallet, Makoto unfolds the map for the next journey." },
+      j_onward: { name: "Onward to the Next Journey", title: "Wanderer of the Winds", text: "Ten towns without great fortune or great trouble — yet each left a small memory. Today, too, Makoto sets off on the next journey." }
     },
 
     townEndings: {

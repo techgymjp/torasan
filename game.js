@@ -25,6 +25,7 @@
   const RECENT_KEY = "tankabai.recent.v1";
   const REGULARS_KEY = "tankabai.regulars.v1";
   const STOCK_KEY = "tankabai.stock.v1";
+  const JOURNEY_KEY = "tankabai.journey.v1"; // 旅の途中経過（町を終えるたびに保存し、続きから再開できる）
   const RECENT_MAX = 10; // 最近のプレイで出たイベントを、これだけ覚えて出にくくする
   const FX_DURATION = 1200;
   const SHARE_URL = "https://techgym.jp/column/claude-code-game-tankabai/";
@@ -34,7 +35,7 @@
   let state = L.createInitialState();
   let fxTimer = null;
   let storageOk = true;
-  let mode = "day";         // "day"（1日の商売）/ "journey"（10 の町から 3 つを回る旅）
+  let mode = "day";         // "day"（1日の商売）/ "journey"（10 の町を順に回る旅）
   let journey = null;       // { results: [], carry, pick: 商売する町, unlocked: 広告で鍵を開けた町, unlockUsed, warps: 鍵を開けて行った町 }
   let beforeChoice = null;  // 口上を選ぶ直前の状態（リワード広告で言い直すため）
   let redoUsed = false;     // 言い直しは 1 プレイ 1 回まで
@@ -526,7 +527,8 @@
     const change = { towns: towns, townBest: townBest };
     if (home) change.currentTown = home;
     saveRecords(change);
-    const completed = towns.length === D.towns.length && before.towns.length < D.towns.length;
+    if (last) clearJourney();
+    else saveJourney();
     const log = $("journey-log");
     log.textContent = "";
     journey.results.forEach(function (r, i) {
@@ -541,12 +543,6 @@
       const li = document.createElement("li");
       li.className = "journey-log__total";
       li.textContent = t("journey.total", { revenue: money(summary.revenue) });
-      log.appendChild(li);
-    }
-    if (completed) {
-      const li = document.createElement("li");
-      li.className = "journey-log__total";
-      li.textContent = t("map.complete");
       log.appendChild(li);
     }
     log.hidden = false;
@@ -792,36 +788,32 @@
     return btn;
   }
 
-  // 旅の町一覧：この旅で済んだ町・今行ける町・鍵のかかった町を並べる。
-  // 行けるのは、最初は日和町商店街、そのあとは道でつながった町。鍵はリワード広告で旅に 1 回開けられる
+  // 旅の町一覧：済んだ町・次の町・鍵のかかった町を順番に並べる。
+  // 町は順番に回る。まだ順番が来ていない町は、リワード広告で旅に 1 回だけ鍵を開けて先に行ける
   function showMap() {
     mode = "journey";
     journey.pick = null;
     $("map-note").textContent = "";
-    const records = loadRecords();
     const route = journey.results.map(function (r) { return r.town; });
-    const open = L.openTowns(route, journey.warps);
+    const open = L.openTowns(route);
     if (journey.unlocked && route.indexOf(journey.unlocked) === -1 && open.indexOf(journey.unlocked) === -1) open.push(journey.unlocked);
-    $("map-step").textContent = t("map.step", { n: route.length + 1, total: D.journeyLength });
-    $("map-progress").textContent = records.towns.length === D.towns.length
-      ? t("map.complete")
-      : t("map.progress", { n: records.towns.length, total: D.towns.length });
+    $("map-step").textContent = open.length
+      ? t("map.step", { town: townText(open[0]).name })
+      : "";
+    $("map-progress").textContent = t("map.progress", { n: route.length, total: D.journeyLength });
     const list = $("map-list");
     list.textContent = "";
-    D.towns.forEach(function (town) {
+    D.towns.forEach(function (town, i) {
       const done = journey.results.find(function (r) { return r.town === town.id; });
       const canGo = open.indexOf(town.id) !== -1;
-      const linkNames = town.links.map(function (id) { return townText(id).name; }).join(I18n.lang === "ja" ? "・" : ", ");
       const status = done ? t("map.done", { revenue: money(done.revenue) })
-        : canGo ? t("map.go") : t("map.locked", { towns: linkNames });
+        : canGo ? t("map.go") : t("map.locked");
       const btn = townCard(town, status, done ? "town-card--done" : canGo ? "town-card--now" : "");
       btn.disabled = !canGo;
-      if (records.towns.indexOf(town.id) !== -1) {
-        const seal = document.createElement("span");
-        seal.className = "town-card__seal";
-        seal.textContent = t("map.seal");
-        btn.querySelector(".good__name").appendChild(seal);
-      }
+      const num = document.createElement("span");
+      num.className = "town-card__num";
+      num.textContent = t("map.num", { n: i + 1 });
+      btn.querySelector(".good__name").prepend(num);
       if (canGo) {
         btn.addEventListener("click", function () {
           journey.pick = town.id;
@@ -844,6 +836,34 @@
     $("map-heading").focus({ preventScroll: true });
   }
 
+  function saveJourney() {
+    writeJson(JOURNEY_KEY, {
+      results: journey.results, carry: journey.carry,
+      unlocked: journey.unlocked, unlockUsed: journey.unlockUsed, warps: journey.warps
+    });
+  }
+
+  function clearJourney() {
+    writeJson(JOURNEY_KEY, {});
+  }
+
+  // 保存された旅の続き（壊れていたり終わっていたりしたら null）
+  function loadJourney() {
+    const j = readJson(JOURNEY_KEY) || {};
+    const ids = D.towns.map(function (x) { return x.id; });
+    if (!Array.isArray(j.results) || j.results.length === 0) return null;
+    const results = j.results.filter(function (r) { return r && ids.indexOf(r.town) !== -1 && Number.isFinite(r.revenue); });
+    if (results.length === 0 || results.length >= D.journeyLength) return null;
+    return {
+      results: results,
+      carry: j.carry && typeof j.carry === "object" ? j.carry : null,
+      pick: null,
+      unlocked: ids.indexOf(j.unlocked) !== -1 ? j.unlocked : null,
+      unlockUsed: j.unlockUsed === true,
+      warps: Array.isArray(j.warps) ? j.warps.filter(function (id) { return ids.indexOf(id) !== -1; }) : []
+    };
+  }
+
   let unlockBusy = false;
 
   // リワード広告を最後まで見たら、その町の鍵を開ける（旅に 1 回）
@@ -864,18 +884,20 @@
     }
     journey.unlockUsed = true;
     journey.unlocked = id;
+    saveJourney();
     showMap();
     $("map-note").textContent = t("map.unlocked");
   }
 
+  // 旅の途中経過は保存してあるので、タイトルに戻っても次は続きから
   function leaveMap() {
-    if (journey && journey.results.length > 0 && !window.confirm(t("map.quit"))) return;
     toTitle();
   }
 
+  // 旅に出る：途中の旅があれば続きから、なければ日和町商店街から
   function beginJourney() {
     mode = "journey";
-    journey = { results: [], carry: null, pick: null, unlocked: null, unlockUsed: false, warps: [] };
+    journey = loadJourney() || { results: [], carry: null, pick: null, unlocked: null, unlockUsed: false, warps: [] };
     showMap();
   }
 
