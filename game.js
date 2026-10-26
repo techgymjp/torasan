@@ -34,7 +34,7 @@
   let state = L.createInitialState();
   let fxTimer = null;
   let storageOk = true;
-  let mode = "day";         // "day"（1日の商売）/ "journey"（3つの町を回る旅）
+  let mode = "day";         // "day"（1日の商売）/ "journey"（10 の町から 3 つを回る旅）
   let journey = null;       // { results: [], carry, pick: 商売する町, unlocked: 広告で鍵を開けた町, unlockUsed }
   let beforeChoice = null;  // 口上を選ぶ直前の状態（リワード広告で言い直すため）
   let redoUsed = false;     // 言い直しは 1 プレイ 1 回まで
@@ -904,7 +904,16 @@
     Sound.setTension(false);
     Sound.setMusic("street");
     showScreen("title");
+    syncJourneyButton();
     $("title-heading").focus({ preventScroll: true });
+  }
+
+  // タイトルの「旅に出る」に、町めぐりの進み具合を出す（まだどこにも行っていなければ「全10町」）
+  function syncJourneyButton() {
+    const n = loadRecords().towns.length;
+    $("btn-journey").textContent = n > 0
+      ? t("title.journeyProgress", { n: n, total: D.towns.length })
+      : t("title.journey", { total: D.towns.length });
   }
 
   // 商売の途中でやめたとき・結果画面の「タイトルへ」でタイトルに戻るときは、全画面広告を経由する
@@ -1072,6 +1081,8 @@
       b.addEventListener("click", function () { I18n.setLang(b.dataset.lang); });
     });
     I18n.onChange(syncMuteButton);
+    I18n.onChange(syncJourneyButton);
+    syncJourneyButton();
 
     const prefs = loadPrefs();
     const toggle = $("opt-reduce-motion");
