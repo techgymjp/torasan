@@ -32,9 +32,8 @@
   let state = L.createInitialState();
   let fxTimer = null;
   let storageOk = true;
-  let finalActState = null; // 最終幕の開始時点（リワード広告でやり直すため）
-  let redoUsed = false;     // 1 プレイ 1 回まで
-  let redoing = false;      // やり直し中はプレイ回数を数えない
+  let beforeChoice = null;  // 口上を選ぶ直前の状態（リワード広告で言い直すため）
+  let redoUsed = false;     // 言い直しは 1 プレイ 1 回まで
 
   // ---------- 保存（失敗してもゲームは続行） ----------
 
@@ -245,6 +244,7 @@
   function choose(choiceId) {
     const result = L.applyChoice(state, choiceId);
     if (!result) return;
+    beforeChoice = state;
     state = result.state;
     showReaction(result.outcome);
   }
@@ -298,6 +298,7 @@
     }
 
     $("btn-next").textContent = t(outcome.isLastTurn ? "play.result" : "play.next");
+    setupRedo(outcome);
     $("reaction").hidden = false;
     renderHud();
     playFx(stampText, outcome.stamp);
@@ -334,7 +335,6 @@
       finish();
     } else {
       Sound.sfx.next();
-      if (state.turn === state.maxTurns) finalActState = state;
       renderEvent();
       $("event-title").focus({ preventScroll: true });
       announce(actName(state.turn) + " " + eventText(L.getCurrentEvent(state)).title);
@@ -353,7 +353,7 @@
     writeJson(RECORDS_KEY, {
       bestRevenue: Math.max(records.bestRevenue, state.revenue),
       endings: isNew ? records.endings.concat(ending.id) : records.endings,
-      playCount: records.playCount + (redoing ? 0 : 1),
+      playCount: records.playCount + 1,
       lastEnding: ending.id,
       lastTitle: ending.title
     });
@@ -371,8 +371,6 @@
     $("res-trouble").textContent = state.trouble;
 
     setupShare(text);
-    setupRedo();
-    redoing = false;
 
     const list = $("history");
     list.textContent = "";
@@ -454,22 +452,23 @@
 
   // ---------- 広告（Android アプリのみ） ----------
 
-  function setupRedo() {
+  // 「大失敗！」などが出た直後だけ、言い直しのボタンを出す（1 プレイ 1 回）
+  function setupRedo(outcome) {
     const btn = $("btn-redo");
-    btn.hidden = !(Ads.available && finalActState && !redoUsed);
+    btn.hidden = !(Ads.available && !redoUsed && outcome.stamp && outcome.stamp.kind === "bad");
     btn.disabled = false;
     btn.textContent = t("redo.button");
     $("redo-note").textContent = "";
   }
 
-  // リワード広告を最後まで見たら、最終幕の選択からやり直せる
+  // リワード広告を最後まで見たら、いまの幕の口上を選び直せる
   async function redo() {
     const btn = $("btn-redo");
-    if (btn.disabled || !finalActState || redoUsed) return;
+    if (btn.disabled || !beforeChoice || redoUsed) return;
     btn.disabled = true;
     btn.textContent = t("redo.loading");
     const result = await Ads.showRewarded();
-    if (state.status !== "result") return;
+    if (state.status !== "playing" || state.phase !== "reacting") return;
     if (result !== "rewarded") {
       btn.disabled = false;
       btn.textContent = t("redo.button");
@@ -477,11 +476,10 @@
       return;
     }
     redoUsed = true;
-    redoing = true;
-    state = finalActState;
-    Sound.setMusic("street");
-    showScreen("play");
+    state = beforeChoice;
+    beforeChoice = null;
     renderEvent();
+    announce(t("redo.done"));
     $("event-title").focus({ preventScroll: true });
   }
 
@@ -506,9 +504,8 @@
     Sound.setMusic("street");
     Sound.sfx.start();
     state = L.startGame(undefined, loadRecent());
-    finalActState = null;
+    beforeChoice = null;
     redoUsed = false;
-    redoing = false;
     showScreen("play");
     renderEvent();
     $("event-title").focus({ preventScroll: true });

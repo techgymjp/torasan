@@ -126,6 +126,10 @@
           <p class="reaction__voice" id="reaction-voice"></p>
           <p class="reaction__note" id="reaction-note"></p>
           <ul class="deltas" id="reaction-deltas" aria-label="今回の変化" data-i18n-attr="aria-label:play.deltas"></ul>
+          <div class="redo" id="redo-box">
+            <button type="button" class="btn" id="btn-redo" hidden>📺 広告を見て口上を言い直す</button>
+            <p class="redo__note" id="redo-note" role="status"></p>
+          </div>
           <button type="button" class="btn btn--primary" id="btn-next">次の幕へ ▶</button>
         </div>
         <p class="visually-hidden" id="live" aria-live="polite"></p>
@@ -163,10 +167,6 @@
         <summary data-i18n="result.log">本日の口上をふりかえる</summary>
         <ol class="log__list" id="history"></ol>
       </details>
-      <div class="redo">
-        <button type="button" class="btn" id="btn-redo" hidden>📺 広告を見て第五幕をやり直す</button>
-        <p class="redo__note" id="redo-note" role="status"></p>
-      </div>
       <div class="menu menu--row">
         <button type="button" class="btn btn--primary" id="btn-retry" data-i18n="result.retry">もう一度商売する</button>
         <button type="button" class="btn" id="btn-to-title" data-i18n="result.toTitle">タイトルへ</button>
