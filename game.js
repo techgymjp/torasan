@@ -506,7 +506,7 @@
     $("title-heading").focus({ preventScroll: true });
   }
 
-  // 商売の途中でやめてタイトルに戻るときは、全画面広告を経由する
+  // 商売の途中でやめたとき・結果画面の「タイトルへ」でタイトルに戻るときは、全画面広告を経由する
   async function quitToTitle() {
     if (startBusy) return;
     if (Ads.available) {
@@ -672,7 +672,7 @@
     $("btn-next").addEventListener("click", next);
     $("btn-retry").addEventListener("click", startWithAd);
     $("btn-redo").addEventListener("click", redo);
-    $("btn-to-title").addEventListener("click", toTitle);
+    $("btn-to-title").addEventListener("click", quitToTitle);
     $("share-native").addEventListener("click", shareNative);
     $("share-copy").addEventListener("click", copyShareUrl);
     document.addEventListener("keydown", onKey);
