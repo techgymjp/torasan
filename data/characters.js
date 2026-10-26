@@ -125,6 +125,45 @@
         dislike: ""
       },
       look: { skin: "#e8bc94", hair: "#2b1a10", hairStyle: "crowd", clothes: "#6b5a48", accent: "#c8102e" }
+    },
+    tamura: {
+      name: "田村巡査",
+      role: "町の駐在さん",
+      hint: "規則には厳しい、町の駐在さん。",
+      trait: "ごまかしは見逃さないが、筋の通った説明と人助けには甘い。",
+      likes: ["honest", "help"],
+      dislikes: ["bluff", "flatter"],
+      reactions: {
+        like: "「うむ、感心な心がけだ」",
+        dislike: "「本官をからかうつもりかね？」"
+      },
+      look: { skin: "#e8bc94", hair: "#1c1c1c", hairStyle: "cap", clothes: "#2c3e66", accent: "#1f3550" }
+    },
+    ume: {
+      name: "お梅ばあさん",
+      role: "商店街の生き字引",
+      hint: "話し好きのおばあさん。",
+      trait: "長話に付き合ってくれる人と、気の利いた冗談が大好き。お世辞はお見通し。",
+      likes: ["help", "wit"],
+      dislikes: ["flatter"],
+      reactions: {
+        like: "「ほっほ、あんた見どころがあるねえ」",
+        dislike: "「年寄りをおだてても、何も出ないよ」"
+      },
+      look: { skin: "#f0c9a6", hair: "#d9d9d9", hairStyle: "bun", clothes: "#6b4a7a", accent: "#f2e6c8" }
+    },
+    shinji: {
+      name: "慎二",
+      role: "冷やかしの会社員",
+      hint: "買う気があるのかないのか、よく分からない客。",
+      trait: "ノリのいい大風呂敷と機転には乗ってくるが、正直すぎる話は退屈がる。",
+      likes: ["bluff", "wit"],
+      dislikes: ["honest"],
+      reactions: {
+        like: "「はは、兄さん面白いね。一つもらおうか」",
+        dislike: "「なんだ、つまんないの」"
+      },
+      look: { skin: "#f2c9a0", hair: "#2b1a10", hairStyle: "slick", clothes: "#4a4a5a", accent: "#c8102e" }
     }
   };
 })(typeof globalThis !== "undefined" ? globalThis : window);

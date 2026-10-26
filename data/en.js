@@ -91,6 +91,36 @@
         reactions: {
           like: "\"Nice one!\" \"Go get 'em, pal!\""
         }
+      },
+      tamura: {
+        name: "Officer Tamura",
+        role: "Local beat cop",
+        hint: "The local beat cop. Strict about the rules.",
+        trait: "Never lets a dodge slide, but goes soft for a straight answer or a good deed.",
+        reactions: {
+          like: "\"Hm. A commendable attitude.\"",
+          dislike: "\"Are you trying to make a fool of an officer?\""
+        }
+      },
+      ume: {
+        name: "Granny Ume",
+        role: "The street's living memory",
+        hint: "A chatty old lady.",
+        trait: "Loves anyone who'll sit through her stories, and a good joke. Sees right through flattery.",
+        reactions: {
+          like: "\"Ho ho, there's something to you, dearie.\"",
+          dislike: "\"Flattering an old woman won't get you anything.\""
+        }
+      },
+      shinji: {
+        name: "Shinji",
+        role: "Window-shopping office worker",
+        hint: "You can never tell if this customer actually wants to buy.",
+        trait: "Goes along with a lively tall tale or quick wit, but gets bored by too much honesty.",
+        reactions: {
+          like: "\"Ha, you're a funny one. I'll take one.\"",
+          dislike: "\"Huh. That's boring.\""
+        }
       }
     },
 
@@ -323,6 +353,124 @@
           A: { text: "\"Half-price drops, half the colors! The real rainbow is only here!\"", result: "The price war turns into a heckling free-for-all, and the street fills with gawkers." },
           B: { text: "\"Sorry about earlier. How about we stop fighting over customers?\"", result: "Ginji rubs his nose. \"...Long as you get it,\" he says, and puts his old price tag back." },
           C: { text: "\"I'll take your half-price drops, add my patter, and sell them for double. Deal?\"", result: "Ginji bursts out laughing in disbelief, and the revenge somehow becomes a joint sale." }
+        }
+      },
+      E15: {
+        title: "The Beat Cop's Rounds",
+        product: { name: "Street Stall Permit", blurb: "Properly filed... supposedly" },
+        dialogue: "Evening. Just making my rounds. Is this stall properly registered?",
+        choices: {
+          A: { text: "\"Yes, right here. If anything's missing, I'll fix it at once.\"", result: "The officer checks the permit, nods — \"Very good\" — and buys a pack of drops." },
+          B: { text: "\"All in order. And this item's all in order for your stiff shoulders too, officer.\"", result: "The officer clears his throat, but the corners of his mouth twitch." },
+          C: { text: "\"Registration? My patter is the only permit I need!\"", result: "\"Show me your permit!\" At the officer's bark, the onlookers scatter." }
+        }
+      },
+      E16: {
+        title: "Just Looking",
+        product: { name: "The Open-Anything", blurb: "Jar lids, cans and more — all with one tool" },
+        dialogue: "Huh, looks interesting. I'm just looking, though.",
+        choices: {
+          A: { text: "\"Looking's free! But once you look, your hand opens your wallet all by itself!\"", result: "\"All by itself!\" Shinji laughs — and actually opens his wallet." },
+          B: { text: "\"Looking's free, but you learn more by touching. Go on, hold it.\"", result: "The moment it's in his hand, Shinji mutters, \"Oh, this is nice.\"" },
+          C: { text: "\"Browsers welcome. If you don't like it, don't buy it.\"", result: "\"Okay, I won't,\" says Shinji, and leaves without buying a thing." }
+        }
+      },
+      E17: {
+        title: "Granny Ume's Old Stories",
+        product: { name: "Washi Paper Fans", blurb: "Hand-printed fans, perfect for summer festivals" },
+        dialogue: "You know, this street used to be lined with night stalls. Plenty of pitchmen like you back then...",
+        choices: {
+          A: { text: "\"Really? Then what? Take your time, I'm listening.\"", result: "After a long chat, Granny Ume buys three fans: \"That's for listening to me.\"" },
+          B: { text: "\"Next to the pitchmen of your day, Granny, I'm just the opening act.\"", result: "\"Oh yes, the pitchmen back then...\" The story picks up steam, and a crowd gathers to listen." },
+          C: { text: "\"Granny, I bet you were the prettiest girl in town back then.\"", result: "\"Flattery won't get you anything,\" she says — though she doesn't look displeased." }
+        }
+      },
+      E18: {
+        title: "The Neighborhood Bulletin",
+        product: { name: "Lucky Cat Charm", blurb: "Brings good fortune... maybe" },
+        dialogue: "Hey, want me to write about your stall in the neighborhood bulletin? What should I say?",
+        choices: {
+          A: { text: "\"Write: 'A god of fortune has come to Hiyori-cho. This cat guarantees a lottery win!'\"", result: "The next morning, readers swarm the stall demanding, \"So when do we win?\"" },
+          B: { text: "\"How about: 'Need a helping paw? Sorry, our lucky cats are not for rent.'\"", result: "Readers chuckle at the line, and quite a few stop by." },
+          C: { text: "\"Just: 'A small street stall. Drop by if you feel like it.' That's plenty.\"", result: "The modest line goes over well, and neighbors trickle in." }
+        }
+      },
+      E19: {
+        title: "Not Quite Rainbow",
+        product: { name: "Rainbow Mint Drops", blurb: "Changes color as you suck it — a Hiyori-cho specialty" },
+        dialogue: "Hey, you! Those drops I bought only changed three colors!",
+        choices: {
+          A: { text: "\"Sorry about that — the damp may have dulled them. I'll swap them for fresh ones.\"", result: "\"Well, that was easy,\" says Matsuko, cheering up — and buying another bag." },
+          B: { text: "\"Your smile will make up the other four colors, ma'am.\"", result: "\"Smooth talker,\" Matsuko laughs, and buys two bags while she's at it." },
+          C: { text: "\"If you can't see seven colors, your heart must be clouded!\"", result: "\"Whose heart is clouded?!\" Matsuko's voice rings down the whole street." }
+        }
+      },
+      E20: {
+        title: "A Line of Kids",
+        product: { name: "Rainbow Mint Drops", blurb: "Changes color as you suck it — a Hiyori-cho specialty" },
+        dialogue: "Mister, I brought my friends! Let us all try a drop!",
+        choices: {
+          A: { text: "\"All right, one drop each — go on!\"", result: "Drawn by the kids' cheers, their parents buy drops one after another." },
+          B: { text: "\"Samples go to whoever solves my riddle! What candy changes color as you suck it?\"", result: "\"Rainbow Mint Drops!\" the kids chorus, and even passing adults stop to look." },
+          C: { text: "\"Suck one of these and you'll ace tomorrow's test, guaranteed!\"", result: "The kids buy happily, but Makoto has a feeling the parents will complain later." }
+        }
+      },
+      E21: {
+        title: "The Wrong Item",
+        product: { name: "Pon-Pon Shoulder Tapper", blurb: "The more you tap, the lighter your shoulders" },
+        dialogue: "An onlooker calls out: \"Hey pal, you gave that customer a back scratcher, not a shoulder tapper!\"",
+        choices: {
+          A: { text: "\"Oh no! I'll run after them and swap it!\"", result: "Makoto catches up at the end of the street and swaps it. \"Sorry for the trouble,\" the customer laughs." },
+          B: { text: "\"Tap your shoulders with a scratcher and it's a tapper; scratch your back with a tapper and it's a scratcher. Both correct!\"", result: "The onlookers roar at logic that makes no sense at all." },
+          C: { text: "\"My apologies. Next time that customer comes, they get both.\"", result: "\"Now that's a real merchant!\" someone calls from the crowd." }
+        }
+      },
+      E22: {
+        title: "Genzo's Favor",
+        product: { name: "The Craftsman-Proof Screwdriver", blurb: "Spare bits to fit any screw, big or small" },
+        dialogue: "...I want to give my grandkid something for their birthday. Got anything fit for a craftsman's grandchild?",
+        choices: {
+          A: { text: "\"Honestly, I don't know if my goods meet your standards. Let's choose together.\"", result: "They look everything over together, and Genzo picks up a small screwdriver: \"This one.\"" },
+          B: { text: "\"Tell your grandkid this tool is called 'Grandpa's Apprentice No. 1.'\"", result: "Genzo bursts out laughing — \"That's a good one\" — and buys two." },
+          C: { text: "\"Your grandkid will be a master no matter what tool you give them.\"", result: "\"Spare me the flattery.\" Genzo scowls and leaves without buying." }
+        }
+      },
+      E23: {
+        title: "Festival Prep",
+        dialogue: "Makoto, sorry to ask, but we're short-handed building the festival tower. What about your stall?",
+        choices: {
+          A: { text: "\"I'll close up and help! Leave the heavy lifting to me.\"", result: "After a sweaty afternoon of work, Toki hands over an ice-cold soda." },
+          B: { text: "\"I'll help — and give a pitch from the top of the tower while I'm at it!\"", result: "The pitch from the tower is a hit, though the work falls a little behind." },
+          C: { text: "\"With you running things, you won't need more hands!\"", result: "\"All talk, as usual.\" Toki sighs and goes to find someone else." }
+        }
+      },
+      E24: {
+        title: "The Big Order",
+        product: { name: "Washi Paper Fans", blurb: "Hand-printed fans, perfect for summer festivals" },
+        dialogue: "The neighborhood association wants a hundred fans for the summer dance. You'll give us a bulk discount, of course?",
+        choices: {
+          A: { text: "\"For a hundred, I'll print the association's name on every fan.\"", result: "\"Now that's thoughtful!\" Matsuko leaves a deposit, delighted." },
+          B: { text: "\"I can't refuse the sharpest eye in the neighborhood. Thirty percent off!\"", result: "\"You get it,\" says Matsuko, stamping the order form in high spirits." },
+          C: { text: "\"Why stop at a hundred? Buy two hundred and you're set for next year — that's style!\"", result: "\"Don't get carried away,\" Matsuko scoffs, and cuts the order to eighty." }
+        }
+      },
+      E25: {
+        title: "The Lost Child",
+        dialogue: "At dusk, a little girl is crying in front of the stall. The onlookers: \"Looks like she's lost. Anyone know her?\"",
+        choices: {
+          A: { text: "\"Forget the stall — let's all find her parents! It's okay now, kiddo.\"", result: "Everyone on the street calls out together, and her mother rushes over, bowing again and again." },
+          B: { text: "\"Here, suck on this drop. By the time it changes color three times, your mom will be here.\"", result: "While she's busy watching the colors change, her mother really does arrive." },
+          C: { text: "\"Calling the lost girl's parents — step right up! And pick up a souvenir while you're here!\"", result: "The pitch finds her parents, but someone heckles: \"Don't use a lost kid to drum up business!\"" }
+        }
+      },
+      E26: {
+        title: "The Pitch Contest",
+        product: { name: "Rainbow Mint Drops", blurb: "Changes color as you suck it — a Hiyori-cho specialty" },
+        dialogue: "Tonight's the shopping street's pitch contest. Travelers can jump in too. Want to enter?",
+        choices: {
+          A: { text: "\"I'm in! Behold the greatest pitch in all Japan!\"", result: "The over-the-top pitch brings the crowd to its feet. No trophy, but the drops fly off the shelf." },
+          B: { text: "\"A wandering peddler, here to give Hiyori-cho one pitch!\"", result: "A pitch woven with local specialties wins big laughs — and a special prize." },
+          C: { text: "\"Tonight I'll sit in the audience and learn from everyone's pitches.\"", result: "\"How modest,\" Toki laughs, and the contestants order drops from the stall." }
         }
       }
     },

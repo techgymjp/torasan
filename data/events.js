@@ -353,7 +353,7 @@
       tier: "final",
       character: "sayori",
       requiresTies: ["sayori_helped"],
-      weight: 3,
+      weight: 6,
       product: { icon: "🧧", name: "道中安全のお守り袋", blurb: "旅の無事を祈る、手縫いの小袋" },
       dialogue: "昼間はありがとうございました。お寺の皆さんにお話ししたら、ぜひお店に寄りたいって……。",
       choices: [
@@ -386,7 +386,7 @@
       tier: "normal",
       character: "toki",
       requiresTies: ["sayori_tricked"],
-      weight: 4,
+      weight: 6,
       product: null,
       dialogue: "まことさん、さっきの旅の娘さん、行き止まりで途方に暮れてたよ！ あんた、何を教えたんだい。",
       choices: [
@@ -419,7 +419,7 @@
       tier: "final",
       character: "ginji",
       requiresTies: ["ginji_friend"],
-      weight: 3,
+      weight: 6,
       product: { icon: "🪵", name: "肩たたき棒「ぽんぽこ」", blurb: "叩けば叩くほど肩が軽くなる" },
       dialogue: "よう兄さん、こっちは品切れだ。客を回すから、昼間の掛け合い、もう一丁やろうじゃねえか。",
       choices: [
@@ -452,7 +452,7 @@
       tier: "normal",
       character: "ginji",
       requiresTies: ["ginji_grudge"],
-      weight: 4,
+      weight: 6,
       product: { icon: "🍬", name: "七色ハッカ飴", blurb: "舐めるたびに色が変わる、日和町名物" },
       dialogue: "へっ、さっきはよくもやってくれたな。こっちは同じ飴を半値で売らせてもらうぜ！",
       choices: [
@@ -476,6 +476,380 @@
           text: "「半値の飴に、うちの口上を付けて二倍で売る。それでどうだい？」",
           effects: { revenue: 900, laughter: 10, humanity: 2, trouble: 2 },
           result: "銀二はあきれ顔で笑い出し、仕返しはいつの間にか共同販売になった。"
+        }
+      ]
+    },
+
+    // ---------- 追加の場面 ----------
+    {
+      id: "E15",
+      title: "巡査の見回り",
+      tier: "normal",
+      character: "tamura",
+      product: { icon: "📋", name: "露店の営業許可証", blurb: "きちんと届け出済み……のはず" },
+      dialogue: "やあ、見回りだ。この露店、ちゃんと届けは出してあるのかね？",
+      choices: [
+        {
+          id: "A",
+          type: "honest",
+          text: "「はい、こちらに。不備があればすぐ直します」",
+          effects: { revenue: 300, laughter: 2, humanity: 10, trouble: -8 },
+          result: "巡査は許可証を確かめ、「よろしい」とうなずいて飴を一つ買っていった。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「届けはばっちり。ついでに旦那の肩こりにも、この品がばっちりで」",
+          effects: { revenue: 900, laughter: 10, humanity: 2, trouble: 2 },
+          result: "巡査は咳払いをしたが、口元が少しゆるんでいた。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「届けなんて、この口上が何よりの許可証でさあ！」",
+          effects: { revenue: 600, laughter: 12, humanity: -4, trouble: 14 },
+          result: "「許可証を見せなさい！」巡査の声に、見物人がさっと引いていった。"
+        }
+      ]
+    },
+    {
+      id: "E16",
+      title: "冷やかし客",
+      tier: "normal",
+      character: "shinji",
+      product: { icon: "🔧", name: "なんでも開けるくん", blurb: "瓶のフタから缶詰まで、これ一本" },
+      dialogue: "へえ、面白そうだね。まあ、見るだけだけど。",
+      choices: [
+        {
+          id: "A",
+          type: "bluff",
+          text: "「見るだけなら損はさせねえ！ 見たら最後、手が勝手に財布を開ける！」",
+          effects: { revenue: 1500, laughter: 15, humanity: -2, trouble: 8 },
+          result: "「財布が勝手に！」と笑いながら、慎二は本当に財布を開いた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「見るだけならタダ、触ればもっと分かる。ほら、持ってごらん」",
+          effects: { revenue: 1100, laughter: 8, humanity: 2, trouble: 0 },
+          result: "手に取った途端、慎二は「あ、これいいな」とつぶやいた。"
+        },
+        {
+          id: "C",
+          type: "honest",
+          text: "「冷やかし大歓迎。気に入らなきゃ買わなくていいよ」",
+          effects: { revenue: 200, laughter: 2, humanity: 8, trouble: -2 },
+          result: "「じゃあ、そうする」と慎二は本当に何も買わずに去っていった。"
+        }
+      ]
+    },
+    {
+      id: "E17",
+      title: "お梅ばあさんの昔話",
+      tier: "normal",
+      character: "ume",
+      product: { icon: "🪭", name: "和紙のうちわ", blurb: "夏祭りにぴったりの手刷り柄" },
+      dialogue: "この通りもねえ、昔は夜店がずらっと並んでねえ。あんたみたいな口上師も、たくさんいたもんだよ……",
+      choices: [
+        {
+          id: "A",
+          type: "help",
+          text: "「へえ、それで？ ゆっくり聞かせてくださいよ」",
+          effects: { revenue: 600, laughter: 4, humanity: 14, trouble: -2 },
+          result: "長話のあと、お梅ばあさんは「話のお代だよ」とうちわを三本買ってくれた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「ばあちゃん、その頃の口上師に比べりゃ、俺なんてまだ前座でさあ」",
+          effects: { revenue: 900, laughter: 12, humanity: 4, trouble: 0 },
+          result: "「そうそう、昔の口上師はねえ」と話はさらに弾み、見物人まで集まってきた。"
+        },
+        {
+          id: "C",
+          type: "flatter",
+          text: "「いやあ、ばあちゃん、昔は町一番の小町だったでしょう」",
+          effects: { revenue: 700, laughter: 6, humanity: 0, trouble: 2 },
+          result: "「おだてても何も出ないよ」と言いながら、まんざらでもなさそうだった。"
+        }
+      ]
+    },
+    {
+      id: "E18",
+      title: "回覧板で宣伝",
+      tier: "normal",
+      character: "koharu",
+      product: { icon: "🐱", name: "福招き猫のお守り", blurb: "持てば運気が上向く……かもしれない" },
+      dialogue: "ねえ、町内の回覧板にお店のこと書いてあげようか？ なんて書く？",
+      choices: [
+        {
+          id: "A",
+          type: "bluff",
+          text: "「『日和町に福の神現る。この招き猫で宝くじ一等間違いなし』で頼む！」",
+          effects: { revenue: 1800, laughter: 16, humanity: -4, trouble: 16 },
+          result: "翌朝、回覧板を見た人が押し寄せ、「一等はいつ当たるんだ」と詰め寄られた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「『猫の手も借りたい方へ。招き猫、貸し出しはしておりません』でどうだい」",
+          effects: { revenue: 1300, laughter: 12, humanity: 2, trouble: 2 },
+          result: "回覧板を見た人がくすっと笑い、何人も顔を出してくれた。"
+        },
+        {
+          id: "C",
+          type: "honest",
+          text: "「『小さな露店です。気が向いたらお立ち寄りください』で十分さ」",
+          effects: { revenue: 500, laughter: 2, humanity: 8, trouble: -2 },
+          result: "控えめな一文が好評で、ご近所さんがぽつぽつ寄ってくれた。"
+        }
+      ]
+    },
+    {
+      id: "E19",
+      title: "色が変わらない飴",
+      tier: "normal",
+      character: "matsuko",
+      product: { icon: "🍬", name: "七色ハッカ飴", blurb: "舐めるたびに色が変わる、日和町名物" },
+      dialogue: "ちょっとあんた！ この前の飴、三色しか変わらなかったわよ！",
+      choices: [
+        {
+          id: "A",
+          type: "honest",
+          text: "「すまねえ、湿気で色が抜けたのかもしれねえ。新しいのと取り替えるよ」",
+          effects: { revenue: 300, laughter: 2, humanity: 12, trouble: -6 },
+          result: "「あら、話が早いじゃない」と松子は機嫌を直し、ついでにもう一袋買っていった。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「残りの四色は、奥さんの笑顔で補ってくだせえ」",
+          effects: { revenue: 900, laughter: 10, humanity: 2, trouble: 2 },
+          result: "「うまいこと言うわね」と松子は笑い、取り替えついでに二袋買っていった。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「七色に見えないのは、心が曇ってる証拠でさあ！」",
+          effects: { revenue: 400, laughter: 8, humanity: -6, trouble: 14 },
+          result: "「誰の心が曇ってるですって！」松子の声が商店街じゅうに響きわたった。"
+        }
+      ]
+    },
+    {
+      id: "E20",
+      title: "子どもたちの行列",
+      tier: "normal",
+      character: "kenta",
+      product: { icon: "🍬", name: "七色ハッカ飴", blurb: "舐めるたびに色が変わる、日和町名物" },
+      dialogue: "おじさん、友だち連れてきた！ みんなで飴の試食させてよ！",
+      choices: [
+        {
+          id: "A",
+          type: "help",
+          text: "「よし、一人一粒ずつ持ってけ！」",
+          effects: { revenue: 400, laughter: 6, humanity: 14, trouble: 0 },
+          result: "子どもたちの歓声につられて、親たちが次々と飴を買っていった。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「試食は、なぞなぞに答えた子から！ 『舐めるたびに色が変わる飴はなーんだ』」",
+          effects: { revenue: 700, laughter: 12, humanity: 6, trouble: 2 },
+          result: "「七色ハッカ飴！」の大合唱に、通りがかりの大人まで足を止めた。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「この飴を舐めたら、明日のテストは百点間違いなし！」",
+          effects: { revenue: 1200, laughter: 10, humanity: -6, trouble: 10 },
+          result: "子どもたちは大喜びで買っていったが、後で親から苦情が来そうな予感がした。"
+        }
+      ]
+    },
+    {
+      id: "E21",
+      title: "品物の取り違え",
+      tier: "mid",
+      character: "crowd",
+      product: { icon: "🪵", name: "肩たたき棒「ぽんぽこ」", blurb: "叩けば叩くほど肩が軽くなる" },
+      dialogue: "見物の衆「おい兄さん、さっきの客に渡したの、肩たたき棒じゃなくて孫の手だぞ！」",
+      choices: [
+        {
+          id: "A",
+          type: "help",
+          text: "「しまった！ 追いかけて取り替えてくる！」",
+          effects: { revenue: -200, laughter: 4, humanity: 14, trouble: -4 },
+          result: "商店街の端で追いつき、取り替えると、客は「わざわざ悪いね」と笑った。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「孫の手で肩を叩けば肩たたき棒、肩たたき棒で背中をかけば孫の手。どっちも正解！」",
+          effects: { revenue: 900, laughter: 14, humanity: -2, trouble: 4 },
+          result: "理屈になっていない理屈に、見物人は大笑いした。"
+        },
+        {
+          id: "C",
+          type: "honest",
+          text: "「申し訳ねえ。今度その人が来たら、両方差し上げます」",
+          effects: { revenue: 0, laughter: 2, humanity: 10, trouble: -4 },
+          result: "見物人から「それでこそ商人だ」と声が飛んだ。"
+        }
+      ]
+    },
+    {
+      id: "E22",
+      title: "源造の頼みごと",
+      tier: "mid",
+      character: "genzo",
+      product: { icon: "🪛", name: "職人泣かせの万能ねじ回し", blurb: "大小どんなねじにも合う替え刃つき" },
+      dialogue: "……孫の誕生日に何かやりてえんだが、職人の孫に合うもんがあるかね。",
+      choices: [
+        {
+          id: "A",
+          type: "honest",
+          text: "「正直、うちの品が親方の目にかなうか分からねえ。一緒に選びましょう」",
+          effects: { revenue: 1000, laughter: 4, humanity: 12, trouble: -2 },
+          result: "二人で品を吟味し、源造は小さなねじ回しを手に「これにする」とうなずいた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「お孫さんには、この道具に『じいちゃんの弟子一号』って名前を付けてやってくだせえ」",
+          effects: { revenue: 1300, laughter: 10, humanity: 6, trouble: 0 },
+          result: "源造は思わず吹き出し、「そりゃいい」と二本買っていった。"
+        },
+        {
+          id: "C",
+          type: "flatter",
+          text: "「親方のお孫さんなら、何を持たせても名人になりますよ」",
+          effects: { revenue: 600, laughter: 4, humanity: -2, trouble: 4 },
+          result: "「世辞はいらねえ」源造はむっとして、何も買わずに帰っていった。"
+        }
+      ]
+    },
+    {
+      id: "E23",
+      title: "夏祭りの準備",
+      tier: "mid",
+      character: "toki",
+      product: null,
+      dialogue: "まことさん、悪いけど夏祭りのやぐら組み、人手が足りないんだよ。店はどうする？",
+      choices: [
+        {
+          id: "A",
+          type: "help",
+          text: "「店は閉めて手伝います！ 力仕事なら任せてくだせえ」",
+          effects: { revenue: -500, laughter: 4, humanity: 18, trouble: -6 },
+          result: "汗だくで働いた夕方、ときが冷えたラムネを差し出してくれた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「手伝いながら、やぐらの上から口上を一席ぶちましょう！」",
+          effects: { revenue: 800, laughter: 14, humanity: 4, trouble: 6 },
+          result: "やぐらの上の口上は大ウケだったが、作業は少し遅れてしまった。"
+        },
+        {
+          id: "C",
+          type: "flatter",
+          text: "「おかみさんの采配があれば、人手なんて足りますよ！」",
+          effects: { revenue: 1000, laughter: 4, humanity: -4, trouble: 4 },
+          result: "「口ばっかりだね」ときはため息をつき、ほかの人を探しに行った。"
+        }
+      ]
+    },
+    {
+      id: "E24",
+      title: "町内会の大口注文",
+      tier: "final",
+      character: "matsuko",
+      product: { icon: "🪭", name: "和紙のうちわ", blurb: "夏祭りにぴったりの手刷り柄" },
+      dialogue: "町内会の盆踊りで、うちわを百本頼みたいの。もちろん、まとめて安くしてくれるわよね？",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「百本お買い上げなら、うちわに町内会の名前を刷ってお付けしましょう」",
+          effects: { revenue: 2400, laughter: 8, humanity: 6, trouble: 0 },
+          result: "「気が利くじゃない！」松子は大喜びで、手付金を置いていった。"
+        },
+        {
+          id: "B",
+          type: "flatter",
+          text: "「町内一の目利きの奥さんに頼まれちゃ、断れませんや。三割引きで！」",
+          effects: { revenue: 1700, laughter: 4, humanity: 4, trouble: 0 },
+          result: "「さすが分かってるわね」と松子は上機嫌で注文書に判を押した。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「百本と言わず二百本！ 来年の分まで買っとくのが粋ってもんでさあ！」",
+          effects: { revenue: 1500, laughter: 10, humanity: -6, trouble: 12 },
+          result: "「調子に乗るんじゃないわよ」と松子はあきれ、注文を八十本に減らした。"
+        }
+      ]
+    },
+    {
+      id: "E25",
+      title: "迷子の子",
+      tier: "final",
+      character: "crowd",
+      product: null,
+      dialogue: "夕暮れ、店先で小さな女の子が泣いている。見物の衆「迷子みたいだよ。誰か知らないか？」",
+      choices: [
+        {
+          id: "A",
+          type: "help",
+          text: "「店はいい、みんなで親を探そう！ 嬢ちゃん、もう大丈夫だ」",
+          effects: { revenue: -400, laughter: 4, humanity: 18, trouble: -6 },
+          result: "通りじゅうで声をかけ合い、駆けつけた母親が何度も頭を下げた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「嬢ちゃん、この飴を舐めて待ってな。色が三回変わる頃に、母ちゃんが来るからな」",
+          effects: { revenue: 300, laughter: 10, humanity: 10, trouble: 0 },
+          result: "飴に夢中になっているうちに、本当に母親が迎えに来た。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「迷子の親御さん、いらっしゃいませー！ ついでにお土産もどうぞー！」",
+          effects: { revenue: 1100, laughter: 12, humanity: -8, trouble: 12 },
+          result: "呼び込みで親は見つかったが、「人の子をだしに商売するな」とヤジが飛んだ。"
+        }
+      ]
+    },
+    {
+      id: "E26",
+      title: "飛び入り口上大会",
+      tier: "final",
+      character: "toki",
+      product: { icon: "🍬", name: "七色ハッカ飴", blurb: "舐めるたびに色が変わる、日和町名物" },
+      dialogue: "今夜は商店街の口上自慢大会だよ。旅の人も飛び入り歓迎だって。出るかい？",
+      choices: [
+        {
+          id: "A",
+          type: "bluff",
+          text: "「出ます！ 日本一の口上、とくとご覧あれ！」",
+          effects: { revenue: 2000, laughter: 18, humanity: -4, trouble: 14 },
+          result: "大げさすぎる口上に会場は総立ち。優勝は逃したが、飴は飛ぶように売れた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「飛び入りの旅商人、日和町の皆さんに一席！」",
+          effects: { revenue: 1600, laughter: 14, humanity: 6, trouble: 2 },
+          result: "土地の名物を織り込んだ口上が大受けし、特別賞をもらった。"
+        },
+        {
+          id: "C",
+          type: "honest",
+          text: "「今夜は客席で、皆さんの口上を勉強させてもらいます」",
+          effects: { revenue: 500, laughter: 2, humanity: 12, trouble: -4 },
+          result: "「殊勝だね」とときが笑い、出場者たちからは飴の注文が入った。"
         }
       ]
     }
