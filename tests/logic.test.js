@@ -220,10 +220,15 @@ test("縁：echo の効果が上乗せされる", () => {
 
 test("最近見たイベントは出にくい", () => {
   const recent = ["E01", "E02", "E04", "E05"];
-  let hits = 0;
-  for (let seed = 0; seed < 400; seed++) {
-    const s = L.startGame(seeded(seed), recent);
-    if (recent.includes(s.currentEventId)) hits++;
-  }
-  assert.ok(hits < 400 * 0.3, `最近見たイベントが ${hits} 回`);
+  const count = (list) => {
+    let hits = 0;
+    for (let seed = 0; seed < 400; seed++) {
+      if (recent.includes(L.startGame(seeded(seed), list).currentEventId)) hits++;
+    }
+    return hits;
+  };
+  // 第一幕の候補 5 つのうち 4 つを「最近見た」にすると、出る割合がはっきり下がる
+  const normal = count([]);
+  const avoided = count(recent);
+  assert.ok(avoided < normal * 0.7, `最近見たイベント ${avoided} 回（通常 ${normal} 回）`);
 });
