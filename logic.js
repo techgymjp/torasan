@@ -10,6 +10,7 @@
 
   const MAX_TURNS = 5;
   const MID_TURN = 3;
+  const DETOUR_TURNS = 3; // 旅の寄り道は 3 幕
 
   const CHOICE_TYPES = {
     bluff: { label: "大風呂敷" },
@@ -52,6 +53,7 @@
     return {
       turn: 0,
       maxTurns: MAX_TURNS,
+      revisit: false,
       revenue: 0,
       laughter: 10,
       humanity: 30,
@@ -113,7 +115,8 @@
 
   function pickEvent(state, turn, rng) {
     const tier = tierForTurn(turn, state.maxTurns);
-    const here = function (e) { return !e.town || e.town === state.town; };
+    // 町の場面はその町でだけ。再訪の場面は、寄り道した町に戻ってきたとき（state.revisit）だけ
+    const here = function (e) { return (!e.town || e.town === state.town) && (!e.revisit || state.revisit); };
     const unused = Data.events.filter(function (e) { return state.usedEvents.indexOf(e.id) === -1 && here(e); });
     const allowed = unused.filter(function (e) { return meetsCondition(state, e.condition) && hasTies(state, e.requiresTies); });
     const free = unused.filter(function (e) { return !e.requiresTies; });
@@ -178,6 +181,7 @@
   // recentEvents：最近のプレイで出たイベント ID（出にくくする。保存は画面側）
   // options.goods：開店前に仕入れた品の ID
   // options.town / humanity / ties：旅モードで町と、前の町から持ち越した評判・縁
+  // options.maxTurns：幕の数（旅の寄り道は短い）／options.revisit：寄り道した町に戻ってきた（再訪の場面が出る）
   function startGame(rng, recentEvents, options) {
     const o = options || {};
     const towns = (Data.towns || []).map(function (t) { return t.id; });
@@ -190,6 +194,8 @@
     if (typeof o.humanity === "number") state.humanity = clampStat(o.humanity);
     if (Array.isArray(o.ties)) state.ties = o.ties.slice();
     if (Array.isArray(o.seen)) state.seenEvents = o.seen.slice();
+    if (Number.isInteger(o.maxTurns) && o.maxTurns >= 1 && o.maxTurns <= MAX_TURNS) state.maxTurns = o.maxTurns;
+    if (o.revisit === true) state.revisit = true;
     return beginTurn(state, rng || Math.random);
   }
 
@@ -437,6 +443,7 @@
     judgeJourney: judgeJourney,
     stockCost: stockCost,
     MAX_TURNS: MAX_TURNS,
+    DETOUR_TURNS: DETOUR_TURNS,
     createInitialState: createInitialState,
     startGame: startGame,
     applyChoice: applyChoice,

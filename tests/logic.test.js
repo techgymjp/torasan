@@ -89,7 +89,7 @@ test("すべてのイベントが実際のプレイで登場する（すべて�
   const towns = D.towns.map((t) => t.id);
   for (let seed = 0; seed < 3000; seed++) {
     const rng = seeded(seed);
-    let s = L.startGame(rng, [], { town: towns[seed % towns.length] });
+    let s = L.startGame(rng, [], { town: towns[seed % towns.length], revisit: Math.floor(seed / towns.length) % 2 === 1 });
     while (s.status === "playing") {
       const e = L.getCurrentEvent(s);
       s = L.advance(L.applyChoice(s, e.choices[Math.floor(rng() * 3)].id).state, rng);
@@ -341,3 +341,35 @@ test("旅：10の町を順番に回る。どの町にも山場の場面がある
   assert.deepEqual(L.openTowns(D.towns.map((t) => t.id)), []);
 });
 
+
+test("旅：寄り道は3幕、順番どおりに戻ってきたら再訪の場面が出て、同じ場面はくり返さない", () => {
+  const play = (s, rng) => {
+    while (s.status === "playing") {
+      const e = L.getCurrentEvent(s);
+      s = L.advance(L.applyChoice(s, e.choices[Math.floor(rng() * 3)].id).state, rng);
+    }
+    return s;
+  };
+  // 再訪の場面は、ふつうの訪問では出ない
+  for (let seed = 0; seed < 200; seed++) {
+    const s = play(L.startGame(seeded(seed), [], { town: "nagi" }), seeded(seed + 1));
+    assert.ok(s.usedEvents.every((id) => !L.getEvent(id).revisit), `再訪の場面が出た ${s.usedEvents}`);
+  }
+  let repeats = 0;
+  let revisitShown = 0;
+  for (const t of D.towns.slice(1)) {
+    for (let seed = 0; seed < 100; seed++) {
+      const rng = seeded(seed);
+      // 日和町 → 寄り道（3幕）→ 順番の町を回って、寄り道した町に戻る
+      let carry = L.carryOver(play(L.startGame(rng, [], { town: "hiyori" }), rng));
+      const detour = play(L.startGame(rng, [], Object.assign({ town: t.id, maxTurns: L.DETOUR_TURNS }, carry)), rng);
+      assert.equal(detour.history.length, 3);
+      carry = L.carryOver(detour);
+      const again = play(L.startGame(rng, [], Object.assign({ town: t.id, revisit: true }, carry)), rng);
+      assert.equal(again.history.length, 5);
+      again.usedEvents.forEach((id) => { if (detour.usedEvents.includes(id)) repeats++; if (L.getEvent(id).revisit) revisitShown++; });
+    }
+  }
+  assert.equal(repeats, 0, `くり返し ${repeats} 回`);
+  assert.ok(revisitShown > 0);
+});

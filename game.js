@@ -944,6 +944,9 @@
     if (mode === "journey") {
       options.town = journey.pick;
       if (journey.carry) Object.assign(options, journey.carry);
+      // 寄り道は 3 幕。寄り道した町に順番どおりに戻ってきたら、再訪の場面が出る
+      if (isDetour(journey.pick)) options.maxTurns = L.DETOUR_TURNS;
+      else if (journey.results.some(function (r) { return r.warp && r.town === journey.pick; })) options.revisit = true;
     } else {
       options.town = loadRecords().currentTown; // 1日の商売は、いまいる町で
     }

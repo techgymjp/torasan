@@ -10,6 +10,7 @@
  * requiresTies : この縁がすべて結ばれているときだけ発生する（縁の続きのイベント）
  * echo      : { tie, town?, effects, text } その縁があると、どの口上を選んでも効果と一文が上乗せされる
  * town      : この町でだけ出る（data/towns.js の町 ID）。省略するとどの町でも出る
+ * revisit   : true なら再訪の場面。旅で寄り道した町に、順番どおりに戻ってきたときだけ出る
  *
  * 文章と数値のみを持ち、コードは含めない。ゲーム側は定義済みの効果量だけを反映する。
  */
@@ -2314,6 +2315,899 @@
           text: "「このラムネを飲めば、船酔いしない！」",
           effects: { revenue: 1500, laughter: 12, humanity: -6, trouble: 12 },
           result: "船の上で酔った客たちが戻ってきて、船着き場は大騒ぎになった。"
+        }
+      ]
+    },
+
+    // ---------- 再訪の場面（寄り道した町に、順番どおりに戻ってきたときだけ出る） ----------
+    {
+      id: "SR1",
+      town: "shiomi",
+      revisit: true,
+      title: "また来た兄さん",
+      tier: "normal",
+      character: "tatsu",
+      product: { icon: "🐟", name: "大漁旗の手ぬぐい", blurb: "港の男の汗ふき" },
+      dialogue: "おう、この前ふらっと来た兄さんじゃねえか！ 今度はちゃんと腰を据えてくんだろうな？",
+      choices: [
+        {
+          id: "A",
+          type: "bluff",
+          text: "「今度は港の端から端まで、俺の口上で埋めてみせます！」",
+          effects: { revenue: 1700, laughter: 14, humanity: 0, trouble: 8 },
+          result: "辰五郎は「でかく出たな！」と大笑いし、漁師仲間を引き連れて戻ってきた。"
+        },
+        {
+          id: "B",
+          type: "help",
+          text: "「この前の礼に、今日は朝の水揚げから手伝います」",
+          effects: { revenue: 700, laughter: 4, humanity: 14, trouble: -2 },
+          result: "水揚げが終わると、漁師たちが「律儀な奴だ」と手ぬぐいを買ってくれた。"
+        },
+        {
+          id: "C",
+          type: "flatter",
+          text: "「親方に会いたくて、戻ってきたんですよ！」",
+          effects: { revenue: 700, laughter: 2, humanity: -4, trouble: 2 },
+          result: "「世辞はいらねえって前も言ったろう」と辰五郎は苦笑いした。"
+        }
+      ]
+    },
+    {
+      id: "SR2",
+      town: "shiomi",
+      revisit: true,
+      title: "浜の子どもたちの頼み",
+      tier: "normal",
+      character: "minami",
+      product: { icon: "🪁", name: "いかのぼり", blurb: "浜風によく揚がる凧" },
+      dialogue: "この前の兄さんだ！ 浜の子たちがね、また来たら凧を作ってほしいって言ってたの。",
+      choices: [
+        {
+          id: "A",
+          type: "help",
+          text: "「よし、一人一枚ずつ一緒に作ろう」",
+          effects: { revenue: 500, laughter: 6, humanity: 16, trouble: -2 },
+          result: "浜じゅうに凧が揚がり、美波は「約束守ってくれたね」と笑った。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「凧は糸が切れたら自由の身。兄さんと同じだ！」",
+          effects: { revenue: 1200, laughter: 14, humanity: 2, trouble: 0 },
+          result: "美波が吹き出し、子どもたちが凧をねだって親を連れてきた。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「この凧なら、隣の島まで飛んでいく！」",
+          effects: { revenue: 1500, laughter: 12, humanity: -6, trouble: 10 },
+          result: "本当に糸を切った子が泣き出し、浜は大騒ぎになった。"
+        }
+      ]
+    },
+    {
+      id: "SR3",
+      town: "shiomi",
+      revisit: true,
+      title: "港の送別会",
+      tier: "final",
+      character: "tatsu",
+      product: { icon: "🍶", name: "祝い酒の升", blurb: "門出を祝う木の升" },
+      dialogue: "二度も来てくれた兄さんに、港の連中で送別会をやることにした。最後にひと口上、頼むぜ！",
+      choices: [
+        {
+          id: "A",
+          type: "bluff",
+          text: "「この升で飲めば、次の大漁も約束されたようなもん！」",
+          effects: { revenue: 2100, laughter: 16, humanity: 0, trouble: 10 },
+          result: "漁師たちが升を掲げて大合唱し、港は祭りのような騒ぎになった。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「二度来たのは、ここの人たちが好きだからです」",
+          effects: { revenue: 1800, laughter: 4, humanity: 16, trouble: -2 },
+          result: "辰五郎は黙って升を買い、「また来い」とだけ言った。"
+        },
+        {
+          id: "C",
+          type: "help",
+          text: "「送別会の片付けは俺がやります。皆さんは飲んでてください」",
+          effects: { revenue: 600, laughter: 6, humanity: 18, trouble: -4 },
+          result: "片付けが終わると、漁師たちが升を全部買い取ってくれた。"
+        }
+      ]
+    },
+    {
+      id: "YR1",
+      town: "yunosawa",
+      revisit: true,
+      title: "若旦那の再会",
+      tier: "normal",
+      character: "seikichi",
+      product: { icon: "🧴", name: "湯の花", blurb: "家でも温泉気分" },
+      dialogue: "やあ、この前の口上師さん！ あのあと宿の客に評判でねえ。今度は長逗留していくかい？",
+      choices: [
+        {
+          id: "A",
+          type: "flatter",
+          text: "「若旦那の宿が評判だから、また来たくなったんです」",
+          effects: { revenue: 1500, laughter: 4, humanity: 4, trouble: 0 },
+          result: "清吉は上機嫌で、湯の花を宿の土産に置いてくれた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「長逗留したら、湯の花より先に俺がふやけちまう」",
+          effects: { revenue: 1300, laughter: 14, humanity: 2, trouble: 0 },
+          result: "清吉は手を叩いて笑い、客を連れて露店に来た。"
+        },
+        {
+          id: "C",
+          type: "honest",
+          text: "「湯の花は湯の成分を固めたもので、効能は人それぞれです」",
+          effects: { revenue: 700, laughter: 2, humanity: 4, trouble: 0 },
+          result: "「なんだか白けるねえ」と清吉は肩をすくめたが、湯治客は感心して買った。"
+        }
+      ]
+    },
+    {
+      id: "YR2",
+      town: "yunosawa",
+      revisit: true,
+      title: "繁蔵さんの腰",
+      tier: "normal",
+      character: "shige",
+      product: { icon: "🩹", name: "腰あて布団", blurb: "湯治のおともに" },
+      dialogue: "おお、あんたか。この前の話のおかげで、腰の調子がいいんだ。……いや、湯のおかげかな。",
+      choices: [
+        {
+          id: "A",
+          type: "honest",
+          text: "「それは湯のおかげです。でも、この布団で冷やさないのも大事ですよ」",
+          effects: { revenue: 1100, laughter: 2, humanity: 12, trouble: -2 },
+          result: "繁蔵は「正直な人だ」とうなずき、布団を二つ買った。"
+        },
+        {
+          id: "B",
+          type: "help",
+          text: "「宿の階段、つかまってください。荷物は俺が持ちます」",
+          effects: { revenue: 500, laughter: 4, humanity: 16, trouble: -2 },
+          result: "宿に着くと、繁蔵が湯治仲間に「いい人だよ」と紹介してくれた。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「この布団で寝れば、明日には走れます！」",
+          effects: { revenue: 1500, laughter: 10, humanity: -6, trouble: 10 },
+          result: "「年寄りをからかっちゃいかんよ」と繁蔵にたしなめられた。"
+        }
+      ]
+    },
+    {
+      id: "YR3",
+      town: "yunosawa",
+      revisit: true,
+      title: "湯けむりの千秋楽",
+      tier: "final",
+      character: "crowd",
+      product: { icon: "🎇", name: "湯けむり花火", blurb: "温泉街の夜空に" },
+      dialogue: "見物の衆「二度目の兄さんだ！ 今夜は温泉街総出で見送るよ。最後にひと花咲かせな！」",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「湯けむりの向こうに花火、のぼせる前に見ておくれ！」",
+          effects: { revenue: 2000, laughter: 16, humanity: 4, trouble: 2 },
+          result: "浴衣姿の客が次々に花火を買い、温泉街の夜空が明るくなった。"
+        },
+        {
+          id: "B",
+          type: "flatter",
+          text: "「こんなに温かい町、湯より皆さんの人柄ですね」",
+          effects: { revenue: 1800, laughter: 6, humanity: 8, trouble: 0 },
+          result: "見物衆は照れ笑いしながら、花火を土産に買っていった。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「この花火、湯の神様も見に来る！」",
+          effects: { revenue: 2100, laughter: 14, humanity: -6, trouble: 14 },
+          result: "神様を待って夜通し騒いだ客たちに、旅館組合が頭を抱えた。"
+        }
+      ]
+    },
+    {
+      id: "TR1",
+      town: "touge",
+      revisit: true,
+      title: "茶屋の常連",
+      tier: "normal",
+      character: "oshin",
+      product: { icon: "🍙", name: "竹の皮の弁当包み", blurb: "峠越えの握り飯に" },
+      dialogue: "あら、この前の旅の人。峠を二度も越えてくるなんて、物好きだねえ。",
+      choices: [
+        {
+          id: "A",
+          type: "honest",
+          text: "「女将さんのお茶が忘れられなくて」",
+          effects: { revenue: 1000, laughter: 2, humanity: 12, trouble: -2 },
+          result: "お信は照れながら茶を出し、弁当包みを店で使うと買ってくれた。"
+        },
+        {
+          id: "B",
+          type: "help",
+          text: "「今日は薪割りを手伝います」",
+          effects: { revenue: 600, laughter: 4, humanity: 16, trouble: -2 },
+          result: "薪の山を見て、お信が「これで冬が越せる」と弁当包みを全部買った。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「峠を二度越えると、天狗と友達になれるんです！」",
+          effects: { revenue: 1400, laughter: 12, humanity: -6, trouble: 10 },
+          result: "「天狗にさらわれるよ」とお信ににらまれた。"
+        }
+      ]
+    },
+    {
+      id: "TR2",
+      town: "touge",
+      revisit: true,
+      title: "荷台の約束",
+      tier: "normal",
+      character: "genta",
+      product: { icon: "🧢", name: "運転手の帽子", blurb: "峠のつばめ印" },
+      dialogue: "おう、また会ったな！ 今度は荷台に乗ってくか？ ただし面白い話をしながらな！",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「乗せてもらう代わりに、峠の上り坂で笑い話を一つずつ！」",
+          effects: { revenue: 1300, laughter: 14, humanity: 2, trouble: 0 },
+          result: "源太は大笑いしながら運転し、仲間の運転手に帽子を勧めてくれた。"
+        },
+        {
+          id: "B",
+          type: "bluff",
+          text: "「この帽子をかぶれば、峠道でもエンストしない！」",
+          effects: { revenue: 1600, laughter: 14, humanity: 0, trouble: 8 },
+          result: "源太は「そりゃいい！」と帽子をまとめ買いしていった。"
+        },
+        {
+          id: "C",
+          type: "flatter",
+          text: "「源太さんの運転なら、どこまでも安心です！」",
+          effects: { revenue: 700, laughter: 2, humanity: -2, trouble: 2 },
+          result: "「おだてても運賃はとるぞ」と源太は笑った。"
+        }
+      ]
+    },
+    {
+      id: "TR3",
+      town: "touge",
+      revisit: true,
+      title: "峠の見送り",
+      tier: "final",
+      character: "oshin",
+      product: { icon: "🏮", name: "道中ちょうちん", blurb: "夜の峠道を照らす" },
+      dialogue: "二度目の旅立ちだね。峠のてっぺんまで、茶屋の客みんなで見送るよ。",
+      choices: [
+        {
+          id: "A",
+          type: "honest",
+          text: "「この峠には、また必ず来ます。ちょうちんは約束の印です」",
+          effects: { revenue: 1900, laughter: 4, humanity: 16, trouble: -2 },
+          result: "お信は目を潤ませ、旅人たちがちょうちんを買い求めた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「峠のてっぺんで別れたら、あとは下り坂。人生もそうありたい！」",
+          effects: { revenue: 2000, laughter: 16, humanity: 4, trouble: 2 },
+          result: "茶屋の客がどっと笑い、ちょうちんが飛ぶように売れた。"
+        },
+        {
+          id: "C",
+          type: "help",
+          text: "「下り道の暗いところ、ちょうちんを置いていきます」",
+          effects: { revenue: 300, laughter: 6, humanity: 20, trouble: -4 },
+          result: "お信は「あんた、ほんとにお人好しだねえ」と笑った。"
+        }
+      ]
+    },
+    {
+      id: "JR1",
+      town: "joka",
+      revisit: true,
+      title: "ご隠居の覚え",
+      tier: "normal",
+      character: "mido",
+      product: { icon: "📜", name: "巻紙", blurb: "手紙を書くための上質な紙" },
+      dialogue: "そなた、前にも来た者だな。わしは一度会った者の顔は忘れぬ。",
+      choices: [
+        {
+          id: "A",
+          type: "flatter",
+          text: "「ご隠居さまに覚えていただけるとは、光栄でございます」",
+          effects: { revenue: 1500, laughter: 4, humanity: 6, trouble: 0 },
+          result: "ご隠居は満足げに巻紙を求め、知人への手紙に使うと言った。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「前は寄り道で、失礼をしました。今日は腰を据えて商います」",
+          effects: { revenue: 1100, laughter: 2, humanity: 12, trouble: -2 },
+          result: "「殊勝な心がけじゃ」とご隠居は巻紙を束で買った。"
+        },
+        {
+          id: "C",
+          type: "wit",
+          text: "「ご隠居さまの記憶力、この巻紙より長いですね」",
+          effects: { revenue: 700, laughter: 12, humanity: -4, trouble: 4 },
+          result: "「軽々しい」とご隠居に眉をひそめられた。"
+        }
+      ]
+    },
+    {
+      id: "JR2",
+      town: "joka",
+      revisit: true,
+      title: "団子の新作",
+      tier: "normal",
+      character: "chiyo",
+      product: { icon: "🍡", name: "団子の串", blurb: "竹を削った長い串" },
+      dialogue: "あっ、この前の！ あの三人一串のおまけ、町で評判なの。新作も考えたんだけど、見てくれる？",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「串を長くして、町の人を全員つなげちゃおう！」",
+          effects: { revenue: 1300, laughter: 14, humanity: 4, trouble: 0 },
+          result: "千代が大笑いし、長い串の団子が城下の名物になりかけた。"
+        },
+        {
+          id: "B",
+          type: "help",
+          text: "「試食の配り役、やりますよ」",
+          effects: { revenue: 600, laughter: 6, humanity: 16, trouble: -2 },
+          result: "団子があっという間に配られ、千代の店に行列ができた。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「この串で食べると、殿様の味がする！」",
+          effects: { revenue: 1500, laughter: 12, humanity: -6, trouble: 10 },
+          result: "「また嘘でしょう」と千代にあきれられた。"
+        }
+      ]
+    },
+    {
+      id: "JR3",
+      town: "joka",
+      revisit: true,
+      title: "城下の名残",
+      tier: "final",
+      character: "mido",
+      product: { icon: "🪭", name: "城下の扇子", blurb: "城の絵が描かれた扇" },
+      dialogue: "二度もこの城下を訪れるとは、そなたも縁があるのう。最後に、ふさわしい口上を聞かせてもらおう。",
+      choices: [
+        {
+          id: "A",
+          type: "honest",
+          text: "「この町で教わった礼儀を、次の町でも守ります」",
+          effects: { revenue: 1900, laughter: 4, humanity: 16, trouble: -2 },
+          result: "ご隠居は扇子を開いて「達者でな」と言い、町の人が扇子を求めた。"
+        },
+        {
+          id: "B",
+          type: "flatter",
+          text: "「この城下の品格は、ご隠居さまそのものです」",
+          effects: { revenue: 2000, laughter: 6, humanity: 8, trouble: 2 },
+          result: "ご隠居は上機嫌で、扇子を土産にとまとめて買った。"
+        },
+        {
+          id: "C",
+          type: "wit",
+          text: "「扇子で風を送れば、次の町まで追い風です！」",
+          effects: { revenue: 1200, laughter: 14, humanity: -4, trouble: 6 },
+          result: "「最後まで軽口か」とご隠居はあきれたが、町の若い衆は笑った。"
+        }
+      ]
+    },
+    {
+      id: "MR1",
+      town: "monzen",
+      revisit: true,
+      title: "小僧さんの再会",
+      tier: "normal",
+      character: "chinnen",
+      product: { icon: "🪀", name: "竹とんぼ", blurb: "境内でよく飛ぶ" },
+      dialogue: "あっ、前の兄さんだ！ あのからくり人形、和尚さまに見つかって取り上げられちゃったんだ……",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「じゃあ今度は竹とんぼ。空に飛んでいけば、取り上げられない！」",
+          effects: { revenue: 1200, laughter: 14, humanity: 2, trouble: 0 },
+          result: "珍念は大喜びで、寺の仲間と竹とんぼを飛ばした。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「和尚さまに一緒に謝りに行こう。それから遊ぼう」",
+          effects: { revenue: 800, laughter: 2, humanity: 14, trouble: -2 },
+          result: "和尚が笑って許し、珍念は竹とんぼを買ってもらえた。"
+        },
+        {
+          id: "C",
+          type: "flatter",
+          text: "「珍念さん、前より修行が進んで見えるねえ！」",
+          effects: { revenue: 500, laughter: 2, humanity: -4, trouble: 2 },
+          result: "「おだてても、お経は短くなりませんよ」と珍念はふくれた。"
+        }
+      ]
+    },
+    {
+      id: "MR2",
+      town: "monzen",
+      revisit: true,
+      title: "和尚の茶飲み話",
+      tier: "normal",
+      character: "kakunen",
+      product: { icon: "🍵", name: "門前の番茶", blurb: "香ばしい焙じ番茶" },
+      dialogue: "おお、また来られたか。縁とは不思議なものよのう。茶でも飲んでいきなされ。",
+      choices: [
+        {
+          id: "A",
+          type: "help",
+          text: "「お茶の前に、本堂の雑巾がけをさせてください」",
+          effects: { revenue: 500, laughter: 4, humanity: 18, trouble: -4 },
+          result: "和尚は感心して番茶をまとめて買い、参拝客に振る舞った。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「前に来たときは急いでいました。今日はゆっくり話を聞かせてください」",
+          effects: { revenue: 1100, laughter: 2, humanity: 12, trouble: -2 },
+          result: "和尚は長い話をしてくれ、帰りに番茶を勧めてくれた。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「この番茶を飲めば、悟りが開けます！」",
+          effects: { revenue: 1500, laughter: 10, humanity: -8, trouble: 10 },
+          result: "「悟りは茶では開けぬよ」と和尚は静かに笑った。"
+        }
+      ]
+    },
+    {
+      id: "MR3",
+      town: "monzen",
+      revisit: true,
+      title: "縁日の夜の別れ",
+      tier: "final",
+      character: "chinnen",
+      product: { icon: "🎐", name: "願い札の風鈴", blurb: "願いを書いて吊るす" },
+      dialogue: "兄さん、もう行っちゃうの？ じゃあ最後に、縁日でいちばん大きな口上やってよ！",
+      choices: [
+        {
+          id: "A",
+          type: "bluff",
+          text: "「この風鈴に願いを書けば、来年の縁日に兄さんがまた来る！」",
+          effects: { revenue: 2000, laughter: 16, humanity: 2, trouble: 8 },
+          result: "珍念が真っ先に願いを書き、縁日の客が次々に風鈴を買った。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「風鈴が鳴るたびに、兄さんの口上を思い出して笑ってくれ！」",
+          effects: { revenue: 1900, laughter: 16, humanity: 4, trouble: 2 },
+          result: "珍念は泣き笑いで手を振り、風鈴の音が門前町に響いた。"
+        },
+        {
+          id: "C",
+          type: "help",
+          text: "「縁日の片付け、最後まで手伝ってから行くよ」",
+          effects: { revenue: 400, laughter: 6, humanity: 18, trouble: -4 },
+          result: "片付けが終わると、和尚と珍念が山門まで見送ってくれた。"
+        }
+      ]
+    },
+    {
+      id: "AR1",
+      town: "aoba",
+      revisit: true,
+      title: "試験の結果",
+      tier: "normal",
+      character: "manabu",
+      product: { icon: "📐", name: "三角定規", blurb: "製図の授業の必需品" },
+      dialogue: "あ、あのときの！ あのあと試験、なんとか通ったんです。報告したかったんですよ。",
+      choices: [
+        {
+          id: "A",
+          type: "honest",
+          text: "「それは学さんが頑張ったからです。おめでとう」",
+          effects: { revenue: 1000, laughter: 2, humanity: 14, trouble: -2 },
+          result: "学は照れながら、次の授業用に定規を買った。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「合格祝いに、三角定規。角が立たない人生を！」",
+          effects: { revenue: 1300, laughter: 14, humanity: 2, trouble: 0 },
+          result: "「角だらけじゃないですか」と学が笑い、仲間の分も買っていった。"
+        },
+        {
+          id: "C",
+          type: "flatter",
+          text: "「さすが青葉台一の秀才！」",
+          effects: { revenue: 500, laughter: 2, humanity: -4, trouble: 2 },
+          result: "「おだてで財布は開きませんよ」と学はいつもの調子で言った。"
+        }
+      ]
+    },
+    {
+      id: "AR2",
+      town: "aoba",
+      revisit: true,
+      title: "マスターのおごり",
+      tier: "normal",
+      character: "poem",
+      product: { icon: "☕", name: "コーヒーミル", blurb: "手回しで豆をひく" },
+      dialogue: "おや、また来たね。前の口上、店の常連が真似してるよ。一杯おごろう。",
+      choices: [
+        {
+          id: "A",
+          type: "flatter",
+          text: "「マスターのコーヒーが飲みたくて戻ってきました」",
+          effects: { revenue: 1500, laughter: 4, humanity: 6, trouble: 0 },
+          result: "マスターは上機嫌で、店用にミルを買ってくれた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「真似されるなら、使用料をコーヒーでいただきます」",
+          effects: { revenue: 1300, laughter: 14, humanity: 2, trouble: 0 },
+          result: "マスターは「洒落てるねえ」と笑い、常連にミルを勧めた。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「このミルでひけば、豆がブルーマウンテンになる！」",
+          effects: { revenue: 1400, laughter: 10, humanity: -6, trouble: 10 },
+          result: "「野暮だねえ」とマスターはため息をついた。"
+        }
+      ]
+    },
+    {
+      id: "AR3",
+      town: "aoba",
+      revisit: true,
+      title: "坂の上の送別会",
+      tier: "final",
+      character: "crowd",
+      product: { icon: "🎸", name: "フォークギター弦", blurb: "学生の歌声に" },
+      dialogue: "見物の衆（学生たち）「二度も来た兄さんを、歌で送ろうって話になったんだ。最後に一席どう？」",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「歌で送られるなら、売上も歌うように伸びてくれ！」",
+          effects: { revenue: 2000, laughter: 16, humanity: 4, trouble: 2 },
+          result: "学生たちが大合唱し、弦が次々と売れた。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「金がなくても笑ってる皆さんに、いちばん元気をもらいました」",
+          effects: { revenue: 1800, laughter: 4, humanity: 16, trouble: -2 },
+          result: "学生たちは照れくさそうに、小銭を出し合って弦を買った。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「この弦を張れば、明日からスターだ！」",
+          effects: { revenue: 2000, laughter: 14, humanity: -6, trouble: 14 },
+          result: "学生たちが夜通し歌い続け、坂の上の下宿から苦情が殺到した。"
+        }
+      ]
+    },
+    {
+      id: "WR1",
+      town: "yukimi",
+      revisit: true,
+      title: "朝市の顔なじみ",
+      tier: "normal",
+      character: "fumi",
+      product: { icon: "🥢", name: "塗り箸", blurb: "雪国の職人の手仕事" },
+      dialogue: "あら、また来たの！ 寒いのに物好きだねえ。今日は場所、いいところ空けといたよ。",
+      choices: [
+        {
+          id: "A",
+          type: "honest",
+          text: "「場所までありがとうございます。今日は正直な値段でいきます」",
+          effects: { revenue: 1100, laughter: 2, humanity: 12, trouble: -2 },
+          result: "フミは「それでこそ」と笑い、市の仲間に箸を勧めてくれた。"
+        },
+        {
+          id: "B",
+          type: "wit",
+          text: "「箸は二本で一膳。おかみさんと俺で、今日は一膳の商売だ！」",
+          effects: { revenue: 1300, laughter: 14, humanity: 2, trouble: 0 },
+          result: "フミが大笑いし、二人の掛け合いに客が集まった。"
+        },
+        {
+          id: "C",
+          type: "flatter",
+          text: "「おかみさんに会いたくて、雪道を越えてきました！」",
+          effects: { revenue: 600, laughter: 2, humanity: -4, trouble: 2 },
+          result: "「口ばっかりあったかいのは相変わらずだね」とフミは笑った。"
+        }
+      ]
+    },
+    {
+      id: "WR2",
+      town: "yukimi",
+      revisit: true,
+      title: "冬吉の報告",
+      tier: "normal",
+      character: "fuyukichi",
+      product: { icon: "🧸", name: "雪うさぎの置物", blurb: "白い焼き物の小さなうさぎ" },
+      dialogue: "兄さん！ この前の土産、家族がすごく喜んでくれたんだ。今度は妹の誕生日なんだけど……",
+      choices: [
+        {
+          id: "A",
+          type: "help",
+          text: "「妹さんの好きなもの、一緒に考えよう」",
+          effects: { revenue: 700, laughter: 4, humanity: 16, trouble: -2 },
+          result: "冬吉は雪うさぎを選び、「兄さんのおかげだ」と頭を下げた。"
+        },
+        {
+          id: "B",
+          type: "flatter",
+          text: "「こんな優しい兄さんがいて、妹さんは幸せだね」",
+          effects: { revenue: 1300, laughter: 4, humanity: 6, trouble: 0 },
+          result: "冬吉は真っ赤になって、雪うさぎを二つ買った。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「この置物、雪がとけても消えない雪うさぎ！」",
+          effects: { revenue: 1400, laughter: 12, humanity: -4, trouble: 8 },
+          result: "「焼き物だから当たり前だよね……」と冬吉は首をかしげた。"
+        }
+      ]
+    },
+    {
+      id: "WR3",
+      town: "yukimi",
+      revisit: true,
+      title: "雪見の朝の別れ",
+      tier: "final",
+      character: "fumi",
+      product: { icon: "🧣", name: "朝市の襟巻き", blurb: "おかみさんたちの手編み" },
+      dialogue: "二度も来てくれたんだ、最後は朝市のみんなで売ってやるよ。ひと口上、頼んだよ！",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「この襟巻きを巻けば、雪国の人情が首から離れない！」",
+          effects: { revenue: 2000, laughter: 16, humanity: 6, trouble: 2 },
+          result: "朝市じゅうが笑いに包まれ、襟巻きはあっという間に売り切れた。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「この襟巻きは、おかみさんたちの手編みです。あったかさは保証します」",
+          effects: { revenue: 1900, laughter: 4, humanity: 16, trouble: -2 },
+          result: "フミたちは誇らしげに胸を張り、客がこぞって買った。"
+        },
+        {
+          id: "C",
+          type: "flatter",
+          text: "「雪見町のおかみさんは、日本一の働き者！」",
+          effects: { revenue: 1200, laughter: 4, humanity: -2, trouble: 2 },
+          result: "「最後まで口がうまいね」とフミに笑われたが、売れ行きはそこそこだった。"
+        }
+      ]
+    },
+    {
+      id: "KR1",
+      town: "kuroiwa",
+      revisit: true,
+      title: "岩男の腕相撲",
+      tier: "normal",
+      character: "iwao",
+      product: { icon: "💪", name: "握力にぎり", blurb: "坑夫の力自慢に" },
+      dialogue: "おう、この前の兄ちゃん！ 今度こそ腕相撲で勝負だ。負けたら品物、全部買ってやる！",
+      choices: [
+        {
+          id: "A",
+          type: "bluff",
+          text: "「受けて立つ！ 俺の腕は口より強い！」",
+          effects: { revenue: 1700, laughter: 16, humanity: 0, trouble: 8 },
+          result: "あっさり負けたが、岩男は大笑いで「根性は買う」と品物を買い占めた。"
+        },
+        {
+          id: "B",
+          type: "help",
+          text: "「勝負の前に、坑道の道具運びを手伝わせてください」",
+          effects: { revenue: 700, laughter: 4, humanity: 14, trouble: -2 },
+          result: "汗だくの兄ちゃんを見て、岩男が「勝負はおあずけだ」と笑った。"
+        },
+        {
+          id: "C",
+          type: "wit",
+          text: "「腕相撲は手と手の握手。つまり、もう友達ってことで」",
+          effects: { revenue: 800, laughter: 10, humanity: -2, trouble: 4 },
+          result: "「難しいこと言われても、わからん！」と岩男は首をかしげた。"
+        }
+      ]
+    },
+    {
+      id: "KR2",
+      town: "kuroiwa",
+      revisit: true,
+      title: "炭住の子どもたち",
+      tier: "normal",
+      character: "tome",
+      product: { icon: "🖍️", name: "クレヨン", blurb: "炭住の子どもたちに" },
+      dialogue: "あんた、また来たのかい。炭住の子らが『あの兄ちゃんまだ？』ってうるさくてねえ。",
+      choices: [
+        {
+          id: "A",
+          type: "help",
+          text: "「子どもたちと一緒に、炭住の壁に絵を描きましょう」",
+          effects: { revenue: 500, laughter: 6, humanity: 18, trouble: -4 },
+          result: "壁一面の絵を見て、トメが「あんた、いい子だねえ」と涙ぐんだ。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「クレヨンは安物ですが、一人一箱ずつ行き渡る値段にします」",
+          effects: { revenue: 1100, laughter: 2, humanity: 12, trouble: -2 },
+          result: "トメは「話がわかる」と、炭住じゅうの分を注文してくれた。"
+        },
+        {
+          id: "C",
+          type: "flatter",
+          text: "「おかみさんの子育て、日本一ですよ！」",
+          effects: { revenue: 600, laughter: 4, humanity: -4, trouble: 2 },
+          result: "「そういうのは、給料日の男衆に言いな」とトメは笑い飛ばした。"
+        }
+      ]
+    },
+    {
+      id: "KR3",
+      town: "kuroiwa",
+      revisit: true,
+      title: "ヤマの見送り",
+      tier: "final",
+      character: "iwao",
+      product: { icon: "🪔", name: "安全ランプ", blurb: "坑夫のお守り" },
+      dialogue: "二度も来てくれた兄ちゃんに、ヤマの連中で見送りだ。最後にでっかい口上を頼むぞ！",
+      choices: [
+        {
+          id: "A",
+          type: "bluff",
+          text: "「このランプを灯せば、ヤマの神様が全員守ってくれる！」",
+          effects: { revenue: 2100, laughter: 16, humanity: 2, trouble: 10 },
+          result: "坑夫たちが雄叫びを上げ、ランプは一つ残らず売れた。"
+        },
+        {
+          id: "B",
+          type: "help",
+          text: "「ランプは皆さんで分けてください。お代は気持ちだけで」",
+          effects: { revenue: 200, laughter: 6, humanity: 20, trouble: -4 },
+          result: "岩男が肩を抱き、「兄ちゃんはヤマの仲間だ」と言った。"
+        },
+        {
+          id: "C",
+          type: "honest",
+          text: "「ランプがあっても、無理だけはしないでください」",
+          effects: { revenue: 1800, laughter: 4, humanity: 14, trouble: -2 },
+          result: "岩男は黙ってうなずき、仲間の分までランプを買った。"
+        }
+      ]
+    },
+    {
+      id: "NR1",
+      town: "nagi",
+      revisit: true,
+      title: "島の噂",
+      tier: "normal",
+      character: "kame",
+      product: { icon: "🐢", name: "亀の甲羅細工", blurb: "島の職人の縁起物" },
+      dialogue: "あいや、この前の兄さん！ あんたの話、もう島じゅうの噂になってるよ。",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「噂になってるなら、今日は噂の続きを売りに来ました」",
+          effects: { revenue: 1300, laughter: 14, humanity: 4, trouble: 0 },
+          result: "カメおばあは大笑いし、島の人たちを呼び集めてくれた。"
+        },
+        {
+          id: "B",
+          type: "help",
+          text: "「おばあ、今日は畑仕事を手伝いますよ」",
+          effects: { revenue: 600, laughter: 4, humanity: 16, trouble: -2 },
+          result: "畑から戻ると、おばあが縁起物を島の知り合いに配ってくれた。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「この細工を持てば、亀みたいに百年生きる！」",
+          effects: { revenue: 1500, laughter: 12, humanity: -6, trouble: 10 },
+          result: "「島で嘘ついたら、明日にはみんな知ってるよ」とおばあににらまれた。"
+        }
+      ]
+    },
+    {
+      id: "NR2",
+      town: "nagi",
+      revisit: true,
+      title: "船長の頼みごと",
+      tier: "normal",
+      character: "kaizo",
+      product: { icon: "📮", name: "島の絵はがき", blurb: "本土への便りに" },
+      dialogue: "また渡ってきたか。ちょうどいい、本土に便りを出したい年寄りが多くてな。手を貸してくれ。",
+      choices: [
+        {
+          id: "A",
+          type: "help",
+          text: "「代筆しますよ。一人ずつ話を聞かせてください」",
+          effects: { revenue: 500, laughter: 4, humanity: 18, trouble: -4 },
+          result: "海蔵は「恩に着る」と、絵はがきを船の売店に置いてくれた。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「絵はがきは一枚十円。切手代はおまけします」",
+          effects: { revenue: 1100, laughter: 2, humanity: 12, trouble: -2 },
+          result: "島の年寄りたちが列を作り、絵はがきが次々に売れた。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「この絵はがきなら、明日には本土に届く！」",
+          effects: { revenue: 1600, laughter: 14, humanity: 0, trouble: 8 },
+          result: "海蔵は「でかく出たな、船は週に二便だぞ」と笑い飛ばした。"
+        }
+      ]
+    },
+    {
+      id: "NR3",
+      town: "nagi",
+      revisit: true,
+      title: "島の別れ歌",
+      tier: "final",
+      character: "kame",
+      product: { icon: "🐚", name: "ほら貝", blurb: "島の祭りで吹く貝" },
+      dialogue: "二度も渡ってきてくれた人は、島の別れ歌で送るのが習わしさ。最後に、あんたもひと声おくれ。",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「ほら貝を吹けば、ほら話も許される！……今日だけは」",
+          effects: { revenue: 2000, laughter: 16, humanity: 6, trouble: 2 },
+          result: "おばあが腹を抱えて笑い、島じゅうがほら貝を鳴らして見送った。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「この島で過ごした日を、ずっと忘れません」",
+          effects: { revenue: 1800, laughter: 4, humanity: 18, trouble: -2 },
+          result: "島の人たちの別れ歌に、まことは船の上で深く頭を下げた。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「このほら貝の音は、本土の果てまで届く！」",
+          effects: { revenue: 2100, laughter: 14, humanity: -6, trouble: 14 },
+          result: "島じゅうが力いっぱい吹き鳴らし、本土の役場から問い合わせが来た。"
         }
       ]
     }

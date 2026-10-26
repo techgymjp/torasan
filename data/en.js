@@ -1100,6 +1100,276 @@
           B: { text: "\"Cold ramune. It's hot on the ferry, so grab one.\"", result: "\"Thoughtful,\" the passengers say, buying bottles to take aboard." },
           C: { text: "\"Drink this ramune and you won't get seasick!\"", result: "Seasick passengers come back from the ferry, and the dock is in an uproar." }
         }
+      },
+      SR1: {
+        title: "That Fella Again",
+        product: { name: "Big-Catch Flag Towels", blurb: "For a harbor man's sweat" },
+        dialogue: "Hey, you're that fella who popped in the other day! You're sticking around properly this time, right?",
+        choices: {
+          A: { text: "\"This time I'll fill the harbor end to end with my pitch!\"", result: "\"Big talk!\" Tatsugoro roars, and comes back with his whole crew." },
+          B: { text: "\"To thank you for last time, I'll help with the morning catch.\"", result: "After the unloading, the fishermen buy towels: \"What a dutiful guy.\"" },
+          C: { text: "\"I came back just to see you, boss!\"", result: "\"Told you last time — no flattery,\" Tatsugoro smirks." }
+        }
+      },
+      SR2: {
+        title: "The Beach Kids' Request",
+        product: { name: "Squid Kites", blurb: "Kites that fly high in the sea breeze" },
+        dialogue: "It's you again! The beach kids said if you came back, they wanted you to make kites with them.",
+        choices: {
+          A: { text: "\"Alright, let's make one each, together.\"", result: "Kites fill the sky over the beach, and Minami smiles: \"You kept your promise.\"" },
+          B: { text: "\"A kite with a snapped string is free — just like me!\"", result: "Minami bursts out laughing, and kids drag their parents over to buy kites." },
+          C: { text: "\"This kite will fly all the way to the next island!\"", result: "A kid really cuts the string and bursts into tears; the beach is in an uproar." }
+        }
+      },
+      SR3: {
+        title: "Harbor Farewell Party",
+        product: { name: "Celebration Sake Cups", blurb: "Wooden cups to toast a new start" },
+        dialogue: "You came twice, so the harbor crew's throwing you a farewell party. One last pitch, eh?",
+        choices: {
+          A: { text: "\"Drink from this cup and the next big catch is as good as promised!\"", result: "The fishermen raise their cups in a roaring chorus, and the harbor feels like a festival." },
+          B: { text: "\"I came twice because I like the people here.\"", result: "Tatsugoro silently buys a cup and says only, \"Come back.\"" },
+          C: { text: "\"I'll clean up after the party. You all keep drinking.\"", result: "When the cleanup's done, the fishermen buy every last cup." }
+        }
+      },
+      YR1: {
+        title: "Reunion with the Young Master",
+        product: { name: "Hot-Spring Salts", blurb: "A hot-spring feeling at home" },
+        dialogue: "Well, if it isn't the pitchman! The guests talked about you after you left. Staying a while this time?",
+        choices: {
+          A: { text: "\"Your inn's reputation made me want to come back.\"", result: "Seikichi beams and stocks the salts as inn souvenirs." },
+          B: { text: "\"Stay too long and I'll get soggy before the salts do.\"", result: "Seikichi claps with laughter and brings guests to the stall." },
+          C: { text: "\"These are just dried spring minerals. Effects vary.\"", result: "\"How dull,\" Seikichi shrugs — but the spa guests are impressed and buy." }
+        }
+      },
+      YR2: {
+        title: "Shigezo's Back",
+        product: { name: "Back-Warming Cushions", blurb: "A companion for spa stays" },
+        dialogue: "Oh, it's you. My back's been better since our talk... or maybe it's the springs.",
+        choices: {
+          A: { text: "\"It's the springs. But keeping warm with this cushion matters too.\"", result: "\"An honest man,\" Shigezo nods, and buys two." },
+          B: { text: "\"Hold on to me on the inn stairs. I'll carry your things.\"", result: "At the inn, Shigezo introduces him to his spa friends: \"A good man.\"" },
+          C: { text: "\"Sleep on this and you'll be running tomorrow!\"", result: "\"Don't tease an old man,\" Shigezo chides." }
+        }
+      },
+      YR3: {
+        title: "Grand Finale in the Steam",
+        product: { name: "Steam Fireworks", blurb: "For the spa town's night sky" },
+        dialogue: "The onlookers: \"Second time here, eh? The whole spa town's seeing you off tonight. Go out with a bang!\"",
+        choices: {
+          A: { text: "\"Fireworks beyond the steam — see them before you get dizzy!\"", result: "Guests in robes buy fireworks one after another, and the night sky lights up." },
+          B: { text: "\"A town this warm — it's the people, not the water.\"", result: "The crowd grins bashfully and buys fireworks as souvenirs." },
+          C: { text: "\"Even the god of the springs will come to watch these!\"", result: "Guests stay up all night waiting for the god, and the innkeepers' union despairs." }
+        }
+      },
+      TR1: {
+        title: "A Teahouse Regular",
+        product: { name: "Bamboo-Sheath Lunch Wraps", blurb: "For rice balls on the pass" },
+        dialogue: "Oh, it's the traveler from before. Crossing the pass twice? You're an odd one.",
+        choices: {
+          A: { text: "\"I couldn't forget your tea, ma'am.\"", result: "Blushing, Oshin serves tea and buys wraps for her shop." },
+          B: { text: "\"Today I'll chop firewood for you.\"", result: "Seeing the woodpile, Oshin buys every wrap: \"Now we'll make it through winter.\"" },
+          C: { text: "\"Cross the pass twice and you become friends with the tengu!\"", result: "\"The tengu will snatch you,\" Oshin glares." }
+        }
+      },
+      TR2: {
+        title: "The Truck-Bed Promise",
+        product: { name: "Driver's Caps", blurb: "With the pass-swallow emblem" },
+        dialogue: "Hey, we meet again! Wanna ride in the back this time? Only if you tell funny stories!",
+        choices: {
+          A: { text: "\"In exchange for the ride, one funny story for every uphill!\"", result: "Genta drives laughing all the way and recommends the caps to his buddies." },
+          B: { text: "\"Wear this cap and your truck will never stall on the pass!\"", result: "\"Now that's useful!\" Genta buys a batch." },
+          C: { text: "\"With you driving, I'd feel safe anywhere!\"", result: "\"Flattery won't get you a free ride,\" Genta laughs." }
+        }
+      },
+      TR3: {
+        title: "Send-Off on the Pass",
+        product: { name: "Travel Lanterns", blurb: "To light the night pass road" },
+        dialogue: "Your second farewell, eh? The whole teahouse will see you off to the top of the pass.",
+        choices: {
+          A: { text: "\"I'll come back to this pass, I promise. These lanterns are my pledge.\"", result: "Oshin's eyes well up, and travelers buy lanterns." },
+          B: { text: "\"Part ways at the top and it's all downhill after. May life be the same!\"", result: "The teahouse guests burst out laughing, and lanterns fly off the stand." },
+          C: { text: "\"I'll leave lanterns along the dark stretches of the descent.\"", result: "\"You really are a soft touch,\" Oshin laughs." }
+        }
+      },
+      JR1: {
+        title: "The Elder Remembers",
+        product: { name: "Rolled Letter Paper", blurb: "Fine paper for writing letters" },
+        dialogue: "You've been here before. I never forget a face.",
+        choices: {
+          A: { text: "\"It's an honor to be remembered by you, sir.\"", result: "Satisfied, the elder buys paper for letters to his acquaintances." },
+          B: { text: "\"Last time was just a detour — forgive me. Today I'm here properly.\"", result: "\"Commendable,\" the elder says, and buys a bundle." },
+          C: { text: "\"Your memory's even longer than this scroll, sir.\"", result: "\"Flippant,\" the elder frowns." }
+        }
+      },
+      JR2: {
+        title: "New Dumplings",
+        product: { name: "Dumpling Skewers", blurb: "Long skewers of shaved bamboo" },
+        dialogue: "Oh, it's you! That three-per-skewer bonus is a hit in town. I've thought up something new — want to see?",
+        choices: {
+          A: { text: "\"Make the skewer longer and link the whole town together!\"", result: "Chiyo laughs out loud, and long-skewer dumplings nearly become a local specialty." },
+          B: { text: "\"I'll hand out the free samples.\"", result: "The samples vanish in no time, and a line forms at Chiyo's shop." },
+          C: { text: "\"Eat from this skewer and it tastes like the lord's own meal!\"", result: "\"Lying again?\" Chiyo sighs." }
+        }
+      },
+      JR3: {
+        title: "Farewell to the Castle Town",
+        product: { name: "Castle Town Fans", blurb: "Fans painted with the castle" },
+        dialogue: "To visit this town twice — you must have a bond with it. Let's hear a fitting final pitch.",
+        choices: {
+          A: { text: "\"I'll keep the manners I learned here in every town ahead.\"", result: "The elder opens a fan — \"Fare thee well\" — and townsfolk ask for fans." },
+          B: { text: "\"This town's dignity is you yourself, sir.\"", result: "Delighted, the elder buys a batch of fans as gifts." },
+          C: { text: "\"Fan yourself and you'll have a tailwind to the next town!\"", result: "\"Flippant to the end,\" the elder sighs — but the young folk laugh." }
+        }
+      },
+      MR1: {
+        title: "The Novice Again",
+        product: { name: "Bamboo Copters", blurb: "They fly great on the temple grounds" },
+        dialogue: "Hey, it's you! The abbot found that wind-up doll and took it away...",
+        choices: {
+          A: { text: "\"Then try a bamboo copter. If it flies into the sky, nobody can take it!\"", result: "Chinnen is thrilled and flies copters with his temple friends." },
+          B: { text: "\"Let's go apologize to the abbot together. Then we'll play.\"", result: "The abbot laughs it off, and Chinnen gets a copter." },
+          C: { text: "\"You look like your training's come along, Chinnen!\"", result: "\"Flattery won't make the sutras shorter,\" Chinnen pouts." }
+        }
+      },
+      MR2: {
+        title: "Tea with the Abbot",
+        product: { name: "Temple Gate Bancha", blurb: "Fragrant roasted tea" },
+        dialogue: "Ah, you've come again. Bonds are curious things. Stay and have some tea.",
+        choices: {
+          A: { text: "\"Before tea, let me wipe down the main hall.\"", result: "Impressed, the abbot buys tea in bulk and serves it to worshippers." },
+          B: { text: "\"Last time I was in a hurry. Today, I'd like to hear your stories.\"", result: "The abbot talks at length and recommends the tea on his way out." },
+          C: { text: "\"Drink this tea and you'll reach enlightenment!\"", result: "\"Enlightenment doesn't come from tea,\" the abbot smiles quietly." }
+        }
+      },
+      MR3: {
+        title: "Farewell on Fair Night",
+        product: { name: "Wish-Card Wind Chimes", blurb: "Write a wish and hang it up" },
+        dialogue: "Mister, you're leaving already? Then do the biggest pitch of the whole fair!",
+        choices: {
+          A: { text: "\"Write a wish on this chime and I'll come back for next year's fair!\"", result: "Chinnen writes the first wish, and fairgoers buy chimes one after another." },
+          B: { text: "\"Every time the chime rings, remember my pitch and laugh!\"", result: "Chinnen waves, laughing through tears, as chimes ring through the town." },
+          C: { text: "\"I'll help clean up the fair before I go.\"", result: "When it's done, the abbot and Chinnen see him off at the temple gate." }
+        }
+      },
+      AR1: {
+        title: "Exam Results",
+        product: { name: "Triangle Rulers", blurb: "Essential for drafting class" },
+        dialogue: "Oh, it's you! I passed that exam after all. I wanted to tell you!",
+        choices: {
+          A: { text: "\"That's because you worked hard. Congratulations.\"", result: "Blushing, Manabu buys a ruler for his next class." },
+          B: { text: "\"A triangle ruler to celebrate — may your life have no sharp corners!\"", result: "\"It's all corners!\" Manabu laughs, and buys some for friends." },
+          C: { text: "\"The smartest student in Aobadai!\"", result: "\"Flattery won't open my wallet,\" Manabu says, as usual." }
+        }
+      },
+      AR2: {
+        title: "On the House",
+        product: { name: "Coffee Grinders", blurb: "Hand-crank bean grinders" },
+        dialogue: "Well, you're back. My regulars have been imitating your pitch. Coffee's on me.",
+        choices: {
+          A: { text: "\"I came back for your coffee, master.\"", result: "In high spirits, the master buys a grinder for the shop." },
+          B: { text: "\"If they're imitating me, I'll take my royalties in coffee.\"", result: "\"Very stylish,\" the master laughs, recommending grinders to regulars." },
+          C: { text: "\"Grind with this and any bean turns into Blue Mountain!\"", result: "\"How tacky,\" the master sighs." }
+        }
+      },
+      AR3: {
+        title: "Farewell Party on the Hill",
+        product: { name: "Folk Guitar Strings", blurb: "For the students' songs" },
+        dialogue: "The onlookers (students): \"You came twice, so we're sending you off with a song. One last pitch?\"",
+        choices: {
+          A: { text: "\"If you're singing me off, may my sales soar like a song!\"", result: "The students sing in chorus, and strings sell one after another." },
+          B: { text: "\"You all laugh even with no money — you've given me the most energy.\"", result: "The students, a little embarrassed, pool their coins to buy strings." },
+          C: { text: "\"String these and you'll be a star tomorrow!\"", result: "The students sing all night, and complaints pour in from the boarding houses." }
+        }
+      },
+      WR1: {
+        title: "A Familiar Face at the Market",
+        product: { name: "Lacquered Chopsticks", blurb: "Handmade by snow-country craftsmen" },
+        dialogue: "Oh, you're back! In this cold? You're an odd one. I saved you a good spot today.",
+        choices: {
+          A: { text: "\"Thanks for the spot. Honest prices today.\"", result: "\"That's the spirit,\" Fumi laughs, recommending the chopsticks to other vendors." },
+          B: { text: "\"Chopsticks come in pairs — you and me, a pair of sellers today!\"", result: "Fumi bursts out laughing, and their banter draws a crowd." },
+          C: { text: "\"I crossed the snowy roads just to see you, ma'am!\"", result: "\"Your mouth still runs warm, I see,\" Fumi laughs." }
+        }
+      },
+      WR2: {
+        title: "Fuyukichi's News",
+        product: { name: "Snow Rabbit Figurines", blurb: "Little white ceramic rabbits" },
+        dialogue: "Hey! My family loved the gifts last time. Now it's my little sister's birthday...",
+        choices: {
+          A: { text: "\"Let's think about what she likes, together.\"", result: "Fuyukichi picks a snow rabbit and bows: \"Thanks to you.\"" },
+          B: { text: "\"With a big brother this kind, your sister's lucky.\"", result: "Fuyukichi turns bright red and buys two rabbits." },
+          C: { text: "\"A snow rabbit that never melts!\"", result: "\"Well, it's ceramic, so...\" Fuyukichi tilts his head." }
+        }
+      },
+      WR3: {
+        title: "Farewell on a Snowy Morning",
+        product: { name: "Market Scarves", blurb: "Hand-knit by the market women" },
+        dialogue: "You came twice, so the whole market's selling with you today. Give us a pitch!",
+        choices: {
+          A: { text: "\"Wrap this scarf on and snow-country kindness will never leave your neck!\"", result: "The whole market fills with laughter, and the scarves sell out in no time." },
+          B: { text: "\"These are hand-knit by the market women. I guarantee the warmth.\"", result: "Fumi and the others puff up with pride, and customers flock to buy." },
+          C: { text: "\"The women of Yukimi are the hardest workers in Japan!\"", result: "\"Sweet-talking to the end,\" Fumi laughs — sales are only so-so." }
+        }
+      },
+      KR1: {
+        title: "Iwao's Arm-Wrestling Match",
+        product: { name: "Grip Trainers", blurb: "For miners who love showing their strength" },
+        dialogue: "Hey, it's you again, kid! This time, arm-wrestling. If I lose, I'll buy everything!",
+        choices: {
+          A: { text: "\"You're on! My arm's even stronger than my mouth!\"", result: "He loses in a flash, but Iwao laughs and buys everything: \"I'll pay for that guts.\"" },
+          B: { text: "\"Before we wrestle, let me help haul the mine tools.\"", result: "Seeing him drenched in sweat, Iwao laughs: \"The match can wait.\"" },
+          C: { text: "\"Arm-wrestling's just a handshake — so we're already friends.\"", result: "\"Talk plain — I don't get it!\" Iwao frowns." }
+        }
+      },
+      KR2: {
+        title: "The Housing Kids",
+        product: { name: "Crayons", blurb: "For the kids of the miners' housing" },
+        dialogue: "You're back, huh? The kids keep pestering me: \"Is that guy here yet?\"",
+        choices: {
+          A: { text: "\"Let's draw on the housing wall together with the kids.\"", result: "Seeing the wall covered in pictures, Tome tears up: \"You're a good kid.\"" },
+          B: { text: "\"These crayons are cheap, but I'll price them so every kid gets a box.\"", result: "\"You get it,\" Tome says, ordering enough for the whole housing." },
+          C: { text: "\"Ma'am, you're the best mom in Japan!\"", result: "\"Save that for the men on payday,\" Tome laughs it off." }
+        }
+      },
+      KR3: {
+        title: "Send-Off from the Mine",
+        product: { name: "Safety Lamps", blurb: "A miner's good-luck charm" },
+        dialogue: "You came twice, kid, so the whole mine's seeing you off. One big pitch to finish!",
+        choices: {
+          A: { text: "\"Light this lamp and the mountain god will protect every one of you!\"", result: "The miners roar, and every last lamp sells." },
+          B: { text: "\"Share the lamps among yourselves. Pay whatever you feel like.\"", result: "Iwao throws an arm around him: \"You're one of us now.\"" },
+          C: { text: "\"Even with a lamp, please don't push yourselves too hard.\"", result: "Iwao nods silently and buys lamps for his whole crew." }
+        }
+      },
+      NR1: {
+        title: "Island Rumors",
+        product: { name: "Tortoiseshell Crafts", blurb: "Lucky charms by island craftsmen" },
+        dialogue: "Oh my, it's you! Your story's already the talk of the island.",
+        choices: {
+          A: { text: "\"If I'm the talk of the island, today I've come to sell the sequel.\"", result: "Grandma Kame roars with laughter and gathers the islanders." },
+          B: { text: "\"Grandma, let me help in your fields today.\"", result: "Back from the fields, Grandma hands out the charms to her island friends." },
+          C: { text: "\"Hold this charm and you'll live a hundred years, like a tortoise!\"", result: "\"Lie on this island and everyone knows by tomorrow,\" Grandma glares." }
+        }
+      },
+      NR2: {
+        title: "The Captain's Favor",
+        product: { name: "Island Postcards", blurb: "For letters to the mainland" },
+        dialogue: "Back across again? Good timing — plenty of old folks want to send letters to the mainland. Lend a hand.",
+        choices: {
+          A: { text: "\"I'll write for them. Let me hear each person's story.\"", result: "\"I owe you,\" Kaizo says, stocking the postcards in the ferry shop." },
+          B: { text: "\"Ten yen a card. Stamps are on me.\"", result: "The island elders line up, and the postcards sell one after another." },
+          C: { text: "\"With these, your letters arrive on the mainland tomorrow!\"", result: "\"Big talk — the ferry runs twice a week,\" Kaizo laughs." }
+        }
+      },
+      NR3: {
+        title: "The Island Farewell Song",
+        product: { name: "Conch Shells", blurb: "Blown at island festivals" },
+        dialogue: "Anyone who crosses over twice gets sent off with the island farewell song. Give us a word too, before you go.",
+        choices: {
+          A: { text: "\"Blow the conch and tall tales are forgiven! ...Just for today.\"", result: "Grandma laughs till her sides hurt, and the whole island sends him off blowing conches." },
+          B: { text: "\"I'll never forget my days on this island.\"", result: "To the islanders' farewell song, Makoto bows deeply from the ferry." },
+          C: { text: "\"The sound of this conch reaches the far end of the mainland!\"", result: "The whole island blows with all its might, and the mainland town hall calls to ask what's going on." }
+        }
       }
     },
 
