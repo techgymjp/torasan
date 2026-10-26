@@ -79,7 +79,8 @@
       towns: Array.isArray(r.towns) ? r.towns.filter(function (id) { return D.towns.some(function (x) { return x.id === id; }); }) : [],
       townBest: r.townBest && typeof r.townBest === "object" ? r.townBest : {},
       // いまいる町：旅で最後に商売した町。「商売を始める」はこの町で開く
-      currentTown: D.towns.some(function (x) { return x.id === r.currentTown; }) ? r.currentTown : D.journeyStart
+      currentTown: D.towns.some(function (x) { return x.id === r.currentTown; }) ? r.currentTown : D.journeyStart,
+      lastEndingTown: D.towns.some(function (x) { return x.id === r.lastEndingTown; }) ? r.lastEndingTown : null
     };
   }
 
@@ -216,12 +217,14 @@
     return { icon: g.icon, cost: g.cost, name: en.name || g.name, blurb: en.blurb || g.blurb };
   }
 
-  function endingText(ending) {
-    const en = I18n.data("endings", ending.id);
+  // town を渡すと、その町に合わせた言い回し（D.townEndings）を使う
+  function endingText(ending, town) {
+    const local = (town && D.townEndings[town] && D.townEndings[town][ending.id]) || {};
+    const en = Object.assign({}, I18n.data("endings", ending.id), (I18n.data("townEndings", town) || {})[ending.id]);
     return {
-      name: en.name || ending.name,
-      title: en.title || ending.title,
-      text: en.text || ending.text
+      name: en.name || local.name || ending.name,
+      title: en.title || local.title || ending.title,
+      text: en.text || local.text || ending.text
     };
   }
 
@@ -472,11 +475,12 @@
       endings: isNew ? records.endings.concat(ending.id) : records.endings,
       playCount: records.playCount + 1,
       lastEnding: ending.id,
+      lastEndingTown: state.town,
       lastJourneyEnding: null,
       lastTitle: ending.title
     });
 
-    const text = endingText(ending);
+    const text = endingText(ending, state.town);
     showEnding(t("result.ending", { name: text.name }), text.text, text.title);
     $("badge-new").hidden = !isNew;
     $("badge-best").hidden = !(isBest && state.revenue > 0);
@@ -943,7 +947,7 @@
     $("rec-plays").textContent = t("times", { n: r.playCount });
     $("rec-best").textContent = money(r.bestRevenue);
     const lastJourney = D.journeyEndings.find(function (e) { return e.id === r.lastJourneyEnding; });
-    $("rec-title").textContent = last ? endingText(last).title
+    $("rec-title").textContent = last ? endingText(last, r.lastEndingTown).title
       : lastJourney ? journeyEndingText(lastJourney).title : r.lastTitle || "—";
     $("rec-count").textContent = t("records.count", { n: r.endings.length, total: D.endings.length });
     const list = $("rec-endings");

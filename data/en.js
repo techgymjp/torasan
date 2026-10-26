@@ -1124,6 +1124,72 @@
       j_onward: { name: "Onward to the Next Journey", title: "Wanderer of the Winds", text: "Three towns without great fortune or great trouble — yet each left a small memory. Today, too, Makoto sets off for the next town." }
     },
 
+    townEndings: {
+      shiomi: {
+        chaos: { name: "Shiomi Harbor Uproar", title: "Legendary Tall-Talker", text: "Fired up by the pitch, the fishermen threw a huge party on the docks, and Makoto got summoned by the fishing co-op. He slipped away behind the first boat out at dawn." },
+        humanity: { name: "Kindness on the Sea Breeze", title: "Always Welcome Back", text: "Sales were modest, but as he left, the fishermen handed him dried fish and the divers a shell necklace. \"Come back, you hear?\" — carried on the sea breeze, that was the best profit of all." },
+        prosperity: { name: "Booming Harbor", title: "Best Pitchman in Shiomi", text: "Sold out, wallet bulging... or so it seemed, until he met a young fisherman who'd lost his nets at the dock and found himself handing over half his take." },
+        laughter: { name: "Harbor Comedian", title: "Master of Laughs", text: "Sales were so-so. But the fishermen kept laughing about his pitch over drinks — and again out on the boats the next morning." },
+        wander: { name: "Tomorrow, the Smell of the Sea", title: "Carefree Peddler", text: "No big profit, no big trouble. Shouldering his pack at the sunset harbor, Makoto sets off, nudged along by the sea air. \"Now then, where shall I set up tomorrow?\"" }
+      },
+      yunosawa: {
+        chaos: { name: "Yunosawa Hot Springs Uproar", title: "Legendary Tall-Talker", text: "Spa guests, overheated by his pitch, partied all night, and he became the topic of the innkeepers' meeting. Makoto slipped away under cover of the steam." },
+        humanity: { name: "Kindness in the Steam", title: "Always Welcome Back", text: "Sales were modest, but as he left, the inn maid gave him hot-spring buns and a spa guest a towel. \"Come again\" — that was the best profit of all." },
+        prosperity: { name: "Booming Spa Town", title: "Best Pitchman in Yunosawa", text: "Sold out, wallet bulging... until he met an elderly couple who couldn't pay for their inn, and found himself handing over half his take." },
+        laughter: { name: "Comedian of the Steam", title: "Master of Laughs", text: "Sales were so-so. But guests said they \"burst out laughing in the bath remembering that pitch,\" and came back in their robes the next day." },
+        wander: { name: "Tomorrow, Beyond the Steam", title: "Carefree Peddler", text: "No big profit, no big trouble. After a soak, Makoto shoulders his pack and walks off into the steam. \"Now then, where shall I set up tomorrow?\"" }
+      },
+      touge: {
+        chaos: { name: "Uproar on the Pass", title: "Legendary Tall-Talker", text: "Travelers who took his pitch seriously caused a ruckus on the pass road, and he was summoned to the post-town office. Makoto slipped down the mountain in the fog." },
+        humanity: { name: "Kindness on the Pass", title: "Always Welcome Back", text: "Sales were modest, but as he left, the teahouse mistress packed him rice balls and a driver saved him a seat on the truck. \"Cross the pass again sometime\" — that was the best profit of all." },
+        prosperity: { name: "Booming Teahouse Inn", title: "Best Pitchman on the Pass", text: "Sold out, wallet bulging... until he met an old peddler woman who'd twisted her ankle on the pass, and found himself handing over half his take." },
+        laughter: { name: "Comedian of the Pass", title: "Master of Laughs", text: "Sales were so-so. But travelers said they \"laughed all the way over the pass,\" and carried the story with them." },
+        wander: { name: "Tomorrow, Over the Pass", title: "Carefree Peddler", text: "No big profit, no big trouble. After a cup of tea, Makoto shoulders his pack and heads down the sunset pass. \"Now then, where shall I set up tomorrow?\"" }
+      },
+      joka: {
+        chaos: { name: "Castle Town Uproar", title: "Legendary Tall-Talker", text: "His pitch became the talk of the castle town, and castle officials came to inspect. Makoto packed up before dawn and quietly left town." },
+        humanity: { name: "Castle Town Kindness", title: "Always Welcome Back", text: "Sales were modest, but as he left, the sweet shop girl gave him dumplings and the old master a parting fan. \"Do come again\" — that was the best profit of all." },
+        prosperity: { name: "Booming Castle Town", title: "Best Pitchman in Tsurumi", text: "Sold out, wallet bulging... until he met an old craftsman about to close his shop, and found himself handing over half his take." },
+        laughter: { name: "Castle Town Comedian", title: "Master of Laughs", text: "Sales were so-so. But people said it was \"the first time anyone laughed like that in this stuffy town,\" and crowds gathered again the next day." },
+        wander: { name: "Tomorrow, the Castle Behind Me", title: "Carefree Peddler", text: "No big profit, no big trouble. With a glance back at the castle in the sunset, Makoto shoulders his pack. \"Now then, where shall I set up tomorrow?\"" }
+      },
+      yukimi: {
+        chaos: { name: "Morning Market Uproar", title: "Legendary Tall-Talker", text: "His pitch threw the whole market into chaos, and he became the topic of the snow-shoveling committee. Makoto packed up by the light of the snow and quietly left." },
+        humanity: { name: "Snow Country Kindness", title: "Always Welcome Back", text: "Sales were modest, but as he left, the market woman gave him pickles and Fuyukichi a hand-knit hat. \"Come back when it snows\" — that was the best profit of all." },
+        prosperity: { name: "Booming Morning Market", title: "Best Pitchman in Yukimi", text: "Sold out, wallet bulging... until he met a family whose roof had caved in under the snow, and found himself handing over half his take." },
+        laughter: { name: "Morning Market Comedian", title: "Master of Laughs", text: "Sales were so-so. But people said \"his pitch makes you forget the cold,\" and gathered again before dawn the next morning." },
+        wander: { name: "Tomorrow, the Snowy Road", title: "Carefree Peddler", text: "No big profit, no big trouble. Leaving footprints in fresh snow, Makoto shoulders his pack. \"Now then, where shall I set up tomorrow?\"" }
+      },
+      monzen: {
+        chaos: { name: "Temple Town Uproar", title: "Legendary Tall-Talker", text: "Crowds overflowed the temple gate, and he became the topic of the temple board meeting. Makoto slipped away before the dawn bell rang." },
+        humanity: { name: "Temple Gate Kindness", title: "Always Welcome Back", text: "Sales were modest, but as he left, the abbot gave him a charm and little Chinnen secretly slipped him a bun. \"Come visit again\" — that was the best profit of all." },
+        prosperity: { name: "Booming Temple Town", title: "Best Pitchman at the Gate", text: "Sold out, wallet bulging... until he saw a mother and child praying with nothing to offer, and found himself handing over half his take." },
+        laughter: { name: "Temple Town Comedian", title: "Master of Laughs", text: "Sales were so-so. But so many came \"more for his pitch than for prayers\" that even the abbot smiled wryly." },
+        wander: { name: "Tomorrow, with the Temple Bell", title: "Carefree Peddler", text: "No big profit, no big trouble. To the toll of the evening bell, Makoto shoulders his pack. \"Now then, where shall I set up tomorrow?\"" }
+      },
+      kuroiwa: {
+        chaos: { name: "Mining Town Uproar", title: "Legendary Tall-Talker", text: "The miners got so worked up they waved their pay envelopes in the streets, and he became the topic of the union meeting. Makoto slipped away among the night-shift crowd." },
+        humanity: { name: "Mining Town Kindness", title: "Always Welcome Back", text: "Sales were modest, but as he left, Tome gave him a lunch box and Iwao a polished lump of coal for luck. \"Come back, you hear?\" — that was the best profit of all." },
+        prosperity: { name: "Payday Boom", title: "Best Pitchman in Kuroiwa", text: "Sold out, wallet bulging... until he met the family of a miner hurt on the job, and found himself handing over half his take." },
+        laughter: { name: "Mining Town Comedian", title: "Master of Laughs", text: "Sales were so-so. But the miners said they \"kept laughing even down in the tunnels,\" and gathered again after their shift the next day." },
+        wander: { name: "Tomorrow, Past the Slag Heap", title: "Carefree Peddler", text: "No big profit, no big trouble. Gazing at the slag heap glowing in the sunset, Makoto shoulders his pack. \"Now then, where shall I set up tomorrow?\"" }
+      },
+      aoba: {
+        chaos: { name: "Student Quarter Uproar", title: "Legendary Tall-Talker", text: "Students debated his pitch all night, and he got called in by the university's student office. Makoto packed up before dawn and quietly walked down the hill." },
+        humanity: { name: "Student Quarter Kindness", title: "Always Welcome Back", text: "Sales were modest, but as he left, Manabu gave him a thank-you poem on a scrap of notebook and the master a bag of coffee beans. \"Come again\" — that was the best profit of all." },
+        prosperity: { name: "Booming on the Hill", title: "Best Pitchman in Aobadai", text: "Sold out, wallet bulging... until he met a student whose allowance had stopped and couldn't pay tuition, and found himself handing over half his take." },
+        laughter: { name: "Student Quarter Comedian", title: "Master of Laughs", text: "Sales were so-so. But students called it \"more fun than studying,\" and skipped class to gather again the next day." },
+        wander: { name: "Tomorrow, Beyond the Hill", title: "Carefree Peddler", text: "No big profit, no big trouble. With the students' singing behind him, Makoto shoulders his pack and heads down the hill. \"Now then, where shall I set up tomorrow?\"" }
+      },
+      nagi: {
+        chaos: { name: "Nagi Island Uproar", title: "Legendary Tall-Talker", text: "Word of his pitch spread across the island overnight, and he became the topic of the island meeting. Makoto jumped on the first ferry and quietly left." },
+        humanity: { name: "Island Kindness", title: "Always Welcome Back", text: "Sales were modest, but as he left, Grandma Kame gave him brown sugar and Captain Kaizo saved him the best seat on the ferry. \"Come across again\" — that was the best profit of all." },
+        prosperity: { name: "Booming Island", title: "Best Pitchman on Nagi", text: "Sold out, wallet bulging... until he met an island fisherman whose boat was wrecked by the typhoon, and found himself handing over half his take." },
+        laughter: { name: "Island Comedian", title: "Master of Laughs", text: "Sales were so-so. But \"the whole island is imitating that pitch,\" they said, and gathered at the dock again the next day." },
+        wander: { name: "Tomorrow, the Calm Sea", title: "Carefree Peddler", text: "No big profit, no big trouble. Gazing at the calm evening sea, Makoto shoulders his pack and boards the ferry. \"Now then, where shall I set up tomorrow?\"" }
+      }
+    },
+
     goods: {
       candy: { name: "Rainbow Mint Drops", blurb: "Tall Tale sales +20%" },
       opener: { name: "The Open-Anything", blurb: "Quick Wit sales +25%" },

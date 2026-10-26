@@ -77,3 +77,16 @@ test("英訳：町と旅の結末すべてに訳がある", () => {
     assert.ok(en && en.name && en.title && en.text, `旅の結末 ${j.id}`);
   }
 });
+
+test("町ごとの結末の言い回しが、日和町以外のすべての町・すべての結末にあり、英訳もそろっている", () => {
+  for (const t of D.towns) {
+    if (t.id === "hiyori") continue;
+    for (const e of D.endings) {
+      const ja = (D.townEndings[t.id] || {})[e.id];
+      const en = (D.en.townEndings[t.id] || {})[e.id];
+      assert.ok(ja && ja.name && ja.title && ja.text, `${t.id} ${e.id}`);
+      assert.ok(en && en.name && en.title && en.text, `en ${t.id} ${e.id}`);
+      assert.ok(!/[぀-ヿ一-鿿]/.test(en.name + en.title + en.text), `en に日本語 ${t.id} ${e.id}`);
+    }
+  }
+});
