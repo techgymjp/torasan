@@ -15,7 +15,7 @@
     },
     // AdMob で作成した本番の広告ユニット（未設定の間は Google Play 用のビルドが止まる）
     production: {
-      interstitial: "",
+      interstitial: "ca-app-pub-6411535997477460/9183794755",
       rewarded: ""
     }
   };
