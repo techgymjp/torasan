@@ -506,6 +506,17 @@
     $("title-heading").focus({ preventScroll: true });
   }
 
+  // 商売の途中でやめてタイトルに戻るときは、全画面広告を経由する
+  async function quitToTitle() {
+    if (startBusy) return;
+    if (Ads.available) {
+      startBusy = true;
+      await Ads.showInterstitial();
+      startBusy = false;
+    }
+    toTitle();
+  }
+
   function openRecords() {
     const r = loadRecords();
     const last = D.endings.find(function (e) { return e.id === r.lastEnding; });
@@ -588,7 +599,7 @@
         if (dlg) {
           dlg.close();
         } else if (state.status === "playing") {
-          if (window.confirm(t("play.quit"))) toTitle();
+          if (window.confirm(t("play.quit"))) quitToTitle();
         } else {
           App.exitApp();
         }
