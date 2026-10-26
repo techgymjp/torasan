@@ -341,11 +341,3 @@ test("旅：10の町を順番に回る。どの町にも山場の場面がある
   assert.deepEqual(L.openTowns(D.towns.map((t) => t.id)), []);
 });
 
-test("旅：鍵を開けて先の町に行ったあとは、元の順番に戻る", () => {
-  const ids = D.towns.map((t) => t.id);
-  const last = ids[ids.length - 1];
-  assert.equal(L.homeTown(["hiyori", last], [last]), "hiyori");
-  assert.deepEqual(L.openTowns(["hiyori", last]), [ids[1]]);
-  assert.equal(L.homeTown([last], [last]), null);
-  assert.deepEqual(L.openTowns([last]), ["hiyori"]);
-});

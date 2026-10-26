@@ -202,12 +202,6 @@
     return next ? [next.id] : [];
   }
 
-  // 旅でいまいる町：鍵を開けて行った町を除いた、最後に商売した町（まだなければ null）
-  function homeTown(route, warps) {
-    const real = (route || []).filter(function (id) { return !warps || warps.indexOf(id) === -1; });
-    return real.length ? real[real.length - 1] : null;
-  }
-
   // 町を出るとき、人情（評判）の半分と縁を次の町へ持ち越す
   function carryOver(state) {
     const start = createInitialState().humanity;
@@ -439,7 +433,6 @@
     validStock: validStock,
     carryOver: carryOver,
     openTowns: openTowns,
-    homeTown: homeTown,
     summarizeJourney: summarizeJourney,
     judgeJourney: judgeJourney,
     stockCost: stockCost,
