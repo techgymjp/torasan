@@ -33,7 +33,6 @@
   let finalActState = null; // 最終幕の開始時点（リワード広告でやり直すため）
   let redoUsed = false;     // 1 プレイ 1 回まで
   let redoing = false;      // やり直し中はプレイ回数を数えない
-  let retries = 0;          // 「もう一度」の回数（2 回に 1 回、全画面広告）
 
   // ---------- 保存（失敗してもゲームは続行） ----------
 
@@ -469,16 +468,16 @@
     $("event-title").focus({ preventScroll: true });
   }
 
-  let retryBusy = false;
+  let startBusy = false;
 
-  // 2 回に 1 回、「もう一度」の前に全画面広告を出す
-  async function retry() {
-    if (retryBusy) return;
-    retries++;
-    if (Ads.available && retries % 2 === 0) {
-      retryBusy = true;
+  // 「商売を始める」「もう一度商売する」のたびに、全画面広告を出してから始める
+  // （読み込めていないときは待たずにそのまま始める）
+  async function startWithAd() {
+    if (startBusy) return;
+    if (Ads.available) {
+      startBusy = true;
       await Ads.showInterstitial();
-      retryBusy = false;
+      startBusy = false;
     }
     start();
   }
@@ -650,11 +649,11 @@
     document.addEventListener("pointerdown", firstGesture);
     document.addEventListener("keydown", firstGesture);
 
-    $("btn-start").addEventListener("click", start);
+    $("btn-start").addEventListener("click", startWithAd);
     $("btn-howto").addEventListener("click", function () { openDialog($("dlg-howto")); });
     $("btn-records").addEventListener("click", openRecords);
     $("btn-next").addEventListener("click", next);
-    $("btn-retry").addEventListener("click", retry);
+    $("btn-retry").addEventListener("click", startWithAd);
     $("btn-redo").addEventListener("click", redo);
     $("btn-to-title").addEventListener("click", toTitle);
     $("share-native").addEventListener("click", shareNative);
