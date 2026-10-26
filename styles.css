@@ -867,6 +867,8 @@ body {
 .town-card--now { background: #fff6e0; outline: 3px solid var(--shu); outline-offset: -6px; }
 .town-card--now .good__cost { color: var(--shu); }
 .town-card--done .good__name::before { content: "✓ "; color: var(--ai); }
+.town-trial { width: 100%; margin-top: 6px; font-size: .95rem; }
+.town-trial:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; }
 .stock__town { margin: 0 0 6px; font-weight: 700; color: var(--ai); }
 .hud .hud__town { margin: 0 0 4px; font-size: .85rem; font-weight: 700; color: var(--kihada); }
 .journey-log { text-align: left; max-width: 30em; margin: 10px auto 0; padding-left: 0; list-style: none; font-size: .9rem; }

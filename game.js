@@ -34,8 +34,8 @@
   let state = L.createInitialState();
   let fxTimer = null;
   let storageOk = true;
-  let mode = "day";         // "day"（1日の商売）/ "journey"（3つの町を回る旅）
-  let journey = null;       // { index, results: [], carry }
+  let mode = "day";         // "day"（1日の商売）/ "journey"（3つの町を回る旅）/ "trial"（旅の途中、広告を見てまだ行けない町で一度だけ商売）
+  let journey = null;       // { index, results: [], carry, trial: 町ID, tried: [] }
   let beforeChoice = null;  // 口上を選ぶ直前の状態（リワード広告で言い直すため）
   let redoUsed = false;     // 言い直しは 1 プレイ 1 回まで
 
@@ -248,10 +248,10 @@
       $("fill-" + k).style.width = state[k] + "%";
       $("meter-" + k).setAttribute("aria-valuenow", state[k]);
     });
-    $("hud-town").hidden = mode !== "journey";
+    $("hud-town").hidden = mode === "day";
     $("hud-town").textContent = mode === "journey"
       ? t("journey.hud", { n: journey.index + 1, total: D.towns.length, town: townText(state.town).name })
-      : "";
+      : mode === "trial" ? t("trial.hud", { town: townText(state.town).name }) : "";
     $("hud-goods").textContent = (state.goods || []).map(function (id) {
       const g = goodText(id);
       return g.icon + " " + g.name;
@@ -459,6 +459,10 @@
     const isBest = state.revenue > records.bestRevenue;
 
     saveRecent(state.usedEvents);
+    if (mode === "trial") {
+      finishTrial();
+      return;
+    }
     if (mode === "journey") {
       finishTown();
       return;
@@ -490,9 +494,10 @@
     $("ending-honor").hidden = !title;
   }
 
-  // 旅の途中なら「次の町へ」、それ以外は「もう一度」
+  // 旅の途中なら「次の町へ」（お試しの町なら「町一覧へ」）、それ以外は「もう一度」
   function setResultButtons(midJourney) {
     $("btn-next-town").hidden = !midJourney;
+    $("btn-next-town").textContent = t(mode === "trial" ? "trial.toMap" : "journey.nextTown");
     $("btn-retry").hidden = midJourney;
     $("btn-retry").textContent = t(mode === "journey" ? "journey.again" : "result.retry");
     document.querySelector(".share").hidden = midJourney;
@@ -559,6 +564,22 @@
     setResultButtons(false);
     fillResult();
     closeResult(ending.id === "j_chaos");
+  }
+
+  // お試しの町の結果。記録には残さず、旅は元の町から続く
+  function finishTrial() {
+    const town = townText(state.town).name;
+    showEnding(
+      t("trial.done", { town: town }),
+      t("trial.text", { next: townText(D.towns[journey.index].id).name }),
+      ""
+    );
+    $("badge-new").hidden = true;
+    $("badge-best").hidden = true;
+    $("journey-log").hidden = true;
+    setResultButtons(true);
+    fillResult();
+    closeResult(state.ending === "chaos");
   }
 
   function fillResult() {
@@ -728,9 +749,10 @@
 
   function goStock() {
     Sound.unlock();
-    const town = mode === "journey" ? D.towns[journey.index] : null;
-    $("stock-heading").textContent = town
-      ? t("journey.stockHeading", { n: journey.index + 1, town: townText(town.id).name })
+    const town = mode === "journey" ? D.towns[journey.index]
+      : mode === "trial" ? D.towns.find(function (x) { return x.id === journey.trial; }) : null;
+    $("stock-heading").textContent = mode === "trial" ? t("trial.stockHeading", { town: townText(town.id).name })
+      : town ? t("journey.stockHeading", { n: journey.index + 1, town: townText(town.id).name })
       : t("stock.heading");
     $("btn-stock-back").textContent = t(town ? "map.back" : "result.toTitle");
     $("stock-town").hidden = !town;
@@ -742,6 +764,8 @@
 
   // 旅の町一覧：済んだ町・今の町・まだ行けない町を並べ、今の町だけ選べる
   function showMap() {
+    mode = "journey";
+    $("map-note").textContent = "";
     const list = $("map-list");
     list.textContent = "";
     D.towns.forEach(function (town, i) {
@@ -768,10 +792,44 @@
       btn.append(icon, name, blurb, status);
       if (i === journey.index) btn.addEventListener("click", goStock);
       li.appendChild(btn);
+      // まだ行けない町：リワード広告を見れば、旅の町ごとに一度だけ商売できる
+      if (i > journey.index && Ads.available) {
+        const tried = journey.tried.indexOf(town.id) !== -1;
+        const trial = document.createElement("button");
+        trial.type = "button";
+        trial.className = "btn town-trial";
+        trial.textContent = t(tried ? "trial.used" : "trial.button");
+        trial.disabled = tried;
+        trial.addEventListener("click", function () { tryTown(town.id, trial); });
+        li.appendChild(trial);
+      }
       list.appendChild(li);
     });
     showScreen("map");
     $("map-heading").focus({ preventScroll: true });
+  }
+
+  let trialBusy = false;
+
+  async function tryTown(id, btn) {
+    if (trialBusy || journey.tried.indexOf(id) !== -1) return;
+    trialBusy = true;
+    btn.disabled = true;
+    btn.textContent = t("redo.loading");
+    $("map-note").textContent = "";
+    const result = await Ads.showRewarded();
+    trialBusy = false;
+    if ($("screen-map").hidden) return;
+    if (result !== "rewarded") {
+      btn.disabled = false;
+      btn.textContent = t("trial.button");
+      $("map-note").textContent = t(result === "unavailable" ? "redo.unavailable" : "trial.skipped");
+      return;
+    }
+    journey.tried.push(id);
+    journey.trial = id;
+    mode = "trial";
+    goStock();
   }
 
   function leaveMap() {
@@ -781,7 +839,7 @@
 
   function beginJourney() {
     mode = "journey";
-    journey = { index: 0, results: [], carry: null };
+    journey = { index: 0, results: [], carry: null, trial: null, tried: [] };
     showMap();
   }
 
@@ -791,7 +849,8 @@
   // （読み込めていないときは待たずにそのまま始める）
   async function startWithAd() {
     if (startBusy) return;
-    if (Ads.available) {
+    // お試しの町はリワード広告を見た直後なので、全画面広告は出さない
+    if (Ads.available && mode !== "trial") {
       startBusy = true;
       await Ads.showInterstitial();
       startBusy = false;
@@ -809,6 +868,8 @@
     if (mode === "journey") {
       options.town = D.towns[journey.index].id;
       if (journey.carry) Object.assign(options, journey.carry);
+    } else if (mode === "trial") {
+      options.town = journey.trial;
     }
     state = L.startGame(undefined, loadRecent(), options);
     beforeChoice = null;
@@ -958,8 +1019,8 @@
         } else if (state.status === "playing") {
           if (window.confirm(t("play.quit"))) quitToTitle();
         } else if (!$("screen-stock").hidden) {
-          if (mode === "journey") showMap();
-          else toTitle();
+          if (mode === "day") toTitle();
+          else showMap();
         } else if (!$("screen-map").hidden) {
           leaveMap();
         } else {
@@ -1030,13 +1091,13 @@
     $("btn-journey").addEventListener("click", beginJourney);
     $("btn-next-town").addEventListener("click", function () {
       if (!journey) return;
-      journey.index++;
+      if (mode !== "trial") journey.index++;
       showMap();
     });
     $("btn-open").addEventListener("click", startWithAd);
     $("btn-stock-back").addEventListener("click", function () {
-      if (mode === "journey") showMap();
-      else toTitle();
+      if (mode === "day") toTitle();
+      else showMap();
     });
     $("btn-map-back").addEventListener("click", leaveMap);
     $("btn-howto").addEventListener("click", function () { openDialog($("dlg-howto")); });
