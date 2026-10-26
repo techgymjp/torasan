@@ -23,6 +23,7 @@
   const RECORDS_KEY = "tankabai.records.v1";
   const PREFS_KEY = "tankabai.prefs.v1";
   const RECENT_KEY = "tankabai.recent.v1";
+  const REGULARS_KEY = "tankabai.regulars.v1";
   const RECENT_MAX = 10; // 最近のプレイで出たイベントを、これだけ覚えて出にくくする
   const FX_DURATION = 1200;
   const SHARE_URL = "https://techgym.jp/column/claude-code-game-tankabai/";
@@ -67,6 +68,47 @@
       lastEnding: known.indexOf(r.lastEnding) !== -1 ? r.lastEnding : null,
       lastTitle: typeof r.lastTitle === "string" ? r.lastTitle : null
     };
+  }
+
+  // ---------- 常連帳（相性◎・×が出た口上を覚えておく） ----------
+
+  function loadRegulars() {
+    const r = readJson(REGULARS_KEY) || {};
+    const out = {};
+    Object.keys(D.characters).forEach(function (id) {
+      const e = r[id] || {};
+      const ok = function (list) { return Array.isArray(list) ? list.filter(function (x) { return L.CHOICE_TYPES[x]; }) : []; };
+      out[id] = { likes: ok(e.likes), dislikes: ok(e.dislikes) };
+    });
+    return out;
+  }
+
+  function rememberAffinity(charId, type, affinity) {
+    if (affinity !== "like" && affinity !== "dislike") return false;
+    const book = loadRegulars();
+    const list = book[charId][affinity === "like" ? "likes" : "dislikes"];
+    if (list.indexOf(type) !== -1) return false;
+    list.push(type);
+    writeJson(REGULARS_KEY, book);
+    return true;
+  }
+
+  function typeList(types) {
+    return types.map(function (x) { return t("type." + x); }).join(I18n.lang === "ja" ? "・" : ", ");
+  }
+
+  function knownParts(charId) {
+    const k = loadRegulars()[charId];
+    const colon = I18n.lang === "ja" ? "：" : ": ";
+    const parts = [];
+    if (k.likes.length) parts.push(t("records.likes") + colon + typeList(k.likes));
+    if (k.dislikes.length) parts.push(t("records.dislikes") + colon + typeList(k.dislikes));
+    return parts.join(I18n.lang === "ja" ? "／" : " / ");
+  }
+
+  function knownLine(charId) {
+    const list = knownParts(charId);
+    return list ? t("play.known", { list: list }) : "";
   }
 
   function loadRecent() {
@@ -123,6 +165,7 @@
       name: en.name || c.name,
       role: en.role || c.role,
       trait: en.trait || c.trait,
+      hint: en.hint || c.hint || en.trait || c.trait,
       reactions: Object.assign({}, c.reactions, en.reactions)
     };
   }
@@ -189,6 +232,7 @@
   // ---------- 商売画面 ----------
 
   function renderEvent() {
+    playFx("", null); // 前の幕のスタンプが残らないように消す
     const event = L.getCurrentEvent(state);
     const character = D.characters[event.character];
     const text = eventText(event);
@@ -199,7 +243,9 @@
     $("event-title").textContent = text.title;
     $("char-name").textContent = who.name;
     $("char-role").textContent = who.role;
-    $("char-trait").textContent = t("play.trait", { t: who.trait });
+    const known = knownLine(event.character);
+    $("char-trait").textContent = t("play.trait", { t: who.hint }) + (known ? (I18n.lang === "ja" ? "　" : " ") + known : "");
+    const book = loadRegulars()[event.character];
     $("dialogue").textContent = text.dialogue;
 
     const product = $("product");
@@ -234,7 +280,16 @@
       line.className = "choice__text";
       line.textContent = choice.text;
 
-      btn.append(key, tag, line);
+      btn.append(key, tag);
+      // 常連帳で分かっている好み・苦手を印で示す
+      const mark = book.likes.indexOf(choice.type) !== -1 ? "like" : book.dislikes.indexOf(choice.type) !== -1 ? "dislike" : null;
+      if (mark) {
+        const badge = document.createElement("span");
+        badge.className = "known known--" + mark;
+        badge.textContent = t(mark === "like" ? "choice.knownLike" : "choice.knownDislike");
+        btn.append(badge);
+      }
+      btn.append(line);
       btn.addEventListener("click", function () { choose(choice.id); });
       box.appendChild(btn);
     });
@@ -289,6 +344,7 @@
       if (outcome.momentumAfter > outcome.momentumBefore) notes.push(t("play.momentumUp", { n: outcome.momentumAfter }));
       else if (outcome.momentumBefore > 0 && outcome.momentumAfter === 0) notes.push(t("play.momentumLost"));
     }
+    if (rememberAffinity(event.character, outcome.choiceType, outcome.affinity)) notes.push(t("play.learned", { name: who.name }));
     if (outcome.affinity === "like") notes.push(t("play.like", { name: who.name }));
     if (outcome.affinity === "dislike") notes.push(t("play.dislike", { name: who.name }));
     if (outcome.overheated) notes.push(t("play.overheat"));
@@ -568,6 +624,21 @@
       li.append(num, name, title);
       list.appendChild(li);
     });
+    const regulars = $("rec-regulars");
+    regulars.textContent = "";
+    const book = loadRegulars();
+    Object.keys(D.characters).forEach(function (id) {
+      const k = book[id];
+      if (!k.likes.length && !k.dislikes.length) return;
+      const li = document.createElement("li");
+      const name = document.createElement("strong");
+      name.textContent = charText(id).name;
+      const line = document.createElement("span");
+      line.textContent = knownParts(id);
+      li.append(name, line);
+      regulars.appendChild(li);
+    });
+    $("rec-regulars-empty").hidden = regulars.children.length > 0;
     $("rec-warning").hidden = storageOk;
     openDialog($("dlg-records"));
   }

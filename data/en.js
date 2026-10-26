@@ -17,6 +17,7 @@
       toki: {
         name: "Toki Hanamura",
         role: "Shopping street organizer",
+        hint: "Runs the shopping street association. Can't stand anything crooked.",
         trait: "Tough on business, but soft on anyone who plays it straight.",
         reactions: {
           like: "\"Hmph. For once you're talking sense.\"",
@@ -26,6 +27,7 @@
       genzo: {
         name: "Genzo Ono",
         role: "Stubborn clockmaker",
+        hint: "A craftsman who's lived by his skill. Doesn't trust smooth talkers.",
         trait: "Hates tall tales and flattery. Respects honesty and real skill.",
         reactions: {
           like: "\"Huh. This youngster's got some sense.\"",
@@ -35,6 +37,7 @@
       koharu: {
         name: "Koharu",
         role: "Curious shopper",
+        hint: "A shopper who finds everything fun.",
         trait: "Loves anything fun — and loves spreading it around even more.",
         reactions: {
           like: "\"Ahaha! I'm telling everyone about this!\""
@@ -43,6 +46,7 @@
       matsuko: {
         name: "Matsuko",
         role: "Champion haggler",
+        hint: "A master haggler. Never opens her purse for nothing.",
         trait: "The best bargainer in the neighborhood. Weak to clever deals and compliments.",
         reactions: {
           like: "\"Oh my, now you're speaking my language!\"",
@@ -52,6 +56,7 @@
       ginji: {
         name: "Ginji",
         role: "Rival stall owner",
+        hint: "The rival stall owner next door.",
         trait: "A rival, but he never says no to a good, clever contest.",
         reactions: {
           like: "\"Heh. Not bad, pal.\"",
@@ -61,6 +66,7 @@
       kenta: {
         name: "Kenta",
         role: "Neighborhood kid",
+        hint: "A neighborhood kid with a nose for grown-up excuses.",
         trait: "Sees through tricks with sharp questions. Likes straight answers.",
         reactions: {
           like: "\"Hehe, mister, you're a good guy!\"",
@@ -70,6 +76,7 @@
       sayori: {
         name: "Sayori",
         role: "Lost traveler",
+        hint: "A quiet traveler who has lost her way.",
         trait: "Quiet and sincere. Never forgets a kindness in a pinch.",
         reactions: {
           like: "\"That's so kind of you... thank you, truly.\"",
@@ -79,6 +86,7 @@
       crowd: {
         name: "The Onlookers",
         role: "Shopping street crowd",
+        hint: "The people watching from the street.",
         trait: "They cheer a clever line and heckle anyone who goes too far.",
         reactions: {
           like: "\"Nice one!\" \"Go get 'em, pal!\""

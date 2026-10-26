@@ -841,6 +841,12 @@ body {
 .records dt { font-size: .78rem; color: var(--ink-soft); }
 .records dd { margin: 0; font-weight: 700; }
 
+.known { flex: none; font-size: .75rem; font-weight: 700; padding: 1px 6px; border-radius: 4px; border: 1.5px solid var(--ink); margin-top: 2px; }
+.known--like { background: #e3efcf; }
+.known--dislike { background: #f6d3d3; }
+.regulars { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.regulars li { display: grid; gap: 2px; padding: 6px 10px; border: 2px solid var(--ink); border-radius: var(--radius); background: #fffaf0; font-size: .9rem; }
+.sheet__muted { font-size: .85rem; color: var(--ink-soft); margin: 0; }
 .zukan { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .zukan__item {
   display: grid;

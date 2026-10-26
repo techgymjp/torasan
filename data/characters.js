@@ -3,7 +3,8 @@
  * すべてオリジナルの人物。既存作品の人物・台詞・外見を模倣しない。
  *
  * likes / dislikes : 好む・嫌う口上タイプ（bluff / wit / honest / flatter / help）
- * trait            : プレイヤーに見せる性格のヒント
+ * trait            : 性格と好み（常連帳で好みが分かったあとに表示）
+ * hint             : 最初に見せる、ぼかした人物メモ
  * reactions        : 相性が良い／悪いときの一言
  * look             : 立ち絵（SVG）生成用の外見パラメーター
  */
@@ -24,6 +25,7 @@
     toki: {
       name: "花村とき",
       role: "商店街の世話役",
+      hint: "商店街の世話役。曲がったことにはうるさい。",
       trait: "商売には厳しいが、筋の通った人には甘い。",
       likes: ["honest", "help"],
       dislikes: ["bluff", "flatter"],
@@ -36,6 +38,7 @@
     genzo: {
       name: "大野源造",
       role: "頑固な時計職人",
+      hint: "腕一本で食ってきた職人。口のうまい奴は信用しない。",
       trait: "大げさな口上もお世辞も大嫌い。誠実さと腕前には弱い。",
       likes: ["honest", "wit"],
       dislikes: ["bluff", "flatter"],
@@ -48,6 +51,7 @@
     koharu: {
       name: "小春",
       role: "好奇心旺盛な買い物客",
+      hint: "何でも面白がる買い物客。",
       trait: "面白いことが大好き。話を大げさに広めるのが玉にきず。",
       likes: ["bluff", "wit"],
       dislikes: [],
@@ -60,6 +64,7 @@
     matsuko: {
       name: "松子",
       role: "値切り名人の奥さん",
+      hint: "値切りの名人。ただでは財布を開かない。",
       trait: "値切りの腕は町内一。気の利いた提案と褒め言葉に弱い。",
       likes: ["wit", "flatter"],
       dislikes: ["bluff"],
@@ -72,6 +77,7 @@
     ginji: {
       name: "銀二",
       role: "隣の露店の商人",
+      hint: "隣の露店の商売敵。",
       trait: "商売敵だが、気の利いた勝負は嫌いじゃない。",
       likes: ["wit", "honest"],
       dislikes: ["bluff"],
@@ -84,6 +90,7 @@
     kenta: {
       name: "健太",
       role: "商店街の子ども",
+      hint: "商店街の子ども。大人のごまかしにうるさい。",
       trait: "鋭い質問でごまかしを見抜く。正直な答えが好き。",
       likes: ["honest", "wit"],
       dislikes: ["bluff"],
@@ -96,6 +103,7 @@
     sayori: {
       name: "さより",
       role: "道に迷った旅の人",
+      hint: "道に迷った、控えめな旅の人。",
       trait: "控えめで誠実。困っているときの親切を忘れない。",
       likes: ["help", "honest"],
       dislikes: ["bluff"],
@@ -108,6 +116,7 @@
     crowd: {
       name: "見物の衆",
       role: "商店街の人々",
+      hint: "通りの見物人たち。",
       trait: "気の利いた一言には拍手、やりすぎにはヤジを飛ばす。",
       likes: ["wit"],
       dislikes: [],

@@ -191,7 +191,7 @@
         <span class="type type--flatter" data-i18n="type.flatter">お世辞</span><span data-i18n="howto.flatter">機嫌は取れるが、見抜かれると逆効果。</span><br>
         <span class="type type--help" data-i18n="type.help">お助け</span><span data-i18n="howto.help">人情が大きく上がるが、売上を失うことも。</span>
       </li>
-      <li data-i18n-html="howto.4">客にはそれぞれ<strong>好きな口上・嫌いな口上</strong>があります。人物紹介のヒントをよく読みましょう。</li>
+      <li data-i18n-html="howto.4">客にはそれぞれ<strong>好きな口上・嫌いな口上</strong>があります。最初は分かりませんが、相性◎や×が出ると<strong>常連帳</strong>に書き込まれ、次からは選択肢に印が付きます。</li>
       <li data-i18n-html="howto.momentum"><strong>勢い</strong>：笑いを取るとたまり（最大3）、大風呂敷の売上が伸びます。満タンで大風呂敷を切ると大騒動。正直・お助けに切り替えると、勢いを売上に変えて締められます。</li>
       <li data-i18n-html="howto.5"><strong>大風呂敷を続けると「調子に乗りすぎ」</strong>で騒動が上乗せされます。</li>
       <li data-i18n-html="howto.6">最後に、売上・笑い・人情・騒動のバランスで<strong>結末</strong>が決まります。全5種の結末を集めましょう。</li>
@@ -208,6 +208,9 @@
     </dl>
     <h3><span data-i18n="records.zukan">結末図鑑</span> <small id="rec-count"></small></h3>
     <ul class="zukan" id="rec-endings"></ul>
+    <h3 data-i18n="records.regulars">常連帳</h3>
+    <ul class="regulars" id="rec-regulars"></ul>
+    <p class="sheet__muted" id="rec-regulars-empty" data-i18n="records.regularsEmpty">まだ誰の好みも分かっていません。相性◎や×が出ると書き込まれます。</p>
     <p class="sheet__note" id="rec-warning" hidden data-i18n="records.warning">※このブラウザでは記録を保存できません。ゲームはそのまま遊べます。</p>
     <form method="dialog"><button class="btn btn--primary" value="close" data-i18n="records.close">閉じる</button></form>
   </dialog>
