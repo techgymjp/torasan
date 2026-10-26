@@ -841,6 +841,27 @@ body {
 .records dt { font-size: .78rem; color: var(--ink-soft); }
 .records dd { margin: 0; font-weight: 700; }
 
+.screen--stock { padding: 20px; }
+.stock__heading { margin: 0 0 6px; font-family: var(--font-display); font-weight: 400; color: var(--shu); font-size: 1.5rem; }
+.stock__heading:focus { outline: none; }
+.stock__lead { margin: 0 0 8px; }
+.stock__budget { margin: 0 0 12px; font-weight: 700; }
+.stock__list { list-style: none; padding: 0; margin: 0 0 8px; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 10px; }
+.good {
+  appearance: none; font: inherit; color: var(--ink); text-align: left; width: 100%; min-height: 72px;
+  display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "icon name cost" "icon blurb blurb";
+  gap: 2px 10px; align-items: center; padding: 10px 12px; cursor: pointer;
+  background: var(--paper-deep); border: 3px solid var(--ink); border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.good--on { background: #fff6e0; outline: 3px solid var(--shu); outline-offset: -6px; }
+.good--on .good__name::before { content: "✓ "; color: var(--shu); }
+.good:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+.good__icon { grid-area: icon; font-size: 1.8rem; }
+.good__name { grid-area: name; }
+.good__cost { grid-area: cost; font-weight: 700; font-variant-numeric: tabular-nums; }
+.good__blurb { grid-area: blurb; font-size: .85rem; color: var(--ink-soft); }
+.hud .hud__goods { margin: 4px 0 0; font-size: .8rem; opacity: .9; }
+.hud__goods:empty { display: none; }
 .known { flex: none; font-size: .75rem; font-weight: 700; padding: 1px 6px; border-radius: 4px; border: 1.5px solid var(--ink); margin-top: 2px; }
 .known--like { background: #e3efcf; }
 .known--dislike { background: #f6d3d3; }

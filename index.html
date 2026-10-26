@@ -63,6 +63,18 @@
       </div>
     </section>
 
+    <!-- 仕入れ画面（開店前） -->
+    <section class="screen screen--stock" id="screen-stock" aria-labelledby="stock-heading" hidden>
+      <h2 class="stock__heading" id="stock-heading" tabindex="-1" data-i18n="stock.heading">開店前の仕入れ</h2>
+      <p class="stock__lead" data-i18n="stock.lead">予算の中で、今日の品を3つまで選びましょう。品ごとに効く口上や相手が違います。</p>
+      <p class="stock__budget" id="stock-budget"></p>
+      <ul class="stock__list" id="stock-list"></ul>
+      <div class="menu menu--row">
+        <button type="button" class="btn btn--primary" id="btn-open" data-i18n="stock.open">この品揃えで開店 ▶</button>
+        <button type="button" class="btn" id="btn-stock-back" data-i18n="result.toTitle">タイトルへ</button>
+      </div>
+    </section>
+
     <!-- 02 商売画面 -->
     <section class="screen screen--play" id="screen-play" aria-labelledby="event-title" hidden>
       <header class="hud">
@@ -71,6 +83,7 @@
           <p class="hud__money"><span data-i18n="stat.revenue">売上</span> <strong id="stat-revenue">0円</strong><span class="hud__sep" data-i18n="hud.sep">・</span><span data-i18n="stat.customers">客</span> <strong id="stat-customers">0人</strong>
             <button type="button" class="mute" id="btn-mute" aria-pressed="false" aria-label="音を消す" title="音を消す">🔊</button></p>
         </div>
+        <p class="hud__goods" id="hud-goods"></p>
         <p class="momentum" id="momentum">
           <span class="momentum__label" data-i18n="hud.momentum">勢い</span>
           <span class="momentum__pips" id="momentum-pips" aria-hidden="true"></span>
@@ -156,6 +169,7 @@
         <div><dt data-i18n="stat.laughter">笑い</dt><dd id="res-laughter">0</dd></div>
         <div><dt data-i18n="stat.humanity">人情</dt><dd id="res-humanity">0</dd></div>
         <div><dt data-i18n="stat.trouble">騒動</dt><dd id="res-trouble">0</dd></div>
+        <div><dt data-i18n="stock.cost">仕入れ</dt><dd id="res-cost">0円</dd></div>
       </dl>
       <section class="share" aria-labelledby="share-heading">
         <h3 class="share__heading" id="share-heading" data-i18n="share.heading">結果をシェアする</h3>
@@ -192,6 +206,7 @@
         <span class="type type--help" data-i18n="type.help">お助け</span><span data-i18n="howto.help">人情が大きく上がるが、売上を失うことも。</span>
       </li>
       <li data-i18n-html="howto.4">客にはそれぞれ<strong>好きな口上・嫌いな口上</strong>があります。最初は分かりませんが、相性◎や×が出ると<strong>常連帳</strong>に書き込まれ、次からは選択肢に印が付きます。</li>
+      <li data-i18n-html="howto.stock"><strong>仕入れ</strong>：開店前に、予算3,000円で品を3つまで選びます。品ごとに効く口上や相手が違います。</li>
       <li data-i18n-html="howto.momentum"><strong>勢い</strong>：笑いを取るとたまり（最大3）、大風呂敷の売上が伸びます。満タンで大風呂敷を切ると大騒動。正直・お助けに切り替えると、勢いを売上に変えて締められます。</li>
       <li data-i18n-html="howto.5"><strong>大風呂敷を続けると「調子に乗りすぎ」</strong>で騒動が上乗せされます。</li>
       <li data-i18n-html="howto.6">最後に、売上・笑い・人情・騒動のバランスで<strong>結末</strong>が決まります。全5種の結末を集めましょう。</li>
@@ -218,6 +233,7 @@
   <script src="data/characters.js"></script>
   <script src="data/events.js"></script>
   <script src="data/endings.js"></script>
+  <script src="data/goods.js"></script>
   <script src="data/en.js"></script>
   <script src="i18n.js"></script>
   <script src="logic.js"></script>

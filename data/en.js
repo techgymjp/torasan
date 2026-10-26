@@ -475,6 +475,15 @@
       }
     },
 
+    goods: {
+      candy: { name: "Rainbow Mint Drops", blurb: "Tall Tale sales +20%" },
+      opener: { name: "The Open-Anything", blurb: "Quick Wit sales +25%" },
+      cat: { name: "Lucky Cat Charm", blurb: "Honesty / Lend a Hand: Heart +4" },
+      driver: { name: "Universal Screwdriver", blurb: "Sales +40% with the craftsman or the officer" },
+      fan: { name: "Washi Paper Fans", blurb: "Sales +30% in the last act (evening)" },
+      whistle: { name: "Toy Whistle", blurb: "With Kenta or Koharu: Laughs +6, Heart +2" }
+    },
+
     endings: {
       chaos: {
         name: "Uproar on the Shopping Street",

@@ -6,6 +6,7 @@ const assert = require("node:assert/strict");
 require("../data/characters.js");
 require("../data/events.js");
 require("../data/endings.js");
+require("../data/goods.js");
 const L = require("../logic.js");
 const D = globalThis.TankaData;
 
@@ -251,4 +252,18 @@ test("勢い：笑いでたまり、満タンの大風呂敷で大騒動、正�
   assert.equal(r.outcome.cashOut, 800);
   assert.equal(r.outcome.deltas.revenue - plain.deltas.revenue, 800);
   assert.equal(r.state.momentum, 0);
+});
+
+test("仕入れ：予算と個数の範囲に収め、条件に合う幕で効く", () => {
+  assert.deepEqual(L.validStock(["candy", "candy", "nope", "opener"]), ["candy", "opener"]);
+  // 予算 3000 円を超える分は入らない（1200 + 1000 + 1000 = 3200）
+  assert.deepEqual(L.validStock(["driver", "opener", "cat"]), ["driver", "opener"]);
+  // 4 つ目は入らない
+  assert.equal(L.validStock(["candy", "whistle", "fan", "opener"]).length, 3);
+  const base = Object.assign(L.startGame(seeded(10), [], { goods: ["opener"] }), { currentEventId: "E02" });
+  const plain = L.applyChoice(Object.assign({}, base, { goods: [] }), "B").outcome;
+  const withGood = L.applyChoice(base, "B").outcome; // 機転
+  assert.deepEqual(withGood.goodsUsed, ["opener"]);
+  assert.ok(withGood.deltas.revenue > plain.deltas.revenue);
+  assert.deepEqual(L.applyChoice(base, "A").outcome.goodsUsed, []); // 大風呂敷には効かない
 });

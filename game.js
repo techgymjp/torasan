@@ -24,6 +24,7 @@
   const PREFS_KEY = "tankabai.prefs.v1";
   const RECENT_KEY = "tankabai.recent.v1";
   const REGULARS_KEY = "tankabai.regulars.v1";
+  const STOCK_KEY = "tankabai.stock.v1";
   const RECENT_MAX = 10; // 最近のプレイで出たイベントを、これだけ覚えて出にくくする
   const FX_DURATION = 1200;
   const SHARE_URL = "https://techgym.jp/column/claude-code-game-tankabai/";
@@ -182,6 +183,12 @@
     };
   }
 
+  function goodText(id) {
+    const g = D.goods.find(function (x) { return x.id === id; });
+    const en = I18n.data("goods", id);
+    return { icon: g.icon, cost: g.cost, name: en.name || g.name, blurb: en.blurb || g.blurb };
+  }
+
   function endingText(ending) {
     const en = I18n.data("endings", ending.id);
     return {
@@ -192,7 +199,7 @@
   }
 
   function showScreen(name) {
-    ["title", "play", "result"].forEach(function (s) {
+    ["title", "stock", "play", "result"].forEach(function (s) {
       $("screen-" + s).hidden = s !== name;
     });
     // バナー広告はすべての画面の下に出しっぱなしにする（商売中も）
@@ -219,6 +226,10 @@
       $("fill-" + k).style.width = state[k] + "%";
       $("meter-" + k).setAttribute("aria-valuenow", state[k]);
     });
+    $("hud-goods").textContent = (state.goods || []).map(function (id) {
+      const g = goodText(id);
+      return g.icon + " " + g.name;
+    }).join(I18n.lang === "ja" ? "　" : "  ");
     const m = state.momentum || 0;
     const max = L.MOMENTUM.max;
     $("momentum-pips").textContent = "●".repeat(m) + "○".repeat(max - m);
@@ -337,6 +348,9 @@
     const notes = [];
     if (outcome.echoTie) notes.push(t("play.echo", { text: eventText(event).echo }));
     if (outcome.newTies.length) notes.push(t("play.tie"));
+    if (outcome.goodsUsed.length) {
+      notes.push(t("play.goods", { names: outcome.goodsUsed.map(function (id) { return goodText(id).name; }).join(I18n.lang === "ja" ? "・" : ", ") }));
+    }
     if (outcome.busted) notes.push(t("play.bust"));
     else if (outcome.cashOut > 0) notes.push(t("play.cashOut", { amount: money(outcome.cashOut) }));
     else {
@@ -438,6 +452,7 @@
     $("res-laughter").textContent = state.laughter;
     $("res-humanity").textContent = state.humanity;
     $("res-trouble").textContent = state.trouble;
+    $("res-cost").textContent = money(L.stockCost(state.goods));
 
     setupShare(text);
 
@@ -552,9 +567,61 @@
     $("event-title").focus({ preventScroll: true });
   }
 
+  // ---------- 仕入れ ----------
+
+  let stockPick = L.validStock((readJson(STOCK_KEY) || {}).goods || ["candy", "opener", "whistle"]);
+
+  function renderStock() {
+    const spent = L.stockCost(stockPick);
+    $("stock-budget").textContent = t("stock.budget", {
+      left: money(D.stockBudget - spent), budget: money(D.stockBudget), n: stockPick.length, max: D.stockMax
+    });
+    const list = $("stock-list");
+    list.textContent = "";
+    D.goods.forEach(function (g) {
+      const picked = stockPick.indexOf(g.id) !== -1;
+      const fits = picked || (stockPick.length < D.stockMax && spent + g.cost <= D.stockBudget);
+      const text = goodText(g.id);
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "good" + (picked ? " good--on" : "");
+      btn.setAttribute("aria-pressed", String(picked));
+      btn.disabled = !fits;
+      const icon = document.createElement("span");
+      icon.className = "good__icon";
+      icon.textContent = text.icon;
+      const name = document.createElement("strong");
+      name.className = "good__name";
+      name.textContent = text.name;
+      const cost = document.createElement("span");
+      cost.className = "good__cost";
+      cost.textContent = money(g.cost);
+      const blurb = document.createElement("span");
+      blurb.className = "good__blurb";
+      blurb.textContent = text.blurb;
+      btn.append(icon, name, cost, blurb);
+      btn.addEventListener("click", function () {
+        stockPick = picked ? stockPick.filter(function (id) { return id !== g.id; }) : L.validStock(stockPick.concat(g.id));
+        writeJson(STOCK_KEY, { goods: stockPick });
+        renderStock();
+      });
+      li.appendChild(btn);
+      list.appendChild(li);
+    });
+    $("btn-open").disabled = stockPick.length === 0;
+  }
+
+  function goStock() {
+    Sound.unlock();
+    renderStock();
+    showScreen("stock");
+    $("stock-heading").focus({ preventScroll: true });
+  }
+
   let startBusy = false;
 
-  // 「商売を始める」「もう一度商売する」のたびに、全画面広告を出してから始める
+  // 開店（「商売を始める」「もう一度商売する」→仕入れ→開店）のたびに、全画面広告を出してから始める
   // （読み込めていないときは待たずにそのまま始める）
   async function startWithAd() {
     if (startBusy) return;
@@ -572,7 +639,7 @@
     Sound.unlock();
     Sound.setMusic("street");
     Sound.sfx.start();
-    state = L.startGame(undefined, loadRecent());
+    state = L.startGame(undefined, loadRecent(), { goods: stockPick });
     beforeChoice = null;
     redoUsed = false;
     showScreen("play");
@@ -698,6 +765,8 @@
           dlg.close();
         } else if (state.status === "playing") {
           if (window.confirm(t("play.quit"))) quitToTitle();
+        } else if (!$("screen-stock").hidden) {
+          toTitle();
         } else {
           App.exitApp();
         }
@@ -758,7 +827,9 @@
     document.addEventListener("pointerdown", firstGesture);
     document.addEventListener("keydown", firstGesture);
 
-    $("btn-start").addEventListener("click", startWithAd);
+    $("btn-start").addEventListener("click", goStock);
+    $("btn-open").addEventListener("click", startWithAd);
+    $("btn-stock-back").addEventListener("click", toTitle);
     $("btn-howto").addEventListener("click", function () { openDialog($("dlg-howto")); });
     // 遊び方・記録を閉じてタイトル画面に戻るときも全画面広告を出す（閉じるボタン・Esc・戻るボタンのどれでも）
     ["dlg-howto", "dlg-records"].forEach(function (id) {
@@ -768,7 +839,7 @@
     });
     $("btn-records").addEventListener("click", openRecords);
     $("btn-next").addEventListener("click", next);
-    $("btn-retry").addEventListener("click", startWithAd);
+    $("btn-retry").addEventListener("click", goStock);
     $("btn-redo").addEventListener("click", redo);
     $("btn-to-title").addEventListener("click", quitToTitle);
     $("share-native").addEventListener("click", shareNative);

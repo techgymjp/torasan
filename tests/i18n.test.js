@@ -6,6 +6,7 @@ const assert = require("node:assert/strict");
 require("../data/characters.js");
 require("../data/events.js");
 require("../data/endings.js");
+require("../data/goods.js");
 require("../data/en.js");
 const D = globalThis.TankaData;
 
@@ -59,4 +60,11 @@ test("端末が英語なら英語、文言の差し込みができる", () => {
   assert.equal(I18n.t("money", { n: "1,500" }), "¥1,500");
   assert.equal(I18n.ordinal(0), "No. 1");
   assert.equal(I18n.t("no.such.key"), "no.such.key");
+});
+
+test("英訳：仕入れの品すべてに訳がある", () => {
+  for (const g of D.goods) {
+    const en = D.en.goods[g.id];
+    assert.ok(en && en.name && en.blurb, `品 ${g.id}`);
+  }
 });

@@ -61,6 +61,7 @@
       recentEvents: [],
       ties: [],
       momentum: 0,
+      goods: [],
       history: [],
       status: "title",
       phase: null,
@@ -145,13 +146,51 @@
     });
   }
 
+  // 仕入れの品を確かめる：知らない ID・重複を除き、個数と予算の範囲に収める
+  function validStock(ids) {
+    const list = Data.goods || [];
+    const out = [];
+    let spent = 0;
+    (Array.isArray(ids) ? ids : []).forEach(function (id) {
+      const g = list.find(function (x) { return x.id === id; });
+      if (!g || out.indexOf(id) !== -1) return;
+      if (out.length >= Data.stockMax || spent + g.cost > Data.stockBudget) return;
+      out.push(id);
+      spent += g.cost;
+    });
+    return out;
+  }
+
+  function stockCost(ids) {
+    return validStock(ids).reduce(function (sum, id) {
+      return sum + Data.goods.find(function (g) { return g.id === id; }).cost;
+    }, 0);
+  }
+
   // recentEvents：最近のプレイで出たイベント ID（出にくくする。保存は画面側）
-  function startGame(rng, recentEvents) {
+  // options.goods：開店前に仕入れた品の ID
+  function startGame(rng, recentEvents, options) {
     const state = Object.assign(createInitialState(), {
       status: "playing",
-      recentEvents: Array.isArray(recentEvents) ? recentEvents.slice() : []
+      recentEvents: Array.isArray(recentEvents) ? recentEvents.slice() : [],
+      goods: validStock(options && options.goods)
     });
     return beginTurn(state, rng || Math.random);
+  }
+
+  // この幕で効く仕入れの品
+  function goodsFor(state, event, choice) {
+    const tier = tierForTurn(state.turn, state.maxTurns);
+    return (state.goods || []).map(function (id) {
+      return Data.goods.find(function (g) { return g.id === id; });
+    }).filter(function (g) {
+      const e = g && g.effect;
+      if (!e) return false;
+      if (e.types && e.types.indexOf(choice.type) === -1) return false;
+      if (e.characters && e.characters.indexOf(event.character) === -1) return false;
+      if (e.tiers && e.tiers.indexOf(tier) === -1) return false;
+      return true;
+    });
   }
 
   function affinityFor(character, type) {
@@ -219,6 +258,14 @@
       trouble += echo.effects.trouble || 0;
     }
     const newTies = (choice.ties || []).filter(function (t) { return state.ties.indexOf(t) === -1; });
+
+    // 仕入れの品
+    const goodsUsed = goodsFor(state, event, choice);
+    goodsUsed.forEach(function (g) {
+      if (g.effect.revenueRate && revenue > 0) revenue *= 1 + g.effect.revenueRate;
+      laughter += g.effect.laughter || 0;
+      humanity += g.effect.humanity || 0;
+    });
 
     // 勢い
     const before = state.momentum || 0;
@@ -302,6 +349,7 @@
         momentumBonus: Math.round(momentumBonus / 10) * 10,
         cashOut: cashOut,
         busted: busted,
+        goodsUsed: goodsUsed.map(function (g) { return g.id; }),
         stamp: busted ? { id: "bust", text: "勢い余って大騒動！", kind: "bad" } : pickStamp(choice.type, affinity, overheated, deltas),
         expression: pickExpression(affinity, deltas),
         isLastTurn: state.turn >= state.maxTurns
@@ -332,6 +380,8 @@
   const api = {
     CHOICE_TYPES: CHOICE_TYPES,
     MOMENTUM: MOMENTUM,
+    validStock: validStock,
+    stockCost: stockCost,
     MAX_TURNS: MAX_TURNS,
     createInitialState: createInitialState,
     startGame: startGame,
