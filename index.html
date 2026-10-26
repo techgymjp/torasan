@@ -71,6 +71,11 @@
           <p class="hud__money"><span data-i18n="stat.revenue">売上</span> <strong id="stat-revenue">0円</strong><span class="hud__sep" data-i18n="hud.sep">・</span><span data-i18n="stat.customers">客</span> <strong id="stat-customers">0人</strong>
             <button type="button" class="mute" id="btn-mute" aria-pressed="false" aria-label="音を消す" title="音を消す">🔊</button></p>
         </div>
+        <p class="momentum" id="momentum">
+          <span class="momentum__label" data-i18n="hud.momentum">勢い</span>
+          <span class="momentum__pips" id="momentum-pips" aria-hidden="true"></span>
+          <span class="momentum__note" id="momentum-note"></span>
+        </p>
         <ul class="gauges" aria-label="パラメーター" data-i18n-attr="aria-label:hud.params">
           <li class="gauge gauge--laughter">
             <span class="gauge__label">😄 <span data-i18n="stat.laughter">笑い</span></span>
@@ -187,6 +192,7 @@
         <span class="type type--help" data-i18n="type.help">お助け</span><span data-i18n="howto.help">人情が大きく上がるが、売上を失うことも。</span>
       </li>
       <li data-i18n-html="howto.4">客にはそれぞれ<strong>好きな口上・嫌いな口上</strong>があります。人物紹介のヒントをよく読みましょう。</li>
+      <li data-i18n-html="howto.momentum"><strong>勢い</strong>：笑いを取るとたまり（最大3）、大風呂敷の売上が伸びます。満タンで大風呂敷を切ると大騒動。正直・お助けに切り替えると、勢いを売上に変えて締められます。</li>
       <li data-i18n-html="howto.5"><strong>大風呂敷を続けると「調子に乗りすぎ」</strong>で騒動が上乗せされます。</li>
       <li data-i18n-html="howto.6">最後に、売上・笑い・人情・騒動のバランスで<strong>結末</strong>が決まります。全5種の結末を集めましょう。</li>
     </ol>

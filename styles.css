@@ -331,6 +331,10 @@ body {
   gap: 4px 16px;
 }
 .hud p { margin: 0; }
+.hud .momentum { margin: 6px 0 0; font-size: .88rem; display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 8px; }
+.momentum__pips { color: var(--kihada); letter-spacing: 2px; font-size: 1rem; }
+.momentum__note { color: #ffb3a6; font-weight: 700; font-size: .8rem; }
+.momentum--full .momentum__pips { color: #ff6b57; }
 .hud__act { font-family: var(--font-display); font-size: 1.3rem; color: var(--kihada); }
 .hud__of { font-size: .85rem; opacity: .8; }
 .hud__money strong { font-size: 1.3rem; color: #fff; font-variant-numeric: tabular-nums; }

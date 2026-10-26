@@ -33,6 +33,18 @@
   // 一度に大きな笑いを取ると、見物人が集まって客が2人増える
   const CROWD_LAUGHTER = 15;
 
+  // 勢い：笑いを取ると 1 つずつたまり（最大 3）、押す口上の売上が伸びる。
+  // 満タンで大風呂敷を切ると大騒動。正直・お助けに切り替えると勢いを売上に変えて手放す
+  const MOMENTUM = {
+    max: 3,
+    gainLaughter: 10,          // この笑いを取ると勢いが 1 たまる
+    pushTypes: ["bluff", "wit", "flatter"],
+    cashTypes: ["honest", "help"],
+    revenueRate: { bluff: 0.35, wit: 0, flatter: 0 }, // 大風呂敷の売上 × (1 + 率 × 勢い)。機転・お世辞は勢いをためるだけ
+    cashPerLevel: 400,         // 切り替えたときの締めの一言：勢い 1 につき 400 円
+    bustTrouble: 15            // 満タンで大風呂敷を切ったときの騒動
+  };
+
   // 最近のプレイで見たイベントは出にくくする（重みに掛ける）
   const RECENT_WEIGHT = 0.2;
 
@@ -48,6 +60,7 @@
       usedEvents: [],
       recentEvents: [],
       ties: [],
+      momentum: 0,
       history: [],
       status: "title",
       phase: null,
@@ -207,6 +220,29 @@
     }
     const newTies = (choice.ties || []).filter(function (t) { return state.ties.indexOf(t) === -1; });
 
+    // 勢い
+    const before = state.momentum || 0;
+    let after = before;
+    let busted = false;
+    let cashOut = 0;
+    let momentumBonus = 0;
+    if (choice.type === "bluff" && before >= MOMENTUM.max) {
+      busted = true;
+      trouble += MOMENTUM.bustTrouble;
+      after = 0;
+    } else if (MOMENTUM.cashTypes.indexOf(choice.type) !== -1) {
+      cashOut = MOMENTUM.cashPerLevel * before;
+      revenue += cashOut;
+      after = 0;
+    } else {
+      if (MOMENTUM.pushTypes.indexOf(choice.type) !== -1 && revenue > 0) {
+        momentumBonus = revenue * MOMENTUM.revenueRate[choice.type] * before;
+        revenue += momentumBonus;
+      }
+      if (affinity === "dislike" || overheated) after = 0;
+      else if (laughter >= MOMENTUM.gainLaughter) after = Math.min(MOMENTUM.max, before + 1);
+    }
+
     revenue = Math.round(revenue / 10) * 10;
     const newCustomers = revenue > 0 ? (laughter >= CROWD_LAUGHTER ? 2 : 1) : 0;
 
@@ -218,7 +254,8 @@
       customers: state.customers + newCustomers,
       phase: "reacting",
       lastChoiceType: choice.type,
-      ties: state.ties.concat(newTies)
+      ties: state.ties.concat(newTies),
+      momentum: after
     });
 
     // 範囲補正後の実際の変化量
@@ -260,7 +297,12 @@
         echoTie: echo ? echo.tie : null,
         newTies: newTies,
         followUp: !!event.requiresTies,
-        stamp: pickStamp(choice.type, affinity, overheated, deltas),
+        momentumBefore: before,
+        momentumAfter: after,
+        momentumBonus: Math.round(momentumBonus / 10) * 10,
+        cashOut: cashOut,
+        busted: busted,
+        stamp: busted ? { id: "bust", text: "勢い余って大騒動！", kind: "bad" } : pickStamp(choice.type, affinity, overheated, deltas),
         expression: pickExpression(affinity, deltas),
         isLastTurn: state.turn >= state.maxTurns
       }
@@ -289,6 +331,7 @@
 
   const api = {
     CHOICE_TYPES: CHOICE_TYPES,
+    MOMENTUM: MOMENTUM,
     MAX_TURNS: MAX_TURNS,
     createInitialState: createInitialState,
     startGame: startGame,

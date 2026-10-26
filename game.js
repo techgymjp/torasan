@@ -176,6 +176,12 @@
       $("fill-" + k).style.width = state[k] + "%";
       $("meter-" + k).setAttribute("aria-valuenow", state[k]);
     });
+    const m = state.momentum || 0;
+    const max = L.MOMENTUM.max;
+    $("momentum-pips").textContent = "●".repeat(m) + "○".repeat(max - m);
+    $("momentum").classList.toggle("momentum--full", m >= max);
+    $("momentum").setAttribute("aria-label", t("hud.momentumAria", { n: m }));
+    $("momentum-note").textContent = m >= max ? t("hud.momentumFull") : "";
     document.body.classList.toggle("is-danger", state.trouble >= 70);
     Sound.setTension(state.trouble >= 70);
   }
@@ -276,6 +282,13 @@
     const notes = [];
     if (outcome.echoTie) notes.push(t("play.echo", { text: eventText(event).echo }));
     if (outcome.newTies.length) notes.push(t("play.tie"));
+    if (outcome.busted) notes.push(t("play.bust"));
+    else if (outcome.cashOut > 0) notes.push(t("play.cashOut", { amount: money(outcome.cashOut) }));
+    else {
+      if (outcome.momentumBonus > 0) notes.push(t("play.momentumBonus", { amount: money(outcome.momentumBonus) }));
+      if (outcome.momentumAfter > outcome.momentumBefore) notes.push(t("play.momentumUp", { n: outcome.momentumAfter }));
+      else if (outcome.momentumBefore > 0 && outcome.momentumAfter === 0) notes.push(t("play.momentumLost"));
+    }
     if (outcome.affinity === "like") notes.push(t("play.like", { name: who.name }));
     if (outcome.affinity === "dislike") notes.push(t("play.dislike", { name: who.name }));
     if (outcome.overheated) notes.push(t("play.overheat"));

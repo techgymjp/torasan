@@ -232,3 +232,23 @@ test("最近見たイベントは出にくい", () => {
   const avoided = count(recent);
   assert.ok(avoided < normal * 0.7, `最近見たイベント ${avoided} 回（通常 ${normal} 回）`);
 });
+
+test("勢い：笑いでたまり、満タンの大風呂敷で大騒動、正直で売上に変わる", () => {
+  const base = L.startGame(seeded(9));
+  // 小春に大風呂敷（好む・笑い 18+5）→ 勢い +1
+  let r = L.applyChoice(Object.assign({}, base, { currentEventId: "E02" }), "A");
+  assert.equal(r.outcome.momentumAfter, 1);
+  // 満タンで大風呂敷 → 大騒動
+  const full = Object.assign({}, base, { currentEventId: "E02", momentum: 3 });
+  r = L.applyChoice(full, "A");
+  assert.equal(r.outcome.busted, true);
+  assert.equal(r.outcome.stamp.id, "bust");
+  assert.equal(r.state.momentum, 0);
+  // 勢い 2 で正直 → 800 円上乗せして 0 に
+  const two = Object.assign({}, base, { currentEventId: "E02", momentum: 2 });
+  const plain = L.applyChoice(Object.assign({}, two, { momentum: 0 }), "C").outcome;
+  r = L.applyChoice(two, "C");
+  assert.equal(r.outcome.cashOut, 800);
+  assert.equal(r.outcome.deltas.revenue - plain.deltas.revenue, 800);
+  assert.equal(r.state.momentum, 0);
+});
