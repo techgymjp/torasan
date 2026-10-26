@@ -199,7 +199,7 @@ npm run android:open   # Android Studio で開く
    （`ANDROID_KEYSTORE_BASE64` / `ANDROID_KEYSTORE_PASSWORD` / `ANDROID_KEY_ALIAS` / `ANDROID_KEY_PASSWORD`）
 3. Actions の「Android build」を実行すると、署名済みの `torasan-release-aab`（.aab）ができる
 4. [Google Play Console](https://play.google.com/console) でアプリを作成し、.aab をアップロードする
-   （ストア掲載情報・スクリーンショット・プライバシーポリシー https://techgym.jp/privacy-policy/ ・コンテンツのレーティング・広告を含む・広告 ID の申告・データセーフティ・ターゲットユーザー 13 歳以上などの入力が必要です）
+   （ストア掲載情報・スクリーンショット〔紹介文と画像は `store/` に用意済み：`listing-ja.md`・`listing-en.md`・`icon-512.png`・`feature-graphic-*.png`・`screenshots/ja|en/`〕・プライバシーポリシー https://techgym.jp/privacy-policy/ ・コンテンツのレーティング・広告を含む・広告 ID の申告・データセーフティ・ターゲットユーザー 13 歳以上などの入力が必要です）
 5. 公開後、AdMob でアプリを Google Play のストアに紐づける
 
 アップロード鍵とパスワードは、チャットやリポジトリで共有しないでください。本番の広告を自分でタップしないでください（動作確認は Release の APK で行う）。
