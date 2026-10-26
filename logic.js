@@ -195,6 +195,15 @@
 
   // ---------- 旅モード ----------
 
+  // 旅で次に行ける町：最初は出発の町、そのあとは今の町と道でつながった、まだ行っていない町
+  function openTowns(route) {
+    const towns = Data.towns || [];
+    if (!route || route.length === 0) return Data.journeyStart ? [Data.journeyStart] : [];
+    if (route.length >= (Data.journeyLength || 3)) return [];
+    const here = towns.find(function (t) { return t.id === route[route.length - 1]; });
+    return ((here && here.links) || []).filter(function (id) { return route.indexOf(id) === -1; });
+  }
+
   // 町を出るとき、人情（評判）の半分と縁を次の町へ持ち越す
   function carryOver(state) {
     const start = createInitialState().humanity;
@@ -425,6 +434,7 @@
     MOMENTUM: MOMENTUM,
     validStock: validStock,
     carryOver: carryOver,
+    openTowns: openTowns,
     summarizeJourney: summarizeJourney,
     judgeJourney: judgeJourney,
     stockCost: stockCost,

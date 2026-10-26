@@ -161,6 +161,146 @@
           like: "\"Hm. You, I can trust.\"",
           dislike: "\"Don't tease an old man.\""
         }
+      },
+      oshin: {
+        name: "Oshin",
+        role: "Teahouse mistress",
+        hint: "Runs the mountain teahouse all by herself.",
+        trait: "Fond of kindness to travelers and honest trade. Can't stand tall tales.",
+        reactions: {
+          like: "\"For a traveler, you're a thoughtful one.\"",
+          dislike: "\"Tell tall tales on this pass and the tengu will snatch you.\""
+        }
+      },
+      genta: {
+        name: "Genta",
+        role: "Truck driver",
+        hint: "A loud driver who runs the pass road every day.",
+        trait: "Loves big talk and sharp jokes. Hates sucking up.",
+        reactions: {
+          like: "\"Ha! I like you — hop in!\"",
+          dislike: "\"Flattery won't get you a ride.\""
+        }
+      },
+      mido: {
+        name: "Old Master Mido",
+        role: "Retired samurai-house elder",
+        hint: "A proud elder living in an old mansion below the castle.",
+        trait: "Appreciates polite praise and sincerity. Finds wisecracks vulgar.",
+        reactions: {
+          like: "\"Hm. You know your manners.\"",
+          dislike: "\"Mind your flippant tongue.\""
+        }
+      },
+      chiyo: {
+        name: "Chiyo",
+        role: "Sweet shop daughter",
+        hint: "The cheerful face of an old sweet shop in the castle town.",
+        trait: "Likes clever talk and helping out. Sees through tall tales instantly.",
+        reactions: {
+          like: "\"Heh, you're a funny one.\"",
+          dislike: "\"That's a lie, isn't it?\""
+        }
+      },
+      fumi: {
+        name: "Fumi",
+        role: "Morning market vendor",
+        hint: "A tough vendor who's at the market before dawn.",
+        trait: "Likes honest trade and good jokes. Never trusts flatterers.",
+        reactions: {
+          like: "\"Now you're talking!\"",
+          dislike: "\"It's freezing, but your mouth sure runs warm.\""
+        }
+      },
+      fuyukichi: {
+        name: "Fuyukichi",
+        role: "Young man back from city work",
+        hint: "A good-natured young man just back from working in the city.",
+        trait: "Melts at praise and can't refuse helping. Has had enough of tall tales.",
+        reactions: {
+          like: "\"Heh, you're making me blush.\"",
+          dislike: "\"I got fooled by talk like that in the city...\""
+        }
+      },
+      chinnen: {
+        name: "Chinnen",
+        role: "Temple novice",
+        hint: "A mischievous young novice at the temple.",
+        trait: "Loves funny stories and big tales. Says flattery gets in the way of training.",
+        reactions: {
+          like: "\"Wow, amazing! Don't tell the abbot.\"",
+          dislike: "\"Flattery won't make the sutras any shorter.\""
+        }
+      },
+      kakunen: {
+        name: "Abbot Kakunen",
+        role: "Head priest of Komyoji",
+        hint: "A gentle priest who watches over the temple town.",
+        trait: "Pleased by sincere words and helping hands. Quietly frowns at tall tales.",
+        reactions: {
+          like: "\"A fine spirit. The Buddha is watching.\"",
+          dislike: "\"A convenient fib, stretched too far, is a lie.\""
+        }
+      },
+      iwao: {
+        name: "Iwao",
+        role: "Coal miner",
+        hint: "A miner proud of his strength.",
+        trait: "Likes bold talk and people who sweat. Can't stand clever wordplay.",
+        reactions: {
+          like: "\"Ha! I like you, kid!\"",
+          dislike: "\"Talk plain — I don't get your fancy words!\""
+        }
+      },
+      tome: {
+        name: "Tome",
+        role: "Mining housing matriarch",
+        hint: "The big-hearted mom who looks after the miners' housing.",
+        trait: "Likes honest people who are kind to kids and elders. Tired of sweet talk.",
+        reactions: {
+          like: "\"You're a good kid.\"",
+          dislike: "\"Save that for the men on payday.\""
+        }
+      },
+      manabu: {
+        name: "Manabu",
+        role: "Struggling student",
+        hint: "A logic-loving student living on a tiny allowance.",
+        trait: "Likes sound arguments and quick wits. Immune to flattery.",
+        reactions: {
+          like: "\"I see — that's logical.\"",
+          dislike: "\"Flattery won't open my wallet. It's empty anyway.\""
+        }
+      },
+      poem: {
+        name: "The Poem Master",
+        role: "Coffee shop owner",
+        hint: "Owner of Coffee Poem in the student quarter.",
+        trait: "A sucker for stylish phrasing and compliments. Finds tall tales tacky.",
+        reactions: {
+          like: "\"Very stylish. Coffee's on me.\"",
+          dislike: "\"How tacky.\""
+        }
+      },
+      kaizo: {
+        name: "Kaizo",
+        role: "Ferry captain",
+        hint: "Captain of the ferry linking the island and the mainland.",
+        trait: "Likes straight talk and big cheerful talk. Throws flattery overboard.",
+        reactions: {
+          like: "\"Right, I like you. I'll knock some off your fare home.\"",
+          dislike: "\"Let the waves carry off your flattery.\""
+        }
+      },
+      kame: {
+        name: "Grandma Kame",
+        role: "Island know-it-all",
+        hint: "An old woman who knows everything about the island.",
+        trait: "Likes kind people and good jokes. Spreads any tall tale all over the island.",
+        reactions: {
+          like: "\"Oh my, you're a funny one.\"",
+          dislike: "\"Lie on this island and everyone knows by tomorrow.\""
+        }
       }
     },
 
@@ -610,13 +750,370 @@
           B: { text: "\"Fan yourself before you catch a chill... wait, that'll chill you!\"", result: "The one-man comedy routine cracks up the spa guests, and the fans sell." },
           C: { text: "\"Watch your step. I'll carry a lantern for you back to the inn.\"", result: "After Makoto lights their way home, the guests all come by the stall the next morning." }
         }
+      },
+      T01: {
+        title: "A Break on the Pass",
+        product: { name: "Mountain Mint Drops", blurb: "One drop and even the uphill feels cool" },
+        dialogue: "Everyone crossing the pass is worn out. Got anything to make them feel better?",
+        choices: {
+          A: { text: "\"Let me help carry the tea first, ma'am. The candy can wait.\"", result: "After the tea is served, travelers ask for \"that young man's candy.\"" },
+          B: { text: "\"Mint drops. I won't say they cure fatigue, but they're refreshing.\"", result: "\"How honest,\" Oshin laughs, and puts the drops on her teahouse shelf." },
+          C: { text: "\"Suck on one of these and you'll fly over the pass!\"", result: "A traveler who failed to fly comes back to complain, and the teahouse is in an uproar." }
+        }
+      },
+      T02: {
+        title: "On the Truck Bed",
+        product: { name: "Hand-Crank Radio", blurb: "No batteries needed — works even on the pass" },
+        dialogue: "Hey, the pass road is dull as dirt. Sell me something lively!",
+        choices: {
+          A: { text: "\"At the top of the pass, this radio picks up foreign stations!\"", result: "Genta happily buys one and drives off blasting it from the truck bed." },
+          B: { text: "\"With a radio, even a dull mountain road becomes a comedy hall.\"", result: "\"A comedy hall, eh? Love it!\" Genta buys some for his buddies too." },
+          C: { text: "\"The King of the Pass! Look at that steering!\"", result: "\"Flattery won't get you a ride,\" Genta shrugs." }
+        }
+      },
+      T03: {
+        title: "Sheltering from the Rain",
+        product: { name: "Oiled-Paper Umbrella", blurb: "Reliable in a sudden downpour" },
+        dialogue: "Oh dear, it's pouring all of a sudden! The travelers will be soaked!",
+        choices: {
+          A: { text: "\"Pay for the umbrellas later. Everyone, under the eaves!\"", result: "When the rain stops, the travelers thank him one after another, and Oshin treats him to tea." },
+          B: { text: "\"A paper umbrella on a rainy pass — now that's a picture.\"", result: "Told they'd look like a painting, travelers snap up umbrellas one after another." },
+          C: { text: "\"This umbrella even keeps off lightning!\"", result: "Right then real thunder cracks, and the travelers drop their umbrellas and scatter." }
+        }
+      },
+      T04: {
+        title: "The Pass Hauler",
+        product: { name: "Pocket Compass", blurb: "Find north even when lost on the pass" },
+        dialogue: "Pal, I'm hauling over the pass tonight. How about one last big deal?",
+        choices: {
+          A: { text: "\"With this compass, you'll drive the pass at night like it's noon!\"", result: "Genta rounds up his driver buddies, and they buy a whole box." },
+          B: { text: "\"When lost, face north. Life and mountain roads are alike.\"", result: "\"Nicely put!\" Genta slaps his knee and spreads the word." },
+          C: { text: "\"The pass is dangerous at night. Better to wait for morning than trust a compass.\"", result: "Genta grudgingly delays, and the next morning buys two compasses as thanks." }
+        }
+      },
+      T05: {
+        title: "Teahouse Onlookers",
+        product: { name: "Wind Chime", blurb: "Rings beautifully in the mountain breeze" },
+        dialogue: "The onlookers: \"The wind's cold up here. Give us a laugh, pal!\"",
+        choices: {
+          A: { text: "\"A chime that rings in the pass wind — take it home and stay cool all summer!\"", result: "The crowd bursts out laughing, and wind chimes sell as souvenirs." },
+          B: { text: "\"You all crossed the pass? What strong legs you have!\"", result: "The praised travelers grin bashfully and buy a chime on the way." },
+          C: { text: "\"When this chime rings, a tengu appears!\"", result: "The kids burst into tears, and the teahouse mistress scolds him." }
+        }
+      },
+      J01: {
+        title: "The Elder's Stroll",
+        product: { name: "Fine Brush", blurb: "A quality brush that writes smoothly" },
+        dialogue: "You there. If you sell in this town, I trust you have a proper pitch?",
+        choices: {
+          A: { text: "\"A brush I'd like to show a connoisseur like yourself, sir.\"", result: "The elder nods with satisfaction and buys three brushes." },
+          B: { text: "\"It's good, but not special. I can vouch for how it writes, though.\"", result: "\"Honest. Good,\" the elder says, tries it out, and buys one." },
+          C: { text: "\"Write with this and your handwriting improves by itself... well, not really.\"", result: "\"Flippant,\" the elder frowns, and only the onlookers giggle." }
+        }
+      },
+      J02: {
+        title: "The Sweet Shop Girl",
+        product: { name: "Dumpling Mold", blurb: "Make castle-town dumplings at home" },
+        dialogue: "Our dumplings haven't been selling lately. Any good ideas?",
+        choices: {
+          A: { text: "\"Three dumplings per skewer. Come as a group of three, get a skewer free?\"", result: "Chiyo claps with joy and posts a new sign. She buys a mold as thanks." },
+          B: { text: "\"Let's sell your dumplings at my stall today too.\"", result: "With the stall and the sweet shop side by side, both sell well." },
+          C: { text: "\"Dumplings made in this mold were eaten by the lord himself!\"", result: "\"That's a lie, isn't it?\" Chiyo sees right through it, and rumors spread across town." }
+        }
+      },
+      J03: {
+        title: "The Castle Tea Ceremony",
+        product: { name: "Tea Whisk", blurb: "For practicing the tea ceremony" },
+        dialogue: "There is a tea ceremony at the castle tonight. Shall we see if your goods pass a tea master's eye?",
+        choices: {
+          A: { text: "\"I can't say if they'll pass. But each one is handmade.\"", result: "The elder tells that story at the ceremony, and tea masters come looking for whisks." },
+          B: { text: "\"If they pass your eye, sir, they'll pass anyone's.\"", result: "Pleased, the elder buys a batch as gifts for the ceremony." },
+          C: { text: "\"Whip up some foam and the conversation blooms too!\"", result: "\"Don't make light of the tea ceremony!\" the elder thunders." }
+        }
+      },
+      J04: {
+        title: "Castle Town Night Festival",
+        product: { name: "Paper Lanterns", blurb: "Handmade lanterns for the night festival" },
+        dialogue: "It's the castle town night festival tonight. Want to team up for one last push?",
+        choices: {
+          A: { text: "\"Dumplings in one hand, lantern in the other... you'll have to eat with your mouth!\"", result: "Chiyo bursts out laughing, and their double act draws a festival crowd." },
+          B: { text: "\"Light for the dark roads. Lanterns are free for the elderly.\"", result: "On the lit-up road, Chiyo smiles: \"You're a good person.\"" },
+          C: { text: "\"This lantern once hung in the castle keep!\"", result: "A castle official comes to check, and the festival is briefly thrown into chaos." }
+        }
+      },
+      J05: {
+        title: "Castle Town Onlookers",
+        product: { name: "Kokeshi Doll", blurb: "Simple wooden dolls carved by local craftsmen" },
+        dialogue: "The onlookers: \"Castle town folks have discerning eyes. So, how will you sell?\"",
+        choices: {
+          A: { text: "\"Each kokeshi is carved by hand. No two faces are alike.\"", result: "The crowd compares the faces, and each buys a favorite." },
+          B: { text: "\"These dolls look just like you all — discerning faces!\"", result: "Laughter erupts — \"That one looks like my grandma!\" — and they sell fast." },
+          C: { text: "\"Castle town customers have such fine taste!\"", result: "\"You get it,\" the crowd says, pleased, and buys." }
+        }
+      },
+      W01: {
+        title: "Market Before Dawn",
+        product: { name: "Wool Gloves", blurb: "Shrug off the morning market chill" },
+        dialogue: "Running a stall on a freezing morning like this? You've got guts. What are you selling?",
+        choices: {
+          A: { text: "\"Wool gloves. The knitting's rough, but the warmth is real.\"", result: "Fumi puts them on — \"It's true\" — and recommends them to the other vendors." },
+          B: { text: "\"Wear these and the cold can't lay a finger on you!\"", result: "\"Good one!\" Fumi laughs and spreads the word across the market." },
+          C: { text: "\"Ma'am, your smile is lovely even in this cold!\"", result: "\"It's freezing, but your mouth sure runs warm,\" Fumi snorts." }
+        }
+      },
+      W02: {
+        title: "Gifts for Home",
+        product: { name: "Small Gift Bags", blurb: "Presents for the family waiting at home" },
+        dialogue: "I'm heading back to my village for the first time in ages. I want gifts for my family...",
+        choices: {
+          A: { text: "\"Tell me about your family. We'll pick something for each of them.\"", result: "Fuyukichi chooses with each face in mind and leaves happy." },
+          B: { text: "\"Gifts from a son who worked hard in the city? They'll love anything.\"", result: "Blushing, Fuyukichi fills up the gift bags." },
+          C: { text: "\"This is all the rage in the city! You can show it off back home!\"", result: "\"I got fooled by talk like that in the city...\" Fuyukichi sighs." }
+        }
+      },
+      W03: {
+        title: "Blizzard Morning",
+        product: { name: "Wool Scarves", blurb: "A must on a snowy morning" },
+        dialogue: "Uh-oh, a blizzard's coming in! The market's goods will get buried!",
+        choices: {
+          A: { text: "\"Forget the scarves! Let's get everyone's goods under the eaves!\"", result: "When the blizzard ends, the whole market comes to thank him, and the scarves sell too." },
+          B: { text: "\"Blizzard days are scarf days! Protect your neck, protect your business!\"", result: "\"Smooth talker,\" Fumi laughs, as frozen customers ask for scarves." },
+          C: { text: "\"No business in this blizzard. I'm closing up today.\"", result: "\"Wise,\" Fumi nods — but sales are almost nothing." }
+        }
+      },
+      W04: {
+        title: "Snow-Viewing Party",
+        product: { name: "Snow-Viewing Candles", blurb: "Thick candles to light up snowy nights" },
+        dialogue: "Tonight's the village snow-viewing party. Won't you come sell something with me?",
+        choices: {
+          A: { text: "\"This party's to celebrate your homecoming. If the guest of honor recommends it, everyone buys.\"", result: "Blushing, Fuyukichi recommends the candles, and every house in the village glows." },
+          B: { text: "\"Let me help set up the party. Sales can wait.\"", result: "When the setup's done, the villagers buy every candle as thanks." },
+          C: { text: "\"This candle summons spring in a single night!\"", result: "Spring doesn't come — only melted wax. Fuyukichi looks heartbroken." }
+        }
+      },
+      W05: {
+        title: "Morning Market Onlookers",
+        product: { name: "Sweet Potato Wrappers", blurb: "Warmer than newspaper" },
+        dialogue: "The onlookers: \"It's so cold our wallets are frozen shut. Thaw 'em out!\"",
+        choices: {
+          A: { text: "\"Frozen wallets? Let's warm them up with roasted sweet potatoes!\"", result: "The steam draws a crowd, and the wallets loosen." },
+          B: { text: "\"Wrap it in this and even snow turns into a sweet potato!\"", result: "Kids who wrapped up snow burst into tears, and the market is in an uproar." },
+          C: { text: "\"It's just wrapping paper, but it's doubled so food stays warm.\"", result: "The market women say \"How handy\" and buy in bulk." }
+        }
+      },
+      M01: {
+        title: "The Novice's Errand",
+        product: { name: "Wind-Up Doll", blurb: "A little doll that walks on a spring" },
+        dialogue: "I'm on an errand for the abbot, but... can I take a quick look at that doll?",
+        choices: {
+          A: { text: "\"This doll stops when you chant sutras. Not enough training, you see.\"", result: "Chinnen roars with laughter and spends his allowance on dolls for his friends." },
+          B: { text: "\"At night, this doll walks all around the main hall!\"", result: "Chinnen gleefully buys one — and gets scolded for winding it in the hall at midnight." },
+          C: { text: "\"Such a dedicated young novice!\"", result: "\"Flattery won't make the sutras any shorter,\" Chinnen huffs." }
+        }
+      },
+      M02: {
+        title: "The Abbot's Request",
+        product: { name: "Wooden Prayer Beads", blurb: "Simple beads that feel good in the hand" },
+        dialogue: "If you trade at our gate, be sure not to offend the worshippers.",
+        choices: {
+          A: { text: "\"Understood. I'll post clear prices too.\"", result: "The abbot smiles and recommends the stall to worshippers." },
+          B: { text: "\"Let me help sweep the temple grounds.\"", result: "After the sweeping, the abbot buys ten strings of beads for the temple shop." },
+          C: { text: "\"Hold these beads and every wish comes true!\"", result: "\"A convenient fib, stretched too far, is a lie,\" the abbot gently chides." }
+        }
+      },
+      M03: {
+        title: "Lost at the Fair",
+        product: { name: "Paper Balloons", blurb: "An old-fashioned toy you blow up" },
+        dialogue: "Oh no! A little kid's lost at the fair! They're crying and won't budge!",
+        choices: {
+          A: { text: "\"Give them a balloon to calm down. Let's find the parents together.\"", result: "When the parents turn up, Chinnen beams: \"Mister, that was cool!\"" },
+          B: { text: "\"Follow the balloon — the parents are where it floats! ...Maybe.\"", result: "The child starts laughing, the parents rush over at the sound, and onlookers buy balloons." },
+          C: { text: "\"Hold this balloon and you'll never get lost!\"", result: "Kids at the fair mob the balloons, and new lost children pop up everywhere." }
+        }
+      },
+      M04: {
+        title: "Night of the Grand Festival",
+        product: { name: "Little Bells", blurb: "Clear-ringing bells for good-luck charms" },
+        dialogue: "Tonight is Komyoji's grand festival. Let your trade end in a fitting way.",
+        choices: {
+          A: { text: "\"These are just bells. But every time they ring, you'll remember today.\"", result: "\"Fine words,\" the abbot says, and worshippers line up for bells." },
+          B: { text: "\"I'll donate part of tonight's sales to the temple repairs.\"", result: "The abbot bows deeply, and townsfolk call him a merchant to admire." },
+          C: { text: "\"Ring the bell and the Buddha turns around... or so I'm told — ask the abbot!\"", result: "Even the abbot can't help a wry smile, and the grounds fill with laughter." }
+        }
+      },
+      M05: {
+        title: "Temple Gate Worshippers",
+        product: { name: "Ward-Off Rice Crackers", blurb: "A crisp cracker on the way home from the temple" },
+        dialogue: "The onlookers: \"We just finished praying. Got anything that might bring good luck?\"",
+        choices: {
+          A: { text: "\"Can't promise luck, but they're fresh-baked and delicious.\"", result: "The worshippers laugh — \"An honest man!\" — and buy crackers as souvenirs." },
+          B: { text: "\"Eat one and bad luck stays away all year!\"", result: "A temple worker overhears, and an argument breaks out among the worshippers." },
+          C: { text: "\"If it breaks, that's proof the bad luck broke too!\"", result: "The worshippers snap their crackers on purpose, laugh, and buy another." }
+        }
+      },
+      K01: {
+        title: "Payday Miners",
+        product: { name: "Little Sake Flask", blurb: "For a drink after work" },
+        dialogue: "It's payday! Kid, bring out something lively!",
+        choices: {
+          A: { text: "\"Drink from this flask and sake tastes twice as good!\"", result: "Iwao laughs, buys a flask, and comes back with his buddies." },
+          B: { text: "\"Let me carry those heavy bags home for you.\"", result: "After the job, Iwao says \"I like you\" and buys three flasks." },
+          C: { text: "\"A flask has a narrow neck. Keep your pay envelope narrow too.\"", result: "\"Talk plain — I don't get your fancy words!\" Iwao frowns." }
+        }
+      },
+      K02: {
+        title: "By the Housing Well",
+        product: { name: "Bamboo Baskets", blurb: "For laundry and shopping alike" },
+        dialogue: "If you sell in the miners' housing, look after the kids and old folks.",
+        choices: {
+          A: { text: "\"These baskets are sturdy. I'll price them cheap for the housing, too.\"", result: "\"You get it,\" Tome nods, and recommends him to the women at the well." },
+          B: { text: "\"I'll deliver one to the old lady's house.\"", result: "When he's back, Tome says \"You're a good kid\" and buys two baskets." },
+          C: { text: "\"Ma'am, you're the prettiest in the whole housing!\"", result: "\"Save that for the men on payday,\" Tome laughs it off." }
+        }
+      },
+      K03: {
+        title: "The Mine Alarm",
+        product: { name: "Flashlights", blurb: "Peace of mind in dark tunnels" },
+        dialogue: "The mine bell's ringing! Power's out — the guys in the tunnels can't get out!",
+        choices: {
+          A: { text: "\"Take every flashlight! No charge!\"", result: "When the miners come out safe, Iwao throws an arm around him: \"I owe you.\"" },
+          B: { text: "\"This flashlight lights up the far side of the mountain!\"", result: "The miners shout at the tall tale, and the mine entrance is in an uproar." },
+          C: { text: "\"This is all I have. We'll make up the rest with candles.\"", result: "\"That helps,\" Iwao nods, buys the lights, and hands them out." }
+        }
+      },
+      K04: {
+        title: "The Mine Bon Dance",
+        product: { name: "Hand Towels", blurb: "For wiping sweat at the Bon dance" },
+        dialogue: "Tonight's the mine's Bon dance. Make the whole town happy to finish off.",
+        choices: {
+          A: { text: "\"I'll help build the dance tower!\"", result: "Once it's up, Tome buys every towel: \"Now you dance too.\"" },
+          B: { text: "\"I brought these towels for the hardworking miners' sweat.\"", result: "Impressed, Tome spreads the word, and towels wave in the dance circle." },
+          C: { text: "\"Wave this towel and you'll dance better!\"", result: "Someone waves too hard, flies out of the circle, and the dance turns to chaos." }
+        }
+      },
+      K05: {
+        title: "Mine Town Onlookers",
+        product: { name: "Kendama", blurb: "A big hit with the miners' kids" },
+        dialogue: "The onlookers: \"We're beat after our shift. Got anything fun?\"",
+        choices: {
+          A: { text: "\"Master this kendama and you'll split mine rock in one blow!\"", result: "The miners take the challenge seriously, and the kendama fly off the stand." },
+          B: { text: "\"Kendama joins ball and cup — get it right and your marriage stays happy!\"", result: "The wives giggle and make their husbands buy one." },
+          C: { text: "\"I'll teach the kids how to play.\"", result: "The kids are hooked, and their parents buy kendama as thanks." }
+        }
+      },
+      A01: {
+        title: "The Student Haggler",
+        product: { name: "Bundle of Pencils", blurb: "Essential before exams" },
+        dialogue: "Logically speaking, don't you think this price is too high for those pencils?",
+        choices: {
+          A: { text: "\"Logically, every answer written with these is correct... not necessarily.\"", result: "Manabu laughs — \"I see\" — and buys some for his friends before exams." },
+          B: { text: "\"They're not cheap. But the lead really doesn't break easily.\"", result: "Manabu tests one — \"That's logical\" — and buys a bundle." },
+          C: { text: "\"A college man! So smart!\"", result: "\"Flattery won't open my wallet. It's empty anyway,\" Manabu shrugs." }
+        }
+      },
+      A02: {
+        title: "Coffee Poem",
+        product: { name: "Coffee Cups", blurb: "Thick cups like the coffee shop uses" },
+        dialogue: "Selling right outside my shop? I'll allow it — if your pitch is stylish.",
+        choices: {
+          A: { text: "\"Drink black coffee from this cup and it tastes like life itself.\"", result: "\"Very stylish,\" the master laughs and buys cups for the shop." },
+          B: { text: "\"An honor to sell in front of the most stylish shop in town.\"", result: "Not displeased, the master recommends the cups to his regulars." },
+          C: { text: "\"These cups are used in a famous café in Paris!\"", result: "\"How tacky,\" the master frowns, and the students start debating whether it's true." }
+        }
+      },
+      A03: {
+        title: "Night Before the Exam",
+        product: { name: "College Notebooks", blurb: "Ruled for easy writing" },
+        dialogue: "The exam's tomorrow and I've lost all my notes... What do I do?",
+        choices: {
+          A: { text: "\"Let's borrow your classmates' notes. I'll go ask with you.\"", result: "His classmates lend their notes, and Manabu thanks him with teary eyes." },
+          B: { text: "\"With a new notebook, you can make brand-new mistakes!\"", result: "Manabu bursts out laughing, pulls himself together, and buys a notebook." },
+          C: { text: "\"I can sell notebooks, not what goes in them. Stay up and study tonight.\"", result: "\"Exactly right,\" Manabu nods, and buys five notebooks." }
+        }
+      },
+      A04: {
+        title: "School Festival Night",
+        product: { name: "Harmonicas", blurb: "To go with the students' singing" },
+        dialogue: "Tonight's the school festival, and I'm hosting a concert at the shop. How about one last stylish pitch?",
+        choices: {
+          A: { text: "\"A harmonica plays whether you blow or draw. May life be the same!\"", result: "\"Words to live by,\" the master applauds, and concertgoers buy harmonicas." },
+          B: { text: "\"With you hosting, every student in town will show up.\"", result: "In high spirits, the master promotes the stall, and harmonicas sell well." },
+          C: { text: "\"Blow this harmonica and anyone becomes a singer!\"", result: "Students all start blowing at once, and the festival drowns in noise." }
+        }
+      },
+      A05: {
+        title: "Students on the Hill",
+        product: { name: "Playing Cards", blurb: "For nights in the boarding house" },
+        dialogue: "The onlookers (students): \"We've got no money but plenty of time. Make us laugh and we'll buy!\"",
+        choices: {
+          A: { text: "\"No money, plenty of time — cards turn time into treasure!\"", result: "The students clap — \"Good one!\" — and each boarding house buys a deck." },
+          B: { text: "\"They're cheap, but one deck keeps a boarding house busy for years.\"", result: "\"That's a blessing,\" the students say, pooling coins to buy." },
+          C: { text: "\"Win with these cards and you'll ace your exams!\"", result: "Students who played cards all night fail their exams and come to complain." }
+        }
+      },
+      N01: {
+        title: "The Ferry Captain",
+        product: { name: "Brass Anchor Charm", blurb: "A sailor's good-luck charm" },
+        dialogue: "Selling on the island? That's rare. Folks here don't fall for sweet deals.",
+        choices: {
+          A: { text: "\"No sweet deals. But this anchor charm is brass and won't rust.\"", result: "\"A straight shooter,\" Kaizo laughs, and buys one for his boat." },
+          B: { text: "\"Hang this anchor charm and no storm will ever sink your ship!\"", result: "\"Big talk!\" Kaizo roars with laughter and recommends it to his crew." },
+          C: { text: "\"The island's finest captain — what presence!\"", result: "\"Let the waves carry off your flattery,\" Kaizo waves him away." }
+        }
+      },
+      N02: {
+        title: "Grandma Who Knows All",
+        product: { name: "Seashell Necklaces", blurb: "Made from shells found on the island's beach" },
+        dialogue: "Oh, from the mainland? Want to know about the island? Ask me first.",
+        choices: {
+          A: { text: "\"Grandma, let me carry that home for you.\"", result: "Once home, Grandma tells the whole island \"a good person has come.\"" },
+          B: { text: "\"Ask the island's know-it-all and you'll know where these shells came from.\"", result: "Grandma laughs — \"That shell's from that beach over there\" — and buys a necklace." },
+          C: { text: "\"A mermaid made this necklace!\"", result: "\"Lie on this island and everyone knows by tomorrow,\" Grandma glares." }
+        }
+      },
+      N03: {
+        title: "Ferry Cancelled",
+        product: { name: "Fishing Line", blurb: "A must for island anglers" },
+        dialogue: "Bad news — typhoon's coming, tomorrow's ferry is cancelled. People had business on the mainland...",
+        choices: {
+          A: { text: "\"I'll take down everyone's errands. When the ferry runs, I'll handle them.\"", result: "Islanders come to thank him one after another, and Kaizo bows: \"I owe you.\"" },
+          B: { text: "\"No ferry? Perfect fishing weather! With this line, a big catch is guaranteed!\"", result: "\"Big talk,\" Kaizo laughs, and island anglers stock up on line." },
+          C: { text: "\"No business in a typhoon. I'll wait for the ferry too.\"", result: "\"Wise,\" Kaizo nods — but sales are almost nothing." }
+        }
+      },
+      N04: {
+        title: "Island Summer Festival",
+        product: { name: "Sparklers", blurb: "Little flowers of fire on an island night" },
+        dialogue: "Tonight's the island summer festival. A mainlander running a stall? First time in decades.",
+        choices: {
+          A: { text: "\"I heard on this island: the bigger the last spark, the more your wish comes true.\"", result: "\"I just made that up myself,\" Grandma laughs, and the whole island buys sparklers." },
+          B: { text: "\"I'll give one sparkler to every child on the island.\"", result: "Seeing the kids' smiles, Grandma tears up: \"Come back again, you hear?\"" },
+          C: { text: "\"These use the same powder as the big mainland fireworks show!\"", result: "By morning, the whole island knows him as \"the lying merchant.\"" }
+        }
+      },
+      N05: {
+        title: "Ferry Dock Onlookers",
+        product: { name: "Ramune Soda", blurb: "A fizzy bottle for the island heat" },
+        dialogue: "The onlookers: \"Waiting for the ferry is dull. Do something fun!\"",
+        choices: {
+          A: { text: "\"Get the marble out of the ramune bottle and you're an island master. Challengers wanted!\"", result: "Waiting passengers get hooked, and the ramune sells bottle after bottle." },
+          B: { text: "\"Cold ramune. It's hot on the ferry, so grab one.\"", result: "\"Thoughtful,\" the passengers say, buying bottles to take aboard." },
+          C: { text: "\"Drink this ramune and you won't get seasick!\"", result: "Seasick passengers come back from the ferry, and the dock is in an uproar." }
+        }
       }
     },
 
     towns: {
       hiyori: { name: "Hiyori-cho Shopping Street", blurb: "An old-fashioned shopping street full of familiar faces." },
       shiomi: { name: "Shiomi Harbor", blurb: "A harbor town of fishermen and divers. Big talk goes over well." },
-      yunosawa: { name: "Yunosawa Hot Springs", blurb: "A steamy hot-spring town. Inn guests loosen their purse strings." }
+      yunosawa: { name: "Yunosawa Hot Springs", blurb: "A steamy hot-spring town. Inn guests loosen their purse strings." },
+      touge: { name: "Toge Teahouse Inn", blurb: "A post town on the mountain pass where travelers stop for tea. Busy guests, slow teahouse." },
+      joka: { name: "Tsurumi Castle Town", blurb: "A castle town famous for sweets. Plenty of people fussy about tradition." },
+      yukimi: { name: "Yukimi Morning Market", blurb: "A snowy northern town. The morning market opens before dawn." },
+      monzen: { name: "Komyoji Temple Gate Town", blurb: "A town at the gate of a great temple, busy with worshippers and fairs." },
+      kuroiwa: { name: "Kuroiwa Mining Town", blurb: "A coal-mining town. On payday, the whole town comes alive." },
+      aoba: { name: "Aobadai Student Quarter", blurb: "A hilly college town. No money, but endless debate and laughter." },
+      nagi: { name: "Nagi Island", blurb: "A small island reached by ferry, where everyone knows everyone." }
     },
 
     journeyEndings: {

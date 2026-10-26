@@ -218,6 +218,190 @@
         dislike: "「年寄りをからかっちゃいかんよ」"
       },
       look: { skin: "#e8bc94", hair: "#bfbfbf", hairStyle: "short", clothes: "#6b5a48", accent: "#c8102e" }
+    },
+
+    // ---------- 旅の町の人々（峠・城下・雪見・門前・炭坑・学生街・島） ----------
+    oshin: {
+      name: "お信",
+      role: "茶屋の女将",
+      hint: "峠の茶屋を一人で切り盛りする女将。",
+      trait: "旅人に親切な人と、正直な商いが好き。大げさな口上は大嫌い。",
+      likes: ["help", "honest"],
+      dislikes: ["bluff"],
+      reactions: {
+        like: "「あんた、旅の人にしちゃ気が利くねえ」",
+        dislike: "「峠でほら吹くと、天狗にさらわれるよ」"
+      },
+      look: { skin: "#f0c6a2", hair: "#2b1a10", hairStyle: "bun", clothes: "#8c4a3a", accent: "#f2e6c8" }
+    },
+    genta: {
+      name: "源太",
+      role: "トラック運転手",
+      hint: "峠道を毎日走る、威勢のいい運転手。",
+      trait: "景気のいい話と気の利いた冗談が好き。おべっかは嫌い。",
+      likes: ["bluff", "wit"],
+      dislikes: ["flatter"],
+      reactions: {
+        like: "「がっはっは！ 気に入った、乗ってけ！」",
+        dislike: "「おだてても荷台には乗せねえぞ」"
+      },
+      look: { skin: "#d9a27a", hair: "#1c1c1c", hairStyle: "headband", clothes: "#3a6a3a", accent: "#e0a020" }
+    },
+    mido: {
+      name: "御堂のご隠居",
+      role: "武家屋敷のご隠居",
+      hint: "城下の古い屋敷に住む、気位の高いご隠居。",
+      trait: "礼儀正しい褒め言葉と誠実さを好む。軽口は品がないと嫌う。",
+      likes: ["flatter", "honest"],
+      dislikes: ["wit"],
+      reactions: {
+        like: "「うむ、礼をわきまえておるな」",
+        dislike: "「軽々しい口をきくでない」"
+      },
+      look: { skin: "#f0c9a6", hair: "#d9d9d9", hairStyle: "short", clothes: "#2b2b4a", accent: "#d9a62e" }
+    },
+    chiyo: {
+      name: "千代",
+      role: "和菓子屋の娘",
+      hint: "城下の老舗和菓子屋の看板娘。",
+      trait: "気の利いた話と人助けが好き。ほら話はすぐ見抜く。",
+      likes: ["wit", "help"],
+      dislikes: ["bluff"],
+      reactions: {
+        like: "「ふふっ、おもしろい人」",
+        dislike: "「それ、嘘でしょう？」"
+      },
+      look: { skin: "#f6d4b6", hair: "#1e1410", hairStyle: "long", clothes: "#d27a9a", accent: "#f2e6c8" }
+    },
+    fumi: {
+      name: "フミ",
+      role: "朝市のおかみ",
+      hint: "夜明け前から朝市に立つ、たくましいおかみ。",
+      trait: "正直な商いと気の利いた冗談が好き。おだてる人は信用しない。",
+      likes: ["honest", "wit"],
+      dislikes: ["flatter"],
+      reactions: {
+        like: "「あんた、話がわかるねえ！」",
+        dislike: "「寒いのに、口ばっかりあったかいね」"
+      },
+      look: { skin: "#f0c09a", hair: "#2b1a10", hairStyle: "perm", clothes: "#a03a3a", accent: "#f2e6c8" }
+    },
+    fuyukichi: {
+      name: "冬吉",
+      role: "出稼ぎ帰りの若者",
+      hint: "都会の出稼ぎから帰ってきた、人のいい若者。",
+      trait: "褒められるとうれしく、人助けにも弱い。ほら話にはこりごり。",
+      likes: ["flatter", "help"],
+      dislikes: ["bluff"],
+      reactions: {
+        like: "「へへ、なんだか照れるなあ」",
+        dislike: "「都会でもそういう話にだまされたんだ……」"
+      },
+      look: { skin: "#f2c9a0", hair: "#2b1a10", hairStyle: "cap", clothes: "#4a5a7a", accent: "#c8102e" }
+    },
+    chinnen: {
+      name: "珍念",
+      role: "寺の小僧",
+      hint: "お寺の修行中の小僧さん。いたずら好き。",
+      trait: "面白い話と大げさな話が大好き。お世辞は修行の邪魔だと嫌う。",
+      likes: ["wit", "bluff"],
+      dislikes: ["flatter"],
+      reactions: {
+        like: "「わあ、すごいや！ 和尚さまには内緒ね」",
+        dislike: "「おだてても、お経は短くなりませんよ」"
+      },
+      look: { skin: "#f4cfa8", hair: "#3b2416", hairStyle: "short", clothes: "#5a4a3a", accent: "#e0a020" }
+    },
+    kakunen: {
+      name: "覚然和尚",
+      role: "光明寺の住職",
+      hint: "門前町を見守る、穏やかな和尚さん。",
+      trait: "誠実な言葉と人助けを喜ぶ。ほら話には静かに眉をひそめる。",
+      likes: ["honest", "help"],
+      dislikes: ["bluff"],
+      reactions: {
+        like: "「よい心がけじゃ。仏さまも見ておられる」",
+        dislike: "「方便も、過ぎれば嘘じゃよ」"
+      },
+      look: { skin: "#e8bc94", hair: "#e8bc94", hairStyle: "short", clothes: "#4a3a5a", accent: "#d9a62e" }
+    },
+    iwao: {
+      name: "岩男",
+      role: "炭坑夫",
+      hint: "坑内で働く、力自慢の炭坑夫。",
+      trait: "豪快な話と汗をかく人が好き。小難しい理屈は苦手。",
+      likes: ["bluff", "help"],
+      dislikes: ["wit"],
+      reactions: {
+        like: "「おう、気に入ったぞ兄ちゃん！」",
+        dislike: "「難しいこと言われても、わからん！」"
+      },
+      look: { skin: "#c99a72", hair: "#1c1c1c", hairStyle: "cap", clothes: "#3a3a3a", accent: "#e0a020" }
+    },
+    tome: {
+      name: "トメ",
+      role: "炭住のおかみ",
+      hint: "炭坑住宅の世話を焼く、肝っ玉母さん。",
+      trait: "正直な人と、子どもや年寄りに親切な人が好き。おべっかは聞き飽きている。",
+      likes: ["honest", "help"],
+      dislikes: ["flatter"],
+      reactions: {
+        like: "「あんた、いい子だねえ」",
+        dislike: "「そういうのは、給料日の男衆に言いな」"
+      },
+      look: { skin: "#f0c09a", hair: "#4a4a4a", hairStyle: "perm", clothes: "#6b5a48", accent: "#f2e6c8" }
+    },
+    manabu: {
+      name: "学",
+      role: "苦学生",
+      hint: "仕送りの少ない、理屈っぽい大学生。",
+      trait: "筋の通った話と機転が好き。おだてには乗らない。",
+      likes: ["wit", "honest"],
+      dislikes: ["flatter"],
+      reactions: {
+        like: "「なるほど、理にかなっている」",
+        dislike: "「おだてで財布は開きませんよ。中身もないし」"
+      },
+      look: { skin: "#f2c9a0", hair: "#1c1c1c", hairStyle: "slick", clothes: "#2c3e66", accent: "#f2e6c8" }
+    },
+    poem: {
+      name: "ポエムのマスター",
+      role: "喫茶店のマスター",
+      hint: "学生街の喫茶「ポエム」のマスター。",
+      trait: "洒落た言い回しと褒め言葉に弱い。大げさな話は野暮だと嫌う。",
+      likes: ["wit", "flatter"],
+      dislikes: ["bluff"],
+      reactions: {
+        like: "「洒落てるねえ。コーヒー一杯おごろう」",
+        dislike: "「野暮だねえ、そういうのは」"
+      },
+      look: { skin: "#e8bc94", hair: "#4a4a4a", hairStyle: "slick", clothes: "#5a3e2b", accent: "#f2e6c8" }
+    },
+    kaizo: {
+      name: "海蔵",
+      role: "定期船の船長",
+      hint: "島と本土を結ぶ定期船の船長。",
+      trait: "まっすぐな話と景気のいい話が好き。お世辞は海に捨てる。",
+      likes: ["honest", "bluff"],
+      dislikes: ["flatter"],
+      reactions: {
+        like: "「よし、気に入った。帰りの船賃はまけてやる」",
+        dislike: "「世辞は波に流しとけ」"
+      },
+      look: { skin: "#d9a27a", hair: "#bfbfbf", hairStyle: "cap", clothes: "#1f3550", accent: "#f2e6c8" }
+    },
+    kame: {
+      name: "カメおばあ",
+      role: "島の物知りおばあ",
+      hint: "島のことなら何でも知っているおばあ。",
+      trait: "親切な人と、気の利いた冗談が好き。ほら話には島じゅうに言いふらす。",
+      likes: ["help", "wit"],
+      dislikes: ["bluff"],
+      reactions: {
+        like: "「あいやー、あんた面白いねえ」",
+        dislike: "「島で嘘ついたら、明日にはみんな知ってるよ」"
+      },
+      look: { skin: "#d9a982", hair: "#d9d9d9", hairStyle: "bun", clothes: "#3f7a5a", accent: "#f7d64a" }
     }
   };
 })(typeof globalThis !== "undefined" ? globalThis : window);

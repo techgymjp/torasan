@@ -68,7 +68,9 @@
     <!-- 旅の町一覧（旅に出るときと、町を終えるたびに表示） -->
     <section class="screen screen--stock" id="screen-map" aria-labelledby="map-heading" hidden>
       <h2 class="stock__heading" id="map-heading" tabindex="-1" data-i18n="map.heading">旅の町一覧</h2>
-      <p class="stock__lead" data-i18n="map.lead">町は順番に回ります。前の町で商売を終えると、次の町へ行けるようになります。</p>
+      <p class="stock__town" id="map-step"></p>
+      <p class="stock__lead" data-i18n="map.lead">旅では3つの町を回ります。最初は日和町商店街、次からは道でつながった町を選びます。全部の町で商売して、全町制覇をめざそう。</p>
+      <p class="stock__budget" id="map-progress"></p>
       <ul class="stock__list" id="map-list"></ul>
       <p class="redo__note" id="map-note" role="status"></p>
       <div class="menu menu--row">
@@ -222,7 +224,7 @@
         <span class="type type--help" data-i18n="type.help">お助け</span><span data-i18n="howto.help">人情が大きく上がるが、売上を失うことも。</span>
       </li>
       <li data-i18n-html="howto.4">客にはそれぞれ<strong>好きな口上・嫌いな口上</strong>があります。最初は分かりませんが、相性◎や×が出ると<strong>常連帳</strong>に書き込まれ、次からは選択肢に印が付きます。</li>
-      <li data-i18n-html="howto.journey"><strong>旅に出る</strong>：町一覧から日和町商店街 → 潮見港 → 湯ノ沢温泉の順に回ります（前の町を終えると次の町へ行けます）。町ごとに仕入れ直し、人情（評判）の半分と縁を次の町へ持ち越し、最後に旅全体の結末が決まります。</li>
+      <li data-i18n-html="howto.journey"><strong>旅に出る</strong>：10の町から3つを回ります。最初は日和町商店街、次からは道でつながった町を町一覧から選びます（Android 版では、広告を見て鍵を開ければ、つながっていない町にも旅に1回行けます）。全部の町で商売して「全町制覇」をめざしましょう。町ごとに仕入れ直し、人情（評判）の半分と縁を次の町へ持ち越し、最後に旅全体の結末が決まります。</li>
       <li data-i18n-html="howto.stock"><strong>仕入れ</strong>：開店前に、予算3,000円で品を3つまで選びます。品ごとに効く口上や相手が違います。</li>
       <li data-i18n-html="howto.momentum"><strong>勢い</strong>：笑いを取るとたまり（最大3）、大風呂敷の売上が伸びます。満タンで大風呂敷を切ると大騒動。正直・お助けに切り替えると、勢いを売上に変えて締められます。</li>
       <li data-i18n-html="howto.5"><strong>大風呂敷を続けると「調子に乗りすぎ」</strong>で騒動が上乗せされます。</li>
@@ -243,6 +245,8 @@
     <h3><span data-i18n="records.journeys">旅の結末</span> <small id="rec-journey-count"></small></h3>
     <p class="sheet__muted" id="rec-journey-best"></p>
     <ul class="zukan" id="rec-journeys"></ul>
+    <h3><span data-i18n="records.towns">町めぐり</span> <small id="rec-towns-count"></small></h3>
+    <ul class="zukan" id="rec-towns"></ul>
     <h3 data-i18n="records.regulars">常連帳</h3>
     <ul class="regulars" id="rec-regulars"></ul>
     <p class="sheet__muted" id="rec-regulars-empty" data-i18n="records.regularsEmpty">まだ誰の好みも分かっていません。相性◎や×が出ると書き込まれます。</p>

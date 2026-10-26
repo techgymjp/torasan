@@ -84,12 +84,12 @@ test("5幕で終わり、3幕目は中規模・5幕目は最終イベント、�
   }
 });
 
-test("すべてのイベントが実際のプレイで登場する（3つの町）", () => {
+test("すべてのイベントが実際のプレイで登場する（すべての町）", () => {
   const seen = new Set();
-  const towns = ["hiyori", "shiomi", "yunosawa"];
-  for (let seed = 0; seed < 900; seed++) {
+  const towns = D.towns.map((t) => t.id);
+  for (let seed = 0; seed < 3000; seed++) {
     const rng = seeded(seed);
-    let s = L.startGame(rng, [], { town: towns[seed % 3] });
+    let s = L.startGame(rng, [], { town: towns[seed % towns.length] });
     while (s.status === "playing") {
       const e = L.getCurrentEvent(s);
       s = L.advance(L.applyChoice(s, e.choices[Math.floor(rng() * 3)].id).state, rng);
@@ -275,7 +275,7 @@ test("仕入れ：予算と個数の範囲に収め、条件に合う幕で効�
 });
 
 test("旅：町ごとに、その町の場面と町を問わない場面だけが出る", () => {
-  for (const town of ["hiyori", "shiomi", "yunosawa"]) {
+  for (const town of D.towns.map((t) => t.id)) {
     for (let seed = 0; seed < 200; seed++) {
       const rng = seeded(seed);
       let s = L.startGame(rng, [], { town });
@@ -310,7 +310,11 @@ test("旅：前の町で見た場面は、次の町で出ない", () => {
     const rng = seeded(seed);
     let carry = {};
     const seen = new Set();
-    for (const town of ["hiyori", "shiomi", "yunosawa"]) {
+    const route = [];
+    for (let i = 0; i < D.journeyLength; i++) {
+      const open = L.openTowns(route);
+      const town = open[Math.floor(rng() * open.length)];
+      route.push(town);
       let s = L.startGame(rng, [], Object.assign({ town }, carry));
       while (s.status === "playing") {
         const e = L.getCurrentEvent(s);
@@ -321,4 +325,30 @@ test("旅：前の町で見た場面は、次の町で出ない", () => {
     }
   }
   assert.equal(repeats, 0, `重複 ${repeats} 回`);
+});
+
+test("旅：10の町と道。最初は日和町、次からはつながった町へ。どの町にも行ける", () => {
+  assert.equal(D.towns.length, 10);
+  const ids = D.towns.map((t) => t.id);
+  for (const t of D.towns) {
+    for (const id of t.links) {
+      assert.ok(ids.includes(id), `${t.id} → ${id}`);
+      assert.ok(D.towns.find((x) => x.id === id).links.includes(t.id), `道が片道: ${t.id} → ${id}`);
+    }
+    const own = D.events.filter((e) => e.town === t.id);
+    assert.ok(own.length >= 5, `${t.id} の場面 ${own.length}`);
+    assert.ok(own.some((e) => e.tier === "final") && own.some((e) => e.tier === "mid"), `${t.id} の山場`);
+  }
+  assert.deepEqual(L.openTowns([]), ["hiyori"]);
+  assert.deepEqual(L.openTowns(["hiyori"]).sort(), ["joka", "shiomi", "touge", "yunosawa"]);
+  assert.ok(!L.openTowns(["hiyori", "shiomi"]).includes("hiyori"));
+  assert.deepEqual(L.openTowns(["hiyori", "shiomi", "nagi"]), []);
+  // 旅の道順だけで、すべての町に行ける
+  const reach = new Set();
+  const walk = (route) => {
+    route.forEach((id) => reach.add(id));
+    L.openTowns(route).forEach((id) => walk(route.concat(id)));
+  };
+  walk([]);
+  assert.equal(reach.size, 10);
 });
