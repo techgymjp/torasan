@@ -221,7 +221,7 @@
   }
 
   function showScreen(name) {
-    ["title", "stock", "play", "result"].forEach(function (s) {
+    ["title", "map", "stock", "play", "result"].forEach(function (s) {
       $("screen-" + s).hidden = s !== name;
     });
     // バナー広告はすべての画面の下に出しっぱなしにする（商売中も）
@@ -732,6 +732,7 @@
     $("stock-heading").textContent = town
       ? t("journey.stockHeading", { n: journey.index + 1, town: townText(town.id).name })
       : t("stock.heading");
+    $("btn-stock-back").textContent = t(town ? "map.back" : "result.toTitle");
     $("stock-town").hidden = !town;
     $("stock-town").textContent = town ? townText(town.id).blurb : "";
     renderStock();
@@ -739,10 +740,49 @@
     $("stock-heading").focus({ preventScroll: true });
   }
 
+  // 旅の町一覧：済んだ町・今の町・まだ行けない町を並べ、今の町だけ選べる
+  function showMap() {
+    const list = $("map-list");
+    list.textContent = "";
+    D.towns.forEach(function (town, i) {
+      const text = townText(town.id);
+      const done = journey.results[i];
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "good town-card" + (done ? " town-card--done" : i === journey.index ? " town-card--now" : "");
+      btn.disabled = i !== journey.index;
+      const icon = document.createElement("span");
+      icon.className = "good__icon";
+      icon.textContent = town.icon;
+      const name = document.createElement("strong");
+      name.className = "good__name";
+      name.textContent = text.name;
+      const blurb = document.createElement("span");
+      blurb.className = "good__blurb";
+      blurb.textContent = text.blurb;
+      const status = document.createElement("span");
+      status.className = "good__cost";
+      status.textContent = done ? t("map.done", { revenue: money(done.revenue) })
+        : i === journey.index ? t("map.go") : t("map.locked");
+      btn.append(icon, name, blurb, status);
+      if (i === journey.index) btn.addEventListener("click", goStock);
+      li.appendChild(btn);
+      list.appendChild(li);
+    });
+    showScreen("map");
+    $("map-heading").focus({ preventScroll: true });
+  }
+
+  function leaveMap() {
+    if (journey && journey.results.length > 0 && !window.confirm(t("map.quit"))) return;
+    toTitle();
+  }
+
   function beginJourney() {
     mode = "journey";
     journey = { index: 0, results: [], carry: null };
-    goStock();
+    showMap();
   }
 
   let startBusy = false;
@@ -918,7 +958,10 @@
         } else if (state.status === "playing") {
           if (window.confirm(t("play.quit"))) quitToTitle();
         } else if (!$("screen-stock").hidden) {
-          toTitle();
+          if (mode === "journey") showMap();
+          else toTitle();
+        } else if (!$("screen-map").hidden) {
+          leaveMap();
         } else {
           App.exitApp();
         }
@@ -988,10 +1031,14 @@
     $("btn-next-town").addEventListener("click", function () {
       if (!journey) return;
       journey.index++;
-      goStock();
+      showMap();
     });
     $("btn-open").addEventListener("click", startWithAd);
-    $("btn-stock-back").addEventListener("click", toTitle);
+    $("btn-stock-back").addEventListener("click", function () {
+      if (mode === "journey") showMap();
+      else toTitle();
+    });
+    $("btn-map-back").addEventListener("click", leaveMap);
     $("btn-howto").addEventListener("click", function () { openDialog($("dlg-howto")); });
     // 遊び方・記録を閉じてタイトル画面に戻るときも全画面広告を出す（閉じるボタン・Esc・戻るボタンのどれでも）
     ["dlg-howto", "dlg-records"].forEach(function (id) {

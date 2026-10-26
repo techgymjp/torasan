@@ -12,9 +12,9 @@
   const D = (root.TankaData = root.TankaData || {});
 
   D.towns = [
-    { id: "hiyori", name: "日和町商店街", blurb: "昔ながらの商店街。顔なじみが多い。" },
-    { id: "shiomi", name: "潮見港", blurb: "漁師と海女の港町。景気のいい話が通る。" },
-    { id: "yunosawa", name: "湯ノ沢温泉", blurb: "湯けむりの温泉町。宿の客は財布のひもがゆるい。" }
+    { id: "hiyori", icon: "🏮", name: "日和町商店街", blurb: "昔ながらの商店街。顔なじみが多い。" },
+    { id: "shiomi", icon: "⚓", name: "潮見港", blurb: "漁師と海女の港町。景気のいい話が通る。" },
+    { id: "yunosawa", icon: "♨️", name: "湯ノ沢温泉", blurb: "湯けむりの温泉町。宿の客は財布のひもがゆるい。" }
   ];
 
   D.journeyEndings = [

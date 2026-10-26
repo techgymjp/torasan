@@ -862,6 +862,11 @@ body {
 .good__blurb { grid-area: blurb; font-size: .85rem; color: var(--ink-soft); }
 .btn--journey { background: var(--ai); color: #fff; text-shadow: 1px 1px 0 var(--ink); }
 .btn--journey:hover { background: #3a5d93; }
+.town-card { grid-template-areas: "icon name" "icon blurb" "icon status"; grid-template-columns: auto 1fr; }
+.town-card .good__cost { grid-area: status; font-size: .9rem; }
+.town-card--now { background: #fff6e0; outline: 3px solid var(--shu); outline-offset: -6px; }
+.town-card--now .good__cost { color: var(--shu); }
+.town-card--done .good__name::before { content: "✓ "; color: var(--ai); }
 .stock__town { margin: 0 0 6px; font-weight: 700; color: var(--ai); }
 .hud .hud__town { margin: 0 0 4px; font-size: .85rem; font-weight: 700; color: var(--kihada); }
 .journey-log { text-align: left; max-width: 30em; margin: 10px auto 0; padding-left: 0; list-style: none; font-size: .9rem; }
