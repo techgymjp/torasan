@@ -904,17 +904,9 @@
     Sound.setTension(false);
     Sound.setMusic("street");
     showScreen("title");
-    syncJourneyButton();
     $("title-heading").focus({ preventScroll: true });
   }
 
-  // タイトルの「旅に出る」に、町めぐりの進み具合を出す（まだどこにも行っていなければ「全10町」）
-  function syncJourneyButton() {
-    const n = loadRecords().towns.length;
-    $("btn-journey").textContent = n > 0
-      ? t("title.journeyProgress", { n: n, total: D.towns.length })
-      : t("title.journey", { total: D.towns.length });
-  }
 
   // 商売の途中でやめたとき・結果画面の「タイトルへ」でタイトルに戻るときは、全画面広告を経由する
   async function quitToTitle() {
@@ -1081,8 +1073,6 @@
       b.addEventListener("click", function () { I18n.setLang(b.dataset.lang); });
     });
     I18n.onChange(syncMuteButton);
-    I18n.onChange(syncJourneyButton);
-    syncJourneyButton();
 
     const prefs = loadPrefs();
     const toggle = $("opt-reduce-motion");
