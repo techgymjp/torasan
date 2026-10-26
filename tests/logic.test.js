@@ -34,7 +34,7 @@ function playThrough(rng, pickChoice) {
 }
 
 test("データ定義：イベント10種・各3択・既知のタイプと人物", () => {
-  assert.equal(D.events.length, 10);
+  assert.ok(D.events.length >= 10);
   const ids = new Set();
   for (const e of D.events) {
     assert.ok(!ids.has(e.id), `重複ID ${e.id}`);
@@ -194,4 +194,36 @@ test("すべてのエンディングに実際のプレイで到達できる", ()
     reached.add(final.ending);
   }
   for (const e of D.endings) assert.ok(reached.has(e.id), `到達不能: ${e.id}`);
+});
+
+test("縁：結んだ縁で続きのイベントが出られるようになり、縁がないと出ない", () => {
+  const base = L.startGame(seeded(7));
+  const s1 = Object.assign({}, base, { currentEventId: "E08" });
+  const r = L.applyChoice(s1, "A"); // さよりを案内する → sayori_helped
+  assert.deepEqual(r.outcome.newTies, ["sayori_helped"]);
+  assert.ok(r.state.ties.includes("sayori_helped"));
+  // 縁がないプレイでは E11 は一度も出ない
+  for (let seed = 0; seed < 300; seed++) {
+    const rng = seeded(seed);
+    const { final } = playThrough(rng, (e) => (e.choices.find((c) => !c.ties) || e.choices[0]).id);
+    for (const id of ["E11", "E12", "E13", "E14"]) assert.ok(!final.usedEvents.includes(id), `${id} が縁なしで出た`);
+  }
+});
+
+test("縁：echo の効果が上乗せされる", () => {
+  const s = Object.assign(L.startGame(seeded(8)), { currentEventId: "E10", ties: ["kenta_fan"] });
+  const without = L.applyChoice(Object.assign({}, s, { ties: [] }), "C").outcome;
+  const withTie = L.applyChoice(s, "C").outcome;
+  assert.equal(withTie.echoTie, "kenta_fan");
+  assert.equal(withTie.deltas.revenue - without.deltas.revenue, 500);
+});
+
+test("最近見たイベントは出にくい", () => {
+  const recent = ["E01", "E02", "E04", "E05"];
+  let hits = 0;
+  for (let seed = 0; seed < 400; seed++) {
+    const s = L.startGame(seeded(seed), recent);
+    if (recent.includes(s.currentEventId)) hits++;
+  }
+  assert.ok(hits < 400 * 0.3, `最近見たイベントが ${hits} 回`);
 });

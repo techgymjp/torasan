@@ -22,6 +22,8 @@
 
   const RECORDS_KEY = "tankabai.records.v1";
   const PREFS_KEY = "tankabai.prefs.v1";
+  const RECENT_KEY = "tankabai.recent.v1";
+  const RECENT_MAX = 10; // 最近のプレイで出たイベントを、これだけ覚えて出にくくする
   const FX_DURATION = 1200;
   const SHARE_URL = "https://techgym.jp/column/claude-code-game-tankabai/";
 
@@ -66,6 +68,16 @@
       lastEnding: known.indexOf(r.lastEnding) !== -1 ? r.lastEnding : null,
       lastTitle: typeof r.lastTitle === "string" ? r.lastTitle : null
     };
+  }
+
+  function loadRecent() {
+    const r = readJson(RECENT_KEY) || {};
+    return Array.isArray(r.events) ? r.events.filter(function (id) { return typeof id === "string"; }) : [];
+  }
+
+  function saveRecent(used) {
+    const merged = used.concat(loadRecent().filter(function (id) { return used.indexOf(id) === -1; }));
+    writeJson(RECENT_KEY, { events: merged.slice(0, RECENT_MAX) });
   }
 
   function loadPrefs() {
@@ -122,6 +134,7 @@
     return {
       title: en.title || event.title,
       dialogue: en.dialogue || event.dialogue,
+      echo: event.echo ? en.echo || event.echo.text : "",
       product: event.product ? Object.assign({}, event.product, en.product) : null,
       choices: event.choices.map(function (c) { return Object.assign({}, c, choices[c.id]); })
     };
@@ -176,7 +189,8 @@
     const text = eventText(event);
     const who = charText(event.character);
 
-    $("event-id").textContent = event.id;
+    $("event-id").textContent = event.requiresTies ? t("play.followUpTag") : event.id;
+    $("event-id").classList.toggle("stage__id--tie", !!event.requiresTies);
     $("event-title").textContent = text.title;
     $("char-name").textContent = who.name;
     $("char-role").textContent = who.role;
@@ -260,6 +274,8 @@
     $("reaction-voice").textContent = voice ? t("play.voice", { name: who.name, text: voice }) : "";
 
     const notes = [];
+    if (outcome.echoTie) notes.push(t("play.echo", { text: eventText(event).echo }));
+    if (outcome.newTies.length) notes.push(t("play.tie"));
     if (outcome.affinity === "like") notes.push(t("play.like", { name: who.name }));
     if (outcome.affinity === "dislike") notes.push(t("play.dislike", { name: who.name }));
     if (outcome.overheated) notes.push(t("play.overheat"));
@@ -333,6 +349,7 @@
     const isNew = records.endings.indexOf(ending.id) === -1;
     const isBest = state.revenue > records.bestRevenue;
 
+    saveRecent(state.usedEvents);
     writeJson(RECORDS_KEY, {
       bestRevenue: Math.max(records.bestRevenue, state.revenue),
       endings: isNew ? records.endings.concat(ending.id) : records.endings,
@@ -488,7 +505,7 @@
     Sound.unlock();
     Sound.setMusic("street");
     Sound.sfx.start();
-    state = L.startGame();
+    state = L.startGame(undefined, loadRecent());
     finalActState = null;
     redoUsed = false;
     redoing = false;

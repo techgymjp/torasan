@@ -6,6 +6,9 @@
  * weight    : 出やすさ（省略時は1。大きいほど選ばれやすい）
  * choices   : 3つの口上。type は bluff / wit / honest / flatter / help
  * effects   : パラメーター変化の基本値（客との相性で補正される）
+ * ties      : その口上を選ぶと結ばれる「縁」。あとの幕のイベントや効果が変わる
+ * requiresTies : この縁がすべて結ばれているときだけ発生する（縁の続きのイベント）
+ * echo      : { tie, effects, text } その縁があると、どの口上を選んでも効果と一文が上乗せされる
  *
  * 文章と数値のみを持ち、コードは含めない。ゲーム側は定義済みの効果量だけを反映する。
  */
@@ -119,6 +122,7 @@
           id: "A",
           type: "bluff",
           text: "「さあ寄ってらっしゃい！ 隣の品は肩を叩くが、こっちの品は運命の扉を叩く！」",
+          ties: ["ginji_grudge"],
           effects: { revenue: 1700, laughter: 15, humanity: -2, trouble: 14 },
           result: "客がどっとこちらへ戻り、銀二は苦い顔で腕を組んだ。"
         },
@@ -126,6 +130,7 @@
           id: "B",
           type: "wit",
           text: "「銀二さん、どうだい。二人で掛け合い口上といこうじゃねえか」",
+          ties: ["ginji_friend"],
           effects: { revenue: 1200, laughter: 12, humanity: 5, trouble: -2 },
           result: "即席の掛け合いが大ウケ。両方の店に人だかりができた。"
         },
@@ -157,6 +162,7 @@
           id: "B",
           type: "honest",
           text: "「幸運は猫じゃなくて、持ってる人が自分で呼ぶもんだ。こいつはその応援団さ」",
+          ties: ["kenta_fan"],
           effects: { revenue: 800, laughter: 4, humanity: 12, trouble: -3 },
           result: "健太は「じゃあ応援してもらう」と、お小遣いで一つ買っていった。"
         },
@@ -164,6 +170,7 @@
           id: "C",
           type: "wit",
           text: "「鋭いねえ坊や！ じゃあ今日一日持って試してくれ。幸運が来たらお代をもらうよ」",
+          ties: ["kenta_fan"],
           effects: { revenue: 600, laughter: 10, humanity: 6, trouble: 0 },
           result: "健太は大はしゃぎ。夕方、母親が律儀に代金を払いに来た。"
         }
@@ -181,6 +188,7 @@
           id: "A",
           type: "honest",
           text: "「腕を見てもらうのが一番だ。どうぞ、好きなだけ試してくだせえ」",
+          ties: ["genzo_trust"],
           effects: { revenue: 1200, laughter: 2, humanity: 10, trouble: -3 },
           result: "源造は黙って時計のねじを回し、最後にひと言「……悪くねえ」。"
         },
@@ -245,6 +253,7 @@
           id: "A",
           type: "help",
           text: "「店はちょいと閉めて、そこまで案内しますよ」",
+          ties: ["sayori_helped"],
           effects: { revenue: -500, laughter: 2, humanity: 16, trouble: -4 },
           result: "寺の門前で深々と頭を下げられ、まことはなぜか鼻歌まじりで戻ってきた。"
         },
@@ -259,6 +268,7 @@
           id: "C",
           type: "bluff",
           text: "「この先をまっすぐ！ ついでに道中安全飴もどうぞ、舐め終わる頃に着きます！」",
+          ties: ["sayori_tricked"],
           effects: { revenue: 1200, laughter: 10, humanity: -4, trouble: 8 },
           result: "勢いで飴を買わせたが、まっすぐ行った先は行き止まりだった。"
         }
@@ -270,6 +280,11 @@
       tier: "final",
       character: "crowd",
       product: { icon: "🪭", name: "和紙のうちわ", blurb: "夏祭りにぴったりの手刷り柄" },
+      echo: {
+        tie: "genzo_trust",
+        effects: { revenue: 0, laughter: 0, humanity: 4, trouble: -6 },
+        text: "源造が「うちの軒先を使いな」と工房のひさしを貸してくれた。品物も客も濡れずに済んだ。"
+      },
       dialogue: "ザーッと夕立。品物のうちわが濡れていく。見物客も「わっ、降ってきた！ 傘なんか持ってないよ！」",
       choices: [
         {
@@ -301,6 +316,11 @@
       tier: "final",
       character: "kenta",
       product: { icon: "🐱", name: "最後の福招き猫", blurb: "本日、残りあと一つ" },
+      echo: {
+        tie: "kenta_fan",
+        effects: { revenue: 500, laughter: 2, humanity: 4, trouble: 0 },
+        text: "健太が「このおじさん、いい人なんだ」と母親を連れてきた。母親もついでに一つ買っていった。"
+      },
       dialogue: "日暮れどき、最後の招き猫に、健太と身なりのいい紳士が同時に手を伸ばした。「あっ……」",
       choices: [
         {
@@ -323,6 +343,139 @@
           text: "「旦那には明日、同じ品をお届けします。今日のこの子は坊やの番だ！」",
           effects: { revenue: 1500, laughter: 8, humanity: 8, trouble: 0 },
           result: "両方の客が満足顔。まことは明日の配達を忘れないよう、手のひらに墨で書いた。"
+        }
+      ]
+    },
+    // ---------- 縁の続き（前の幕の選択で出てくるイベント） ----------
+    {
+      id: "E11",
+      title: "恩返しの参拝客",
+      tier: "final",
+      character: "sayori",
+      requiresTies: ["sayori_helped"],
+      weight: 3,
+      product: { icon: "🧧", name: "道中安全のお守り袋", blurb: "旅の無事を祈る、手縫いの小袋" },
+      dialogue: "昼間はありがとうございました。お寺の皆さんにお話ししたら、ぜひお店に寄りたいって……。",
+      choices: [
+        {
+          id: "A",
+          type: "honest",
+          text: "「こりゃどうも。案内しただけなのに、ありがてえ話だ」",
+          effects: { revenue: 1600, laughter: 4, humanity: 10, trouble: -2 },
+          result: "参拝客たちがお守り袋を次々と手に取り、気づけば台の上が空っぽになった。"
+        },
+        {
+          id: "B",
+          type: "bluff",
+          text: "「さあさあ皆さん、このお守りを持てば御利益十倍！」",
+          effects: { revenue: 1900, laughter: 12, humanity: -6, trouble: 10 },
+          result: "よく売れたが、さよりが少し寂しそうな顔をしたのを、まことは見逃さなかった。"
+        },
+        {
+          id: "C",
+          type: "help",
+          text: "「せっかくだ、皆さんに一つずつ差し上げましょう」",
+          effects: { revenue: -300, laughter: 4, humanity: 18, trouble: -4 },
+          result: "「こんなにしていただいて」と、参拝客たちは何度も頭を下げて帰っていった。"
+        }
+      ]
+    },
+    {
+      id: "E12",
+      title: "行き止まりの苦情",
+      tier: "normal",
+      character: "toki",
+      requiresTies: ["sayori_tricked"],
+      weight: 4,
+      product: null,
+      dialogue: "まことさん、さっきの旅の娘さん、行き止まりで途方に暮れてたよ！ あんた、何を教えたんだい。",
+      choices: [
+        {
+          id: "A",
+          type: "help",
+          text: "「しまった！ 今すぐ探して、お寺まで送ってきます」",
+          effects: { revenue: -400, laughter: 2, humanity: 14, trouble: -8 },
+          result: "息を切らして追いつき、平謝りで案内した。帰り道、ときの顔が少しだけ緩んでいた。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「面目ねえ。売りたい一心で、いい加減なことを言いました」",
+          effects: { revenue: 0, laughter: 0, humanity: 8, trouble: -5 },
+          result: "「わかってるならいいさ。二度とするんじゃないよ」"
+        },
+        {
+          id: "C",
+          type: "wit",
+          text: "「行き止まりも、人生の寄り道ってやつでして……」",
+          effects: { revenue: 300, laughter: 8, humanity: -4, trouble: 8 },
+          result: "見物人は笑ったが、ときは「笑い事じゃないよ！」と声を張り上げた。"
+        }
+      ]
+    },
+    {
+      id: "E13",
+      title: "銀二の助け舟",
+      tier: "final",
+      character: "ginji",
+      requiresTies: ["ginji_friend"],
+      weight: 3,
+      product: { icon: "🪵", name: "肩たたき棒「ぽんぽこ」", blurb: "叩けば叩くほど肩が軽くなる" },
+      dialogue: "よう兄さん、こっちは品切れだ。客を回すから、昼間の掛け合い、もう一丁やろうじゃねえか。",
+      choices: [
+        {
+          id: "A",
+          type: "wit",
+          text: "「待ってました！ 日和町名物、二人口上の始まりだ！」",
+          effects: { revenue: 1800, laughter: 14, humanity: 6, trouble: 2 },
+          result: "息の合った掛け合いに人垣ができ、閉店間際とは思えない売れ行きになった。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「ありがてえ。お客さんには、銀二さんの紹介だって言っとくよ」",
+          effects: { revenue: 1200, laughter: 4, humanity: 10, trouble: -2 },
+          result: "客は二つの店を行き来し、銀二も「持ちつ持たれつだ」と笑った。"
+        },
+        {
+          id: "C",
+          type: "bluff",
+          text: "「回してもらった客は、全部こっちのもんだ！」",
+          effects: { revenue: 2000, laughter: 8, humanity: -8, trouble: 10 },
+          result: "売上は伸びたが、銀二は「恩を仇で返すたあ、このことだ」と背を向けた。"
+        }
+      ]
+    },
+    {
+      id: "E14",
+      title: "銀二の仕返し",
+      tier: "normal",
+      character: "ginji",
+      requiresTies: ["ginji_grudge"],
+      weight: 4,
+      product: { icon: "🍬", name: "七色ハッカ飴", blurb: "舐めるたびに色が変わる、日和町名物" },
+      dialogue: "へっ、さっきはよくもやってくれたな。こっちは同じ飴を半値で売らせてもらうぜ！",
+      choices: [
+        {
+          id: "A",
+          type: "bluff",
+          text: "「半値の飴は色も半分！ 本物の七色はこっちだけだ！」",
+          effects: { revenue: 1400, laughter: 12, humanity: -4, trouble: 14 },
+          result: "値下げ合戦はヤジの飛び交う大騒ぎになり、通りは見物人でごった返した。"
+        },
+        {
+          id: "B",
+          type: "honest",
+          text: "「さっきはすまなかった。客の取り合いはやめにしねえか」",
+          effects: { revenue: 600, laughter: 2, humanity: 12, trouble: -8 },
+          result: "銀二は鼻をこすり、「……わかりゃいいんだよ」と値札を元に戻した。"
+        },
+        {
+          id: "C",
+          type: "wit",
+          text: "「半値の飴に、うちの口上を付けて二倍で売る。それでどうだい？」",
+          effects: { revenue: 900, laughter: 10, humanity: 2, trouble: 2 },
+          result: "銀二はあきれ顔で笑い出し、仕返しはいつの間にか共同販売になった。"
         }
       ]
     }

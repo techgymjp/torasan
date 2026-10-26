@@ -240,6 +240,7 @@
       },
       E09: {
         title: "Sudden Rain",
+        echo: "Genzo calls out, \"Use my eaves,\" and lends the awning of his workshop. The goods and the customers stay dry.",
         product: { name: "Washi Paper Fans", blurb: "Hand-printed fans, perfect for summer festivals" },
         dialogue: "A sudden downpour soaks your paper fans. The onlookers cry, \"Whoa, it's pouring! Nobody brought an umbrella!\"",
         choices: {
@@ -259,6 +260,7 @@
       },
       E10: {
         title: "Last Customer of the Day",
+        echo: "Kenta brings his mother along: \"This guy's really nice!\" She buys one too while she's at it.",
         product: { name: "The Last Lucky Cat", blurb: "Only one left today" },
         dialogue: "At dusk, Kenta and a well-dressed gentleman reach for the last lucky cat at the same time. \"Oh...\"",
         choices: {
@@ -274,6 +276,45 @@
             text: "\"Sir, I'll deliver the same one to you tomorrow. Today, it's the kid's turn!\"",
             result: "Both customers leave happy. Makoto inks the delivery onto one palm so it won't be forgotten."
           }
+        }
+      },
+      E11: {
+        title: "Grateful Pilgrims",
+        product: { name: "Safe-Journey Charm Pouch", blurb: "A hand-sewn pouch that wishes you a safe trip" },
+        dialogue: "Thank you for earlier. I told everyone at the temple about you, and they all wanted to stop by...",
+        choices: {
+          A: { text: "\"Well, I'll be. All I did was point the way — this is too kind.\"", result: "The pilgrims pick up charm pouches one after another, and soon the stall is bare." },
+          B: { text: "\"Step right up, everyone! Carry this charm and your blessings multiply tenfold!\"", result: "They sell well, but Makoto doesn't miss the small, sad look on Sayori's face." },
+          C: { text: "\"Since you came all this way, please — one each, on the house.\"", result: "\"You've done so much for us,\" the pilgrims say, bowing again and again as they leave." }
+        }
+      },
+      E12: {
+        title: "The Dead-End Complaint",
+        dialogue: "Makoto, that young traveler from earlier was stranded at a dead end! What on earth did you tell her?",
+        choices: {
+          A: { text: "\"Oh no! I'll find her right now and take her to the temple myself.\"", result: "Out of breath, Makoto catches up, apologizes over and over, and walks her there. On the way back, Toki's face softens a little." },
+          B: { text: "\"I'm ashamed. I just wanted the sale and said something careless.\"", result: "\"As long as you know it. Don't you ever do that again.\"" },
+          C: { text: "\"Well, a dead end is just one of life's little detours...\"", result: "The onlookers laugh, but Toki shouts, \"This is no laughing matter!\"" }
+        }
+      },
+      E13: {
+        title: "Ginji Lends a Hand",
+        product: { name: "Pon-Pon Shoulder Tapper", blurb: "The more you tap, the lighter your shoulders" },
+        dialogue: "Hey pal, I'm sold out. I'll send my customers your way — how about another round of that double act?",
+        choices: {
+          A: { text: "\"Been waiting for this! Hiyori-cho's famous double act, take two!\"", result: "The perfectly timed routine draws a crowd, and business booms right up to closing." },
+          B: { text: "\"Much obliged. I'll tell everyone Ginji sent them.\"", result: "Customers shuttle between the two stalls, and Ginji laughs: \"We look out for each other.\"" },
+          C: { text: "\"Every customer you send is mine now!\"", result: "Sales climb, but Ginji turns his back: \"Biting the hand that feeds you, huh.\"" }
+        }
+      },
+      E14: {
+        title: "Ginji's Revenge",
+        product: { name: "Rainbow Mint Drops", blurb: "Changes color as you suck it — a Hiyori-cho specialty" },
+        dialogue: "Heh, you got me good earlier. Now I'm selling the same drops at half price!",
+        choices: {
+          A: { text: "\"Half-price drops, half the colors! The real rainbow is only here!\"", result: "The price war turns into a heckling free-for-all, and the street fills with gawkers." },
+          B: { text: "\"Sorry about earlier. How about we stop fighting over customers?\"", result: "Ginji rubs his nose. \"...Long as you get it,\" he says, and puts his old price tag back." },
+          C: { text: "\"I'll take your half-price drops, add my patter, and sell them for double. Deal?\"", result: "Ginji bursts out laughing in disbelief, and the revenge somehow becomes a joint sale." }
         }
       }
     },

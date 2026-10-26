@@ -33,6 +33,9 @@
   // 一度に大きな笑いを取ると、見物人が集まって客が2人増える
   const CROWD_LAUGHTER = 15;
 
+  // 最近のプレイで見たイベントは出にくくする（重みに掛ける）
+  const RECENT_WEIGHT = 0.2;
+
   function createInitialState() {
     return {
       turn: 0,
@@ -43,6 +46,8 @@
       trouble: 0,
       customers: 0,
       usedEvents: [],
+      recentEvents: [],
+      ties: [],
       history: [],
       status: "title",
       phase: null,
@@ -86,20 +91,27 @@
     return state.currentEventId ? getEvent(state.currentEventId) : null;
   }
 
+  function hasTies(state, ties) {
+    return !ties || ties.every(function (t) { return state.ties.indexOf(t) !== -1; });
+  }
+
   function pickEvent(state, turn, rng) {
     const tier = tierForTurn(turn, state.maxTurns);
     const unused = Data.events.filter(function (e) { return state.usedEvents.indexOf(e.id) === -1; });
-    const allowed = unused.filter(function (e) { return meetsCondition(state, e.condition); });
+    const allowed = unused.filter(function (e) { return meetsCondition(state, e.condition) && hasTies(state, e.requiresTies); });
+    const free = unused.filter(function (e) { return !e.requiresTies; });
     const pools = [
       allowed.filter(function (e) { return e.tier === tier; }),
       allowed.filter(function (e) { return e.tier === "normal"; }),
       allowed,
-      unused,
-      Data.events
+      free,
+      Data.events.filter(function (e) { return !e.requiresTies; })
     ];
     const pool = pools.find(function (p) { return p.length > 0; });
-    // weight が大きいイベントほど選ばれやすい（省略時は1）
-    const weights = pool.map(function (e) { return e.weight || 1; });
+    // weight が大きいイベントほど選ばれやすい（省略時は1）。最近見たイベントは出にくい
+    const weights = pool.map(function (e) {
+      return (e.weight || 1) * (state.recentEvents.indexOf(e.id) !== -1 ? RECENT_WEIGHT : 1);
+    });
     const total = weights.reduce(function (a, b) { return a + b; }, 0);
     let r = rng() * total;
     for (let i = 0; i < pool.length; i++) {
@@ -120,8 +132,12 @@
     });
   }
 
-  function startGame(rng) {
-    const state = Object.assign(createInitialState(), { status: "playing" });
+  // recentEvents：最近のプレイで出たイベント ID（出にくくする。保存は画面側）
+  function startGame(rng, recentEvents) {
+    const state = Object.assign(createInitialState(), {
+      status: "playing",
+      recentEvents: Array.isArray(recentEvents) ? recentEvents.slice() : []
+    });
     return beginTurn(state, rng || Math.random);
   }
 
@@ -181,6 +197,16 @@
     const overheated = choice.type === "bluff" && state.lastChoiceType === "bluff";
     if (overheated) trouble += OVERHEAT_TROUBLE;
 
+    // 前の幕で結んだ縁が、この幕で効いてくる
+    const echo = event.echo && state.ties.indexOf(event.echo.tie) !== -1 ? event.echo : null;
+    if (echo) {
+      revenue += echo.effects.revenue || 0;
+      laughter += echo.effects.laughter || 0;
+      humanity += echo.effects.humanity || 0;
+      trouble += echo.effects.trouble || 0;
+    }
+    const newTies = (choice.ties || []).filter(function (t) { return state.ties.indexOf(t) === -1; });
+
     revenue = Math.round(revenue / 10) * 10;
     const newCustomers = revenue > 0 ? (laughter >= CROWD_LAUGHTER ? 2 : 1) : 0;
 
@@ -191,7 +217,8 @@
       trouble: clampStat(state.trouble + trouble),
       customers: state.customers + newCustomers,
       phase: "reacting",
-      lastChoiceType: choice.type
+      lastChoiceType: choice.type,
+      ties: state.ties.concat(newTies)
     });
 
     // 範囲補正後の実際の変化量
@@ -230,6 +257,9 @@
         deltas: deltas,
         resultText: choice.result,
         reactionText: reactionText,
+        echoTie: echo ? echo.tie : null,
+        newTies: newTies,
+        followUp: !!event.requiresTies,
         stamp: pickStamp(choice.type, affinity, overheated, deltas),
         expression: pickExpression(affinity, deltas),
         isLastTurn: state.turn >= state.maxTurns
