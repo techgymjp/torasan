@@ -2,18 +2,22 @@
   "name": "tankabai-showa-ninjo-shotengai",
   "version": "1.0.0",
   "private": true,
-  "description": "啖呵売！昭和人情商店街 — 会話選択型ドタバタ喜劇（Web / Android）",
+  "description": "啖呵売！昭和人情商店街 — 会話選択型ドタバタ喜劇（Web / Android / iOS）",
   "scripts": {
     "build": "node scripts/build-web.js",
     "test": "node --test tests/*.test.js",
     "android:sync": "npm run build && npx cap sync android",
-    "android:open": "npx cap open android"
+    "android:open": "npx cap open android",
+    "ios:sync": "npm run build && npx cap sync ios",
+    "ios:release": "ADMOB_MODE=production ADMOB_PLATFORM=ios npm run build && npx cap sync ios",
+    "ios:open": "npx cap open ios"
   },
   "dependencies": {
     "@capacitor-community/admob": "^8.2.1",
     "@capacitor/android": "8.5.2",
     "@capacitor/app": "8.1.2",
     "@capacitor/core": "8.5.2",
+    "@capacitor/ios": "8.5.2",
     "@capacitor/share": "8.0.3"
   },
   "devDependencies": {

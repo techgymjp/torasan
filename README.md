@@ -156,7 +156,7 @@ scripts/            Android に同梱する Web ファイルを www/ にまと�
 
 ### 広告（Google AdMob）
 
-Android アプリでのみ広告を表示します（Web 版には広告は出ません）。
+Android・iOS アプリでのみ広告を表示します（Web 版には広告は出ません）。タイミングは iOS 版も同じです。
 
 | 広告 | タイミング |
 | --- | --- |
@@ -174,7 +174,9 @@ Android アプリでのみ広告を表示します（Web 版には広告は出�
 | 場所 | 値 |
 | --- | --- |
 | `android/app/src/main/res/values/strings.xml` の `admob_app_id` | アプリ ID |
-| `ads.js` の `UNITS.production` | インタースティシャル・リワード・バナーの広告ユニット ID |
+| `ads.js` の `UNITS.android.production` | インタースティシャル・リワード・バナーの広告ユニット ID |
+
+iOS 版の本番 ID は `ios/App/App/Info.plist` の `GADApplicationIdentifier`（アプリ ID）と `ads.js` の `UNITS.ios.production` です（`npm run ios:release` のときに確かめます）。
 
 ### 動作確認用 APK
 
@@ -203,6 +205,16 @@ npm run android:open   # Android Studio で開く
 5. 公開後、AdMob でアプリを Google Play のストアに紐づける
 
 アップロード鍵とパスワードは、チャットやリポジトリで共有しないでください。本番の広告を自分でタップしないでください（動作確認は Release の APK で行う）。
+
+## iOS 版（App Store 配布用）
+
+Android 版と同じ Capacitor のプロジェクトに `ios/` を足して作っています（Swift Package Manager 構成。CocoaPods は不要）。構成は JET STRIKE（techgymjp/jet-fighter）の iOS 版と同じです。Mac での作業手順は [`docs/IOS_BUILD.md`](docs/IOS_BUILD.md) にあります。
+
+- Bundle ID：`jp.techgym.torasan`（Android と同じ）／ Team ID `GNM3VTX9YG` ／ iPhone 専用・縦画面固定・ステータスバーなし・プレイ中は画面が暗くならない
+- 広告：iOS 用の AdMob の ID（アプリ・バナー・インタースティシャル・リワード）。同意確認（UMP）のあと、App Tracking Transparency の確認を一度出す（日本語・英語の説明文は `ios/App/App/{ja,en}.lproj/InfoPlist.strings`）
+- `npm run ios:sync`（テスト広告）／ `npm run ios:release`（本番広告。App Store 用）／ `npm run ios:open`（Xcode で開く）
+- push のたびに GitHub Actions（`.github/workflows/ios.yml`）が Mac 環境で署名なしのシミュレーター向けビルドを行い、ビルドできるかを確かめる
+- App Store 用の画像と文章は `store/ios/`（スクリーンショット 1206 × 2622 縦向き 日英各 4 枚、ヘッダ 3840 × 1646、検索結果 3840 × 2560、`listing-appstore.md`）
 
 ## Web 版の公開
 

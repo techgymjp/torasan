@@ -1,5 +1,5 @@
 /*
- * Google AdMob 広告（Android アプリのときだけ動く。Web 版では何もしない）
+ * Google AdMob 広告（Android / iOS アプリのときだけ動く。Web 版では何もしない）
  *
  * インタースティシャル：仕入れを終えて開店するとき（「商売を始める」「もう一度商売する」のあと）、遊び方・記録を閉じたとき、
  *   商売の途中で戻るボタンからタイトルに戻るとき、結果画面の「タイトルへ」を押したとき（毎回）
@@ -10,18 +10,34 @@
 (function (root) {
   "use strict";
 
+  // AdMob では Android と iOS を別のアプリとして登録しているので、広告ユニットも OS ごとに分かれている
   const UNITS = {
-    // Google 公式のテスト用広告ユニット
-    test: {
-      interstitial: "ca-app-pub-3940256099942544/1033173712",
-      rewarded: "ca-app-pub-3940256099942544/5224354917",
-      banner: "ca-app-pub-3940256099942544/9214589741"
+    android: {
+      // Google 公式のテスト用広告ユニット
+      test: {
+        interstitial: "ca-app-pub-3940256099942544/1033173712",
+        rewarded: "ca-app-pub-3940256099942544/5224354917",
+        banner: "ca-app-pub-3940256099942544/9214589741"
+      },
+      // AdMob で作成した本番の広告ユニット（未設定の間は Google Play 用のビルドが止まる）
+      production: {
+        interstitial: "ca-app-pub-6411535997477460/9183794755",
+        rewarded: "ca-app-pub-6411535997477460/9794168844",
+        banner: "ca-app-pub-6411535997477460/4733413854"
+      }
     },
-    // AdMob で作成した本番の広告ユニット（未設定の間は Google Play 用のビルドが止まる）
-    production: {
-      interstitial: "ca-app-pub-6411535997477460/9183794755",
-      rewarded: "ca-app-pub-6411535997477460/9794168844",
-      banner: "ca-app-pub-6411535997477460/4733413854"
+    ios: {
+      test: {
+        interstitial: "ca-app-pub-3940256099942544/4411468910",
+        rewarded: "ca-app-pub-3940256099942544/1712485313",
+        banner: "ca-app-pub-3940256099942544/2435281174"
+      },
+      // 未設定の間は App Store 用のビルド（npm run ios:release）が止まる
+      production: {
+        interstitial: "",
+        rewarded: "",
+        banner: ""
+      }
     }
   };
   const RETRY_MS = 20000; // 読み込みに失敗したら少し待って再挑戦する
@@ -29,8 +45,9 @@
 
   const cap = root.Capacitor;
   const native = !!(cap && cap.isNativePlatform && cap.isNativePlatform());
+  const platform = native && cap.getPlatform && cap.getPlatform() === "ios" ? "ios" : "android";
   const testing = root.AD_MODE !== "production";
-  const ids = testing ? UNITS.test : UNITS.production;
+  const ids = UNITS[platform][testing ? "test" : "production"];
   const AdMob = native && cap.Plugins && ids.interstitial && ids.rewarded ? cap.Plugins.AdMob : null;
   const Sound = root.TankaAudio;
 
@@ -98,6 +115,14 @@
       privacyRequired = consent.privacyOptionsRequirementStatus === "REQUIRED";
     } catch (e) {
       ready = true;
+    }
+    // iOS では、広告用の ID を使ってよいか（App Tracking Transparency）を利用者に確認する。
+    // 同意確認のあとに一度だけ出る。断られても広告は出せる（パーソナライズされないだけ）
+    if (platform === "ios") {
+      try {
+        const res = await AdMob.trackingAuthorizationStatus();
+        if (res && res.status === "notDetermined") await AdMob.requestTrackingAuthorization();
+      } catch (e) { /* 確認できなくても広告は続ける */ }
     }
     let rewarded = false;
     AdMob.addListener("interstitialAdDismissed", function () { finish("inter"); });

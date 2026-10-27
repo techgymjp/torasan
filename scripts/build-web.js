@@ -15,18 +15,20 @@ for (const item of ITEMS) {
   if (fs.existsSync(src)) fs.cpSync(src, path.join(out, item), { recursive: true });
 }
 
-// Google Play 用のビルドでは本番の広告を使う
+// Google Play / App Store 用のビルドでは本番の広告を使う（ADMOB_PLATFORM=ios なら iOS の ID を確かめる）
 const mode = process.env.ADMOB_MODE === 'production' ? 'production' : 'test';
 if (mode === 'production') {
-  // 本番の広告 ID が未設定のまま Google Play 用にビルドしないようにする
+  // 本番の広告 ID が未設定のまま、ストア用にビルドしないようにする
+  const platform = process.env.ADMOB_PLATFORM === 'ios' ? 'ios' : 'android';
   const ads = fs.readFileSync(path.join(root, 'ads.js'), 'utf8');
-  const strings = fs.readFileSync(path.join(root, 'android/app/src/main/res/values/strings.xml'), 'utf8');
-  const prod = (ads.match(/production:\s*\{([^}]*)\}/) || [])[1] || '';
+  const block = ads.slice(ads.indexOf(`${platform}: {`));
+  const prod = (block.match(/production:\s*\{([^}]*)\}/) || [])[1] || '';
   const unitsSet = ['interstitial', 'rewarded', 'banner'].every(k =>
     new RegExp(`${k}:\\s*["']ca-app-pub-\\d+/\\d{10}["']`).test(prod));
-  const appIdSet = !strings.includes('ca-app-pub-3940256099942544');
+  const appIdFile = platform === 'ios' ? 'ios/App/App/Info.plist' : 'android/app/src/main/res/values/strings.xml';
+  const appIdSet = !fs.readFileSync(path.join(root, appIdFile), 'utf8').includes('ca-app-pub-3940256099942544');
   if (!unitsSet || !appIdSet) {
-    console.error('本番の AdMob ID が未設定です。ads.js の UNITS.production と strings.xml の admob_app_id を設定してください。');
+    console.error(`本番の AdMob ID（${platform}）が未設定です。ads.js の UNITS.${platform}.production と ${appIdFile} のアプリ ID を設定してください。`);
     process.exit(1);
   }
 }

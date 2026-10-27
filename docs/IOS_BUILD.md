@@ -1,0 +1,184 @@
+# iOS 版をビルドして App Store に出す手順（Mac での作業）
+
+「啖呵売！昭和人情商店街」の iOS 版は、Android 版と同じ Capacitor で作っています（`ios/` フォルダ）。
+コードの準備はできているので、Mac では「ビルドして App Store Connect にアップロードする」作業だけを行います。
+構成は JET STRIKE（techgymjp/jet-fighter）の iOS 版と同じです。
+
+- Bundle ID：`jp.techgym.torasan`（Android のパッケージ名と同じ）
+- チーム：Team ID `GNM3VTX9YG`（Xcode の設定に入れてあります）。Apple Developer には**個人で登録**しています（App Store の販売元は個人名になります）
+- 対応端末：iPhone（**縦画面固定**）。iPad では iPhone 用の画面で動きます
+- 広告：AdMob（iOS 用のアプリと広告ユニット。バナー・インタースティシャル・リワード）。起動時に「トラッキングの許可」の確認画面が出ます
+- 言語：日本語・英語（端末の言語で切り替わり、タイトル画面でも切り替えられます）
+
+---
+
+## 0. 先にやること（ブラウザ）
+
+1. **Apple Developer**（developer.apple.com）→「Certificates, Identifiers & Profiles」→「Identifiers」→「＋」→「App IDs」→「App」
+   - Description：`Tankabai Showa Shopping Street`（英数字。記号や「！」は使えないことがあります）
+   - Bundle ID：「Explicit」で `jp.techgym.torasan`
+   - Capabilities：何もチェックしない
+2. **App Store Connect**（appstoreconnect.apple.com）→「マイ App」→「＋」→「新規 App」
+   - プラットフォーム：iOS ／ 名前：`啖呵売！昭和人情商店街`（App Store 全体で重複不可）／ プライマリ言語：日本語
+   - バンドル ID：1 で登録したもの ／ SKU：`torasan`（あとから変更不可）／ ユーザアクセス：アクセス制限なし
+3. **AdMob**
+   - 「アプリを追加」→ **iOS** →「ストアに掲載されていない」で登録し、**バナー・インタースティシャル・リワード**の広告ユニットを作る
+   - アプリ ID（`ca-app-pub-…~…`）と広告ユニット ID 3 つを Claude Code に渡す。Claude Code が `ios/App/App/Info.plist` の `GADApplicationIdentifier` と `ads.js` の `UNITS.ios.production` に入れます
+   - 「プライバシーとメッセージ」→「欧州の規制」のメッセージに iOS アプリも追加する
+
+**本番の ID を入れるまでは、`npm run ios:release` は止まるようにしてあります**（テスト用の ID のまま App Store に出さないため）。`npm run ios:sync`（テスト広告）はそのまま使えます。
+
+---
+
+## 1. Mac の準備（最初の1回だけ）
+
+1. **Xcode** を App Store からインストールする（数十 GB あるので時間がかかります）。インストール後に一度起動し、追加コンポーネントのインストールを済ませる
+2. Xcode の「Settings…」→「Accounts」→「＋」で、Apple Developer に登録している Apple ID でサインインする（チームが個人名で表示されれば OK）
+3. **Node.js**（LTS 版）を https://nodejs.org/ からインストールする
+4. ターミナルでリポジトリを取得する
+   ```bash
+   cd ~/Desktop   # 置きたい場所（どこでもよい）
+   git clone https://github.com/techgymjp/torasan.git
+   cd torasan
+   npm ci
+   ```
+   `git` がないと言われたら、表示に従って「コマンドライン・デベロッパツール」をインストールしてから、もう一度実行します。
+
+2回目以降は、`cd torasan` のあと `git pull` と `npm ci` で最新にします。
+
+---
+
+## 2. 自分の iPhone で動作確認する（テスト広告）
+
+```bash
+npm run ios:sync    # ゲームのファイルを iOS のプロジェクトにコピー（テスト広告）
+npm run ios:open    # Xcode で開く
+```
+
+1. iPhone を USB ケーブルで Mac につなぎ、iPhone で「このコンピュータを信頼」を許可する
+2. iPhone の「設定」→「プライバシーとセキュリティ」→「デベロッパモード」をオンにする（再起動を求められます。項目がない場合は、Xcode で一度 iPhone を選ぶと表示されます）
+3. Xcode の上部で、実行先に自分の iPhone を選ぶ
+4. 左の「App」→「Signing & Capabilities」で、「Automatically manage signing」がオン、Team に自分（個人名）のチームが選ばれていることを確認する
+5. ▶（Run）を押すと、iPhone にアプリが入って起動する
+
+確認すること：
+
+- 縦画面の全画面表示で、画面の上（ノッチ・Dynamic Island）や下にボタンや文字が隠れない
+- 起動時に広告の同意（EU など）とトラッキングの確認画面が出る
+- 画面の下に**テスト広告のバナー**が出たままになり、ボタンや文字がバナーに隠れない
+- 「この品揃えで開店」・遊び方や記録を閉じたとき・結果画面の「タイトルへ」で**テスト広告**の全画面広告が出る
+- 「大失敗！」などのあとの「広告を見て口上を言い直す」、旅の町一覧の「広告を見て鍵を開ける」で**テスト広告**のリワード広告が出て、最後まで見ると言い直し・鍵が開く
+- 音楽と効果音が鳴る（最初のタップのあと）。広告のあいだは止まり、閉じると戻る
+- 結果画面のシェアができる
+- 日本語・英語の切り替え、旅の途中でアプリを閉じても「旅に出る」で続きから再開できる
+
+---
+
+## 3. App Store 用にビルドしてアップロードする（本番広告）
+
+```bash
+git pull && npm ci
+npm run ios:release   # 本番の広告 ID でコピーする（ここが ios:sync と違う）
+npm run ios:open
+```
+
+1. Xcode の左で「App」→「General」→「Identity」を開き、**Build の番号を前回より大きくする**（初回は 1。アップロードのたびに 2、3…と上げる。同じ番号は二度アップロードできない）。Version はストアに表示されるバージョン（1.0.0）
+2. 上部の実行先を「**Any iOS Device (arm64)**」にする
+3. メニューの「Product」→「**Archive**」（「Product」メニューは画面最上部のメニューバー。全画面表示だと隠れるので、マウスを画面の上端に動かす）
+4. 終わると Organizer が開くので、「**Distribute App**」→「**App Store Connect**」→「Upload」で進める（途中の確認は既定のまま「Next」でよい。「Xcode Cloud can automate…」は「Remind Me Later」で閉じてよい）
+5. 10〜30 分ほどで、App Store Connect の「TestFlight」タブにビルドが表示される
+
+輸出コンプライアンス（暗号化）の質問は、Info.plist で「独自の暗号化は使っていない」と設定済みなので、聞かれません。
+
+**注意**：`ios:release` でビルドしたアプリは本番の広告が出ます。TestFlight で確認するときも、**本番の広告はタップしない**でください（AdMob のアカウント停止の対象）。Xcode から iPhone に直接入れて試すときは、`npm run ios:sync` でテスト広告に戻してから実行します。
+
+---
+
+## 4. TestFlight で確認し、審査用の録画を用意する
+
+1. App Store Connect の「TestFlight」→「内部テスト」でグループを作り、自分を追加する
+2. iPhone に「TestFlight」アプリを App Store から入れ、届いた招待から「啖呵売！昭和人情商店街」をインストールする
+3. **審査用の画面録画を撮る**（初回の審査では、新しいアカウントに「実機での操作の録画」を求められることが多いので、提出前に用意しておく）
+   - iPhone の「設定」→「コントロールセンター」に「画面収録」を追加し、コントロールセンターから録画を始める
+   - **アプリの起動から**録画する：起動 → 同意・トラッキングの確認 → タイトル → 「商売を始める」→ 仕入れ → 開店 → 口上を選んで 5 幕 → 結果画面 → 「旅に出る」→ 町一覧 → 遊び方・記録 → 言語の切り替え、まで 2〜3 分程度
+   - 本番の広告が出ても**タップしない**（録画の中で広告が出ること自体は問題ありません）
+   - 録画は「写真」アプリに保存される。返信に添付するときは 720p 程度に小さくするか（Mac の Finder で右クリック →「選択したビデオファイルをエンコード」）、Google ドライブの共有リンクにする（大きい動画を添付すると「エラーが発生しました」になる）
+
+---
+
+## 5. App Store Connect で審査に出す
+
+「配信」タブ（iOS App のバージョン 1.0.0）で入力します。バージョンが「1.0」のままだとアップロードしたビルドを選べないので、**1.0.0 に直して保存**します。
+
+| 項目 | 入力内容 |
+| --- | --- |
+| スクリーンショット | 「Dynamic Island 搭載 iPhone（中型ディスプレイ）」の欄に、`store/ios/6.3inch/` の 1206 × 2622（**縦向き**。このゲームは縦画面なので、2622 × 1206 の向きを縦にしたもの）を入れる。日本語版（`ja-`）と英語版（`en-`）各 4 枚 |
+| ヘッダ・検索結果 | 「ヘッダと検索結果」タブに `store/ios/appstore-header-ja-3840x1646.png` と `appstore-search-ja-3840x2560.png`（英語版は `-en-`）。ヘッダを入れたら検索結果も入れる（片方だけだと赤枠になる） |
+| サブタイトル・プロモーション用テキスト・概要・キーワード | `store/ios/listing-appstore.md` |
+| サポート URL | https://techgym.jp/ |
+| プライバシーポリシー URL（App 情報・App のプライバシー） | https://techgym.jp/privacy-policy/ |
+| 著作権 | 2026 TECH GYM K.K. |
+| カテゴリ（App 情報） | ゲーム（サブカテゴリ：アドベンチャー） |
+| コンテンツの配信権（App 情報） | 第三者のコンテンツ：「いいえ」（絵・音・文章はすべて自作） |
+| 価格 | 無料 |
+| ビルド | TestFlight で確認したビルドを選ぶ |
+| 年齢制限 | 質問に答える（暴力・性的表現・ギャンブルなし。コミカルな口論の描写のみ） |
+| App のプライバシー | AdMob が収集するデータを申告する（下記） |
+| App Review に関する情報 | ログイン不要。連絡先を入力。メモに下の「審査メモ」を入れる |
+
+**App のプライバシー（AdMob を使うアプリの目安）**
+Google の「Apple の App Store のデータ開示要件への準備」（AdMob のヘルプ）に、AdMob が収集するデータの一覧があります。必ずそちらを見て最終確認してください。目安は次のとおりです。
+
+- 収集する：ID（デバイス ID）、使用状況データ（広告データ、製品の操作）、診断（クラッシュデータ、パフォーマンスデータ、その他の診断データ）、位置情報（おおよその場所）
+- 目的：サードパーティ広告、アナリティクス
+- ユーザーに関連付け：しない
+- トラッキングに使用：デバイス ID と広告データは「する」
+- ゲーム自体は、記録・設定を端末の中（WebView の localStorage）にだけ保存し、外部に送らない
+
+**審査メモ（App Review に関する情報の「メモ」。「Guideline 2.1 - Information Needed」と言われたときの返信にも使う）**
+
+```
+1. Screen recording: (attach the recording from a physical iPhone, starting from app launch, or paste a shared link)
+2. Purpose and audience: A single-player conversation-choice comedy game set in a Showa-era Japanese shopping street, for general audiences who enjoy story and retro themes.
+3. How to use: No login or account is required. Tap "Open for Business" (商売を始める) to play a day of business, or "Go on a Journey" (旅に出る) to visit 10 towns. Choose one of three sales pitches in each act.
+4. External services: Google AdMob (banner, interstitial and rewarded ads) with Google's User Messaging Platform for consent and App Tracking Transparency. No other external services. Game data is stored only on the device.
+5. Regional differences: None, except that the ad consent form is shown only in regions that require it (e.g. EEA/UK). The game is available in Japanese and English.
+6. Regulated industries / third-party content: Not applicable. All art, music, sound and text are original.
+```
+
+入力が終わったら「審査用に追加」→「審査へ提出」。
+
+---
+
+## 6. 公開後にやること
+
+- AdMob で iOS アプリを App Store のアプリに紐づける（「アプリ」→ iOS の「啖呵売！昭和人情商店街」→「アプリの設定」）
+- App Store からインストールして、起動・同意画面・トラッキングの確認・広告を確認する
+
+---
+
+## 7. 自動化（2回目以降を GitHub Actions に任せる場合）
+
+push するたびの「ビルドできるか」の確認は、すでに `.github/workflows/ios.yml`（GitHub の Mac 環境で、署名なし・シミュレーター向けにビルド）で行っています。
+
+TestFlight へのアップロードまで自動にする準備（App Store Connect の API キー、配布用の証明書、GitHub の Secrets 5 つ）は、JET STRIKE と同じです。手順は techgymjp/jet-fighter の `docs/IOS_BUILD.md` の 7 章を見てください。JET STRIKE で作った .p12・.p8 とパスワードを、このリポジトリの Secrets（`https://github.com/techgymjp/torasan/settings/secrets/actions`）にも登録すれば使い回せます。登録が終わったら、Claude Code に「iOS の自動アップロードのワークフローを作って」と頼みます。
+
+**注意**：証明書（.p12）、そのパスワード、API キー（.p8）は、チャット・AI へのアップロード・リポジトリへのコミットで**絶対に共有しない**でください。
+
+---
+
+## つまずきやすいところ
+
+| 症状 | 対処 |
+| --- | --- |
+| `npm run ios:release` が「本番の AdMob ID（ios）が未設定です」で止まる | AdMob の iOS 用のアプリ ID と広告ユニット ID 3 つを Claude Code に渡して、設定してもらう |
+| アップロードで「同じビルド番号がすでにある」 | General の Build の番号を上げてから Archive し直す |
+| Signing でエラー（チームが選べない、証明書がない） | Xcode の Accounts で Apple ID にサインインし直し、Team を選ぶ。「Automatically manage signing」をオンにする |
+| 実行先に iPhone が出ない | ケーブルをつなぎ直し、iPhone で「信頼」を許可。デベロッパモードをオンにする |
+| 実行先に「iOS 26.x Not Installed」と出る | 「Get」で iOS のシミュレーターと部品をダウンロードする（8 GB ほど。Archive にも必要） |
+| ビルドが古いゲームのまま | `npm run ios:sync`（または `ios:release`）を実行し忘れている。`git pull` してから実行し直す |
+| ビルドを選ぼうとしても、アップロードしたビルドが出てこない | バージョンのページの「バージョン」を 1.0.0 に直して保存する |
+| 「審査用に追加できません」 | 「App 情報」の「コンテンツの配信権」と、「App のプライバシー」のプライバシーポリシー URL を入れて保存する |
+| スクリーンショットがアップロードできない | 欄が「Dynamic Island 搭載 iPhone（中型ディスプレイ）」か確かめる。6.9 インチ（1320 × 2868）は受け付けられなかった |
+| App Store の審査で「Xcode が古い」と言われる | Xcode を最新版に更新してから Archive し直す |
+| 本番広告とテスト広告の取り違え | App Store 用は必ず `npm run ios:release`。Xcode から実機で試すときは `npm run ios:sync` に戻す |
