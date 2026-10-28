@@ -32,10 +32,10 @@
         rewarded: "ca-app-pub-3940256099942544/1712485313",
         banner: "ca-app-pub-3940256099942544/2435281174"
       },
-      // 未設定の間は App Store 用のビルド（npm run ios:release）が止まる
+      // AdMob で作成した本番の広告ユニット（未設定の間は App Store 用のビルド npm run ios:release が止まる）
       production: {
         interstitial: "ca-app-pub-6411535997477460/1920220709",
-        rewarded: "",
+        rewarded: "ca-app-pub-6411535997477460/5408039574",
         banner: "ca-app-pub-6411535997477460/1775704297"
       }
     }
