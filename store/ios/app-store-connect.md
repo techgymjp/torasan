@@ -81,7 +81,7 @@ App Store Connect の「配信」タブ（iOS App 1.0.0）と「App 情報」に
 
 | Field | Content |
 | --- | --- |
-| Name | Tankabai! Showa Shopping St. |
+| Name | Tankabai! Showa Street Comedy |
 | Subtitle | A street-stall comedy of talk |
 | Keywords | retro,showa,japan,story,comedy,choices,visual novel,shop,merchant,text,dialogue,travel |
 | Support URL | https://techgym.jp/ |

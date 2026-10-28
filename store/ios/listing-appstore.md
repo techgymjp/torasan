@@ -21,7 +21,7 @@
 
 | Field | Content |
 | --- | --- |
-| Name (max 30) | Tankabai! Showa Shopping St. |
+| Name (max 30) | Tankabai! Showa Street Comedy |
 | Subtitle (max 30) | A street-stall comedy of talk |
 | Keywords (max 100, comma-separated) | retro,showa,japan,story,comedy,choices,visual novel,shop,merchant,text,dialogue,travel |
 | Description | "Full description" in `store/listing-en.md` |
