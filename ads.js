@@ -34,7 +34,7 @@
       },
       // 未設定の間は App Store 用のビルド（npm run ios:release）が止まる
       production: {
-        interstitial: "",
+        interstitial: "ca-app-pub-6411535997477460/1920220709",
         rewarded: "",
         banner: "ca-app-pub-6411535997477460/1775704297"
       }
