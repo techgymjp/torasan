@@ -82,7 +82,7 @@ npm run ios:release   # 本番の広告 ID でコピーする（ここが ios:sy
 npm run ios:open
 ```
 
-1. Xcode の左で「App」→「General」→「Identity」を開き、**Build の番号を前回より大きくする**（初回は 1。アップロードのたびに 2、3…と上げる。同じ番号は二度アップロードできない）。Version はストアに表示されるバージョン（1.0.0）
+1. Xcode の左で「App」→「General」→「Identity」を開き、**Build の番号を前回より大きくする**（初回は 1。アップロードのたびに 2、3…と上げる。同じ番号は二度アップロードできない。GitHub Actions の自動アップロードは 101 からの番号を使うので、手動は 1〜99 で）。Version はストアに表示されるバージョン（1.0.0）
 2. 上部の実行先を「**Any iOS Device (arm64)**」にする
 3. メニューの「Product」→「**Archive**」（「Product」メニューは画面最上部のメニューバー。全画面表示だと隠れるので、マウスを画面の上端に動かす）
 4. 終わると Organizer が開くので、「**Distribute App**」→「**App Store Connect**」→「Upload」で進める（途中の確認は既定のまま「Next」でよい。「Xcode Cloud can automate…」は「Remind Me Later」で閉じてよい）
@@ -157,13 +157,17 @@ Google の「Apple の App Store のデータ開示要件への準備」（AdMob
 
 ---
 
-## 7. 自動化（2回目以降を GitHub Actions に任せる場合）
+## 7. 自動アップロード（GitHub Actions）
 
-push するたびの「ビルドできるか」の確認は、すでに `.github/workflows/ios.yml`（GitHub の Mac 環境で、署名なし・シミュレーター向けにビルド）で行っています。
+Secrets 5 つ（`IOS_DIST_CERT_P12_BASE64` / `IOS_DIST_CERT_PASSWORD` / `ASC_KEY_ID` / `ASC_ISSUER_ID` / `ASC_KEY_P8_BASE64`）は登録済みです（JET STRIKE と同じ証明書と API キー）。
 
-TestFlight へのアップロードまで自動にする準備（App Store Connect の API キー、配布用の証明書、GitHub の Secrets 5 つ）は、JET STRIKE と同じです。手順は techgymjp/jet-fighter の `docs/IOS_BUILD.md` の 7 章を見てください。JET STRIKE で作った .p12・.p8 とパスワードを、このリポジトリの Secrets（`https://github.com/techgymjp/torasan/settings/secrets/actions`）にも登録すれば使い回せます。登録が終わったら、Claude Code に「iOS の自動アップロードのワークフローを作って」と頼みます。
+- **既定ブランチに push するたびに**、`.github/workflows/ios-release.yml`（「iOS TestFlight upload」）が GitHub の Mac 環境で、本番広告の設定でビルド・署名し、App Store Connect にアップロードします。10〜30 分ほどで TestFlight に表示されます
+- ビルド番号は「Actions の実行回数 ＋ 100」で自動で上がります（101、102…）。**Xcode から手動でアップロードするときは 1〜99 の番号を使う**と、自動の番号とぶつかりません
+- Actions の画面から「Run workflow」で手動で実行することもできます
+- 審査への提出は、これまでどおり App Store Connect で行います（TestFlight に届いたビルドを、バージョンのページで選ぶ）
+- push のたびの「ビルドできるか」の確認（署名なし）は、別に `.github/workflows/ios.yml` が行います
 
-**注意**：証明書（.p12）、そのパスワード、API キー（.p8）は、チャット・AI へのアップロード・リポジトリへのコミットで**絶対に共有しない**でください。
+**注意**：証明書（.p12）、そのパスワード、API キー（.p8）は、チャット・AI へのアップロード・リポジトリへのコミットで**絶対に共有しない**でください。誤って共有したら、App Store Connect で API キーを取り消し、証明書も取り消して作り直します。
 
 ---
 

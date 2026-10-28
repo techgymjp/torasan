@@ -214,6 +214,7 @@ Android 版と同じ Capacitor のプロジェクトに `ios/` を足して作�
 - 広告：iOS 用の AdMob の ID（アプリ・バナー・インタースティシャル・リワード）。同意確認（UMP）のあと、App Tracking Transparency の確認を一度出す（日本語・英語の説明文は `ios/App/App/{ja,en}.lproj/InfoPlist.strings`）
 - `npm run ios:sync`（テスト広告）／ `npm run ios:release`（本番広告。App Store 用）／ `npm run ios:open`（Xcode で開く）
 - push のたびに GitHub Actions（`.github/workflows/ios.yml`）が Mac 環境で署名なしのシミュレーター向けビルドを行い、ビルドできるかを確かめる
+- 既定ブランチへの push では、`.github/workflows/ios-release.yml` が本番広告でビルド・署名して TestFlight にアップロードする（ビルド番号は実行回数＋100。署名用の Secrets 5 つが必要）
 - App Store 用の画像と文章は `store/ios/`（スクリーンショット 1206 × 2622 縦向き 日英各 4 枚、ヘッダ 3840 × 1646、検索結果 3840 × 2560、`listing-appstore.md`）
 
 ## Web 版の公開
