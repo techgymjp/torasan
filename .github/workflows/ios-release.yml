@@ -31,6 +31,10 @@ jobs:
   upload:
     runs-on: macos-latest
     timeout-minutes: 45
+    # shell: bash を明示すると -o pipefail が付く（| tail でつないだ xcodebuild の失敗も、ここで止まる）
+    defaults:
+      run:
+        shell: bash
     env:
       HAS_SECRETS: ${{ secrets.IOS_DIST_CERT_P12_BASE64 != '' && secrets.ASC_KEY_P8_BASE64 != '' }}
       TEAM_ID: GNM3VTX9YG
@@ -98,23 +102,20 @@ jobs:
           echo "$ASC_KEY_P8_BASE64" | base64 -d > "$RUNNER_TEMP/AuthKey.p8"
           echo "ASC_KEY_PATH=$RUNNER_TEMP/AuthKey.p8" >> "$GITHUB_ENV"
 
+      # Archive は署名なしで作る（自動署名のまま Archive すると開発用の証明書を新しく作ろうとし、
+      # チームの証明書の上限で止まる）。署名は次のアップロードで、配布用の証明書を使って行う
       - name: Archive
         if: env.HAS_SECRETS == 'true'
         working-directory: ios/App
-        env:
-          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
         run: |
           xcodebuild -project App.xcodeproj -scheme App -configuration Release \
             -destination 'generic/platform=iOS' \
             -archivePath "$RUNNER_TEMP/App.xcarchive" \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath "$ASC_KEY_PATH" \
-            -authenticationKeyID "$ASC_KEY_ID" \
-            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
-            DEVELOPMENT_TEAM="$TEAM_ID" CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM="$TEAM_ID" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
             MARKETING_VERSION="$VERSION_NAME" CURRENT_PROJECT_VERSION="$VERSION_CODE" \
-            archive | tail -60
+            archive | tail -40
+          test -d "$RUNNER_TEMP/App.xcarchive"
 
       - name: Upload to App Store Connect (TestFlight)
         if: env.HAS_SECRETS == 'true'
@@ -143,7 +144,7 @@ jobs:
             -allowProvisioningUpdates \
             -authenticationKeyPath "$ASC_KEY_PATH" \
             -authenticationKeyID "$ASC_KEY_ID" \
-            -authenticationKeyIssuerID "$ASC_ISSUER_ID" | tail -60
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" 2>&1 | tail -60
           echo "アップロードしました：v${VERSION_NAME} (build ${VERSION_CODE})。10〜30 分ほどで TestFlight に表示されます。" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Clean up signing files
