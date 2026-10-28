@@ -185,4 +185,6 @@ Secrets 5 つ（`IOS_DIST_CERT_P12_BASE64` / `IOS_DIST_CERT_PASSWORD` / `ASC_KEY
 | 「審査用に追加できません」 | 「App 情報」の「コンテンツの配信権」と、「App のプライバシー」のプライバシーポリシー URL を入れて保存する |
 | スクリーンショットがアップロードできない | 欄が「Dynamic Island 搭載 iPhone（中型ディスプレイ）」か確かめる。6.9 インチ（1320 × 2868）は受け付けられなかった |
 | App Store の審査で「Xcode が古い」と言われる | Xcode を最新版に更新してから Archive し直す |
+| 自動アップロードの Archive で「Your account has reached the maximum number of certificates」 | 自動署名のまま Archive すると開発用の証明書を新しく作ろうとし、チームの証明書の上限で止まる。`ios-release.yml` では Archive を署名なしで作り、アップロードのときに配布用の証明書で署名している |
+| Actions が成功なのにアップロードされていない | macOS のジョブは `shell: bash` を書かないと pipefail が効かず、`xcodebuild … \| tail` の失敗が成功と表示される。ワークフローの `defaults.run.shell: bash` を消さない。結果はログの「Upload succeeded」で確かめる |
 | 本番広告とテスト広告の取り違え | App Store 用は必ず `npm run ios:release`。Xcode から実機で試すときは `npm run ios:sync` に戻す |
