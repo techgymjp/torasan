@@ -1,0 +1,22 @@
+Google Play リリースノート（Play Console の「リリースノート」欄に、タグごとそのまま貼る。各言語 500 文字以内）
+
+リリース名：1.0.0 (34)
+
+<ja-JP>
+はじめてのリリースです。
+・昭和の商店街で、口上ひとつでお客の心をつかむ人情喜劇
+・3つの口上から選んで、売上・笑い・人情・騒動が変わる
+・10の町をめぐる旅（途中から再開できます）
+・開店前の仕入れ、縁と勢い、常連帳
+・1日の結末5種と旅の結末5種
+・日本語・英語に対応
+</ja-JP>
+<en-US>
+First release.
+- A Showa-era comedy where your sales pitch wins customers' hearts
+- Pick one of three pitches to change Sales, Laughs, Heart and Trouble
+- Journey through 10 towns (resume anytime)
+- Stock up before opening, build ties and momentum, keep a regulars' book
+- 5 daily endings and 5 journey endings
+- Available in Japanese and English
+</en-US>
