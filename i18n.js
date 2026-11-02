@@ -24,6 +24,8 @@
       "opt.sfx": "効果音",
       "opt.motion": "演出を控えめにする",
       "legal.privacy": "プライバシーポリシー",
+      "store.playSmall": "アプリ版はこちら",
+      "store.play": "Google Play で手に入れる",
       "legal.adSettings": "広告の設定",
       "url.privacy": "https://techgym.jp/privacy-policy/",
 
@@ -204,6 +206,8 @@
       "opt.sfx": "Sound FX",
       "opt.motion": "Reduce effects",
       "legal.privacy": "Privacy Policy",
+      "store.playSmall": "Also available as an app",
+      "store.play": "Get it on Google Play",
       "legal.adSettings": "Ad settings",
       "url.privacy": "https://techgym.jp/privacy-policy-en/",
 
