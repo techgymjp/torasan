@@ -26,6 +26,8 @@
       "legal.privacy": "プライバシーポリシー",
       "store.playSmall": "アプリ版はこちら",
       "store.play": "Google Play で手に入れる",
+      "store.howto": "スマートフォンでは、アプリ版でも遊べます：",
+      "store.howtoLink": "Android（Google Play）",
       "legal.adSettings": "広告の設定",
       "url.privacy": "https://techgym.jp/privacy-policy/",
 
@@ -208,6 +210,8 @@
       "legal.privacy": "Privacy Policy",
       "store.playSmall": "Also available as an app",
       "store.play": "Get it on Google Play",
+      "store.howto": "On your phone, you can also play the app version: ",
+      "store.howtoLink": "Android (Google Play)",
       "legal.adSettings": "Ad settings",
       "url.privacy": "https://techgym.jp/privacy-policy-en/",
 

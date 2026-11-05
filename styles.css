@@ -315,7 +315,8 @@ body {
 .store-link span:last-child { display: flex; flex-direction: column; line-height: 1.25; text-align: left; }
 .store-link small { font-size: .72rem; opacity: .85; }
 .store-link strong { font-size: 1rem; }
-.is-app .store-links { display: none; } /* アプリの中では出さない */
+.howto__store { margin: 0 0 12px; }
+.is-app .store-links, .is-app .howto__store { display: none; } /* アプリの中では出さない */
 .legal { margin: 10px 0 0; font-size: .82rem; color: var(--ink-soft); }
 .legal a { color: var(--ink-soft); padding: 6px 4px; }
 #build-info:not(:empty) { margin-right: 10px; }

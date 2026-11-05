@@ -221,7 +221,7 @@ Android 版と同じ Capacitor のプロジェクトに `ios/` を足して作�
 
 `vercel.json` で、Vercel が `npm run build` を実行して `www/` を公開するよう設定しています（Android アプリに同梱するのと同じファイルです）。
 
-Web 版のタイトル画面には、Google Play のアプリ（https://play.google.com/store/apps/details?id=jp.techgym.torasan ）へのリンクを出します（アプリの中では出しません）。
+Web 版のタイトル画面と遊び方には、Google Play のアプリ（https://play.google.com/store/apps/details?id=jp.techgym.torasan ）へのリンクを出します（アプリの中では出しません）。
 
 ## テスト
 
