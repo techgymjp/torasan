@@ -33,6 +33,10 @@
         </provider>
     </application>
 
+    <!-- 画面は縦向きに固定しているが、縦・横どちらの画面も端末に必須ではない（タブレットや横画面の端末にも配信する） -->
+    <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
+    <uses-feature android:name="android.hardware.screen.landscape" android:required="false" />
+
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
