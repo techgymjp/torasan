@@ -36,7 +36,7 @@
       production: {
         interstitial: "ca-app-pub-6411535997477460/1920220709",
         rewarded: "ca-app-pub-6411535997477460/5408039574",
-        banner: "ca-app-pub-6411535997477460/1775704297"
+        banner: "ca-app-pub-6411535997477460/7918149231"
       }
     }
   };
