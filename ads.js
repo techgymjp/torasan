@@ -35,7 +35,7 @@
       // AdMob で作成した本番の広告ユニット（未設定の間は App Store 用のビルド npm run ios:release が止まる）
       production: {
         interstitial: "ca-app-pub-6411535997477460/1436501366",
-        rewarded: "ca-app-pub-6411535997477460/5408039574",
+        rewarded: "ca-app-pub-6411535997477460/1696802924",
         banner: "ca-app-pub-6411535997477460/7918149231"
       }
     }
